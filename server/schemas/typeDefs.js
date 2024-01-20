@@ -66,12 +66,13 @@ const typeDefs = `
   type Query {
     me: User
     getFriends: User
+    getPost(postId: ID!): Post
     getPosts: [Post]
     getComments: [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
     getNotifications: [Notification]
-    singleUser(username: String!): User
+    getUser(username: String!): User
     
   }
 
@@ -86,6 +87,7 @@ const typeDefs = `
     createPost(content: String!): Post
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!): Comment
+    deleteComment(commentId: ID!): Comment
     createChat(recipientIds: [ID]!, firstMessage: String!): Chat
     leaveChat(chatId: ID!): Chat
     clearNotifications(notificationIds: [ID]!): [Notification]

@@ -1,6 +1,8 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
+const settingsSchema = require('./Settings');
+
 const userSchema = new Schema(
   {
     username: {
@@ -39,6 +41,14 @@ const userSchema = new Schema(
         ref: 'chat',
       },
     ],
+    notifications: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'chat',
+      },
+    ],
+    settings: settingsSchema,
+
   },
   // set this to use virtual below
   {
@@ -71,6 +81,6 @@ userSchema.virtual('postCount').get(function () {
   return this.posts.length;
 })
 
-const User = model('User', userSchema);
+const User = model('user', userSchema);
 
 module.exports = User;
