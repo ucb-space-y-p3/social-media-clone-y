@@ -4,16 +4,28 @@ const typeDefs = `
     _id: ID
     username: String
     email: String
-    
+    posts
+    friends
+    chats
+    friendCount
+    postCount
   }
 
-  # type xxx {
+  type Post {
+    _id: ID
+    creator:
+    likeCount:
+    commentCount:
+    cooments: [Comments]!
+  }
 
-  # }
+  type Chat {
 
-  # input xxxxInput {
+  }
 
-  # }
+  input xxxxInput {
+
+  }
 
   type Auth {
     token: ID!
@@ -28,6 +40,7 @@ const typeDefs = `
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
+    addFriend(user: String!, newFriend: String!): User
   }
 `;
 
