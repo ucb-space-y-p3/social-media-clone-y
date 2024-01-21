@@ -1,6 +1,6 @@
-const { User } = require('../models');
+const { User, Post, Comment, Chat, Message, Notification } = require('../models');
 const { signToken } = require('../utils/auth');
-const { AuthenticationError, PassAlongError } = require('../utils/error');
+const { AuthenticationError, PassAlongError, UserNotFoundError } = require('../utils/error');
 
 const resolvers = {
   Query: {
@@ -159,7 +159,7 @@ const resolvers = {
         throw error;
       }
     },
-    createUser: async (parent, { username, email, password }) => {
+    createUser: async (parent, { input: { username, email, password } }) => {
       try {
         const user = await User.create({ username, email, password });
         const token = signToken(user);
@@ -169,7 +169,127 @@ const resolvers = {
         throw error;
       }
     },
-    editUser: async (parent, { }, context) => {
+    editUser: async (parent, { userId, username, email }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const user = await User.findOneAndUpdate(
+          { _id: userId },
+          {
+            username,
+            email
+          },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+        return user;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    changePassword: async (parent, { userId, password }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const user = await User.findOneAndUpdate(
+          { _id: userId },
+          {
+            password
+          },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+        return user;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    deleteUser: async (parent, { userId, }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const user = await User.findOneAndDelete({ _id: userId });
+
+        if (!user) {
+          throw UserNotFoundError;
+        };
+
+        await Post.deleteMany({ _id: { $in: user.posts } });
+
+        await Notification.deleteMany({ _id: { $in: user.notifications } });
+        // need to remove this friend from other friends' lists
+        await User.updateMany(
+          { _id: { $in: user.friends } },
+          { $pull: { friends: user._id } },
+        );
+
+        await Chat.updateMany(
+          { _id: { $in: user.chats } },
+          { $pull: { friends: user._id } },
+        );
+
+        return user;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    addFriend: async (parent, { me, friend }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const newFriend = await User.findOneAndUpdate(
+          { _id: friend },
+          { $addToSet: { friends: me } },
+          {
+            new: true,
+            runValidators: true
+          }
+        )
+        if (!newFriend) {
+          throw UserNotFoundError;
+        };
+        
+        const user = await User.findOneAndUpdate(
+          { _id: me },
+          { $addToSet: { friends: friend } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+        if (!user) {
+          throw UserNotFoundError;
+        };
+        return newFriend;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    removeFriend: async (parent, { me, friend }, context) => {
       try {
         // if (context.user) {
 
@@ -183,63 +303,7 @@ const resolvers = {
         throw error;
       }
     },
-    changePassword: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
-
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    deleteUser: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
-
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    addFriend: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
-
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    removeFriend: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
-
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    createPost: async (parent, { }, context) => {
+    createPost: async (parent, { userId, content }, context) => {
       try {
         // if (context.user) {
 

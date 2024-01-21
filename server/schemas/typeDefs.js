@@ -89,13 +89,13 @@ const typeDefs = `
 
   type Mutation {
     createUser(input: UserInput): Auth
-    editUser(username: String, email: String): User
+    editUser(username: String, email: String, userId: ID!): User
     changePassword(oldPassword: String!): User
     deleteUser(input: UserInput): User
     login(email: String!, password: String!): Auth
-    addFriend(friend: String!): User
-    removeFriend(friend: String!): User
-    createPost(content: String!): Post
+    addFriend(me: ID!, friend: String!): User
+    removeFriend(me: ID!, friend: String!): User
+    createPost(userId: ID!, content: String!): Post
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!): Comment
     deleteComment(commentId: ID!): Comment
