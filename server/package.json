@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "graphql": "^16.8.1",
     "jsonwebtoken": "^8.5.1",
+    "luxon": "^3.4.4",
     "mongoose": "^7.0.2"
   }
 }

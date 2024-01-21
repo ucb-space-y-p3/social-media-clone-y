@@ -12,6 +12,7 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  status400ForVariableCoercionErrors: true,
 });
 
 // Create a new instance of an Apollo server with the GraphQL schema

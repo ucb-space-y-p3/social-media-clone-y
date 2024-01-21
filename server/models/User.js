@@ -44,7 +44,7 @@ const userSchema = new Schema(
     notifications: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'chat',
+        ref: 'notification',
       },
     ],
     settings: settingsSchema,
