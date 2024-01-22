@@ -48,4 +48,10 @@ module.exports = {
       error: {},
     },
   }),
+  RequestNotFoundError: new GraphQLError('Request(s) could not be found.', {
+    extensions: {
+      code: 'RESOURCE NOT FOUND',
+      error: {},
+    },
+  }),
 }

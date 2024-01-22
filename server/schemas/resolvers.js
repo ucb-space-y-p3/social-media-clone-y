@@ -6,7 +6,8 @@ const {
   PostNotFoundError,
   CommentNotFoundError,
   ChatNotFoundError,
-  MessageNotFoundError
+  MessageNotFoundError,
+  RequestNotFoundError,
 } = require('../utils/error');
 
 const resolvers = {
@@ -333,7 +334,7 @@ const resolvers = {
 
         // dev code
         const user = await User.findOneAndDelete({ _id: userId });
-        
+
         if (!user) {
           throw UserNotFoundError;
         };
@@ -383,6 +384,20 @@ const resolvers = {
           { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true },
         );
 
+        const user = await User.findOneAndUpdate(
+          { _id: targetId },
+          { $addToSet: { friendRequests: friendRequest._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!user) {
+          await FriendRequest.deleteOne({ _id: friendRequest._id });
+          throw UserNotFoundError;
+        };
+
         return friendRequest;
       } catch (error) {
         console.log(error);
@@ -397,8 +412,26 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const friendRequest = await FriendRequest.deleteOne({_id: requestId});
+        const friendRequest = await FriendRequest.deleteOne({ _id: requestId });
 
+        if (!friendRequest) {
+          return RequestNotFoundError;
+        }
+
+        const user = await User.findOneAndUpdate(
+          { _id: targetId },
+          { $pull: { friendRequests: friendRequest._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!user) {
+          throw UserNotFoundError;
+        };
+
+        return friendRequest;
       } catch (error) {
         console.log(error);
         throw error;
@@ -412,9 +445,11 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const friendRequest = await FriendRequest.deleteOne({ _id: requestId });
+
         const newFriend = await User.findOneAndUpdate(
-          { _id: friend },
-          { $addToSet: { friends: me } },
+          { _id: friendRequest.targetId },
+          { $addToSet: { friends: friendRequest.requesterId } },
           {
             new: true,
             runValidators: true
@@ -425,8 +460,8 @@ const resolvers = {
         };
 
         const user = await User.findOneAndUpdate(
-          { _id: me },
-          { $addToSet: { friends: friend } },
+          { _id: friendRequest.requesterId },
+          { $addToSet: { friends: friendRequest.targetId } },
           {
             new: true,
             runValidators: true
