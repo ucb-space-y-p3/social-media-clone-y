@@ -1,5 +1,5 @@
 // const models = require('../models');
-const db = require('../config/connection');
+// const db = require('../config/connection');
 
 // module.exports = async (modelName, collectionName) => {
 //   try {
@@ -15,7 +15,7 @@ const db = require('../config/connection');
 //   }
 // }
 
-module.exports = async () => {
+module.exports = async (db) => {
   try {
     // Get all collection names
     const collections = await db.db.collections();
@@ -29,8 +29,8 @@ module.exports = async () => {
     console.log('Database cleared successfully.');
   } catch (error) {
     console.error('Error clearing the database:', error);
-  } finally {
-    // Close the connection
-    await db.close();
+  // } finally {
+  //   // Close the connection
+  //   await db.close();
   }
 };

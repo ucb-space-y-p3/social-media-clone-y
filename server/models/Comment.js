@@ -22,7 +22,7 @@ const commentSchema = new Schema(
       default: DateTime.now(),
       get: function (value) {
         // ISO 8601 format (UTC)
-        return value.toFormat('yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'');
+        return DateTime.fromJSDate(value).toFormat('yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'');
       }
     },
   },

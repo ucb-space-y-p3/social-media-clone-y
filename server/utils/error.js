@@ -12,37 +12,37 @@ module.exports = {
       error: {},
     },
   }),
-  UserNotFoundError: new GraphQLError('User could not be found.', {
+  UserNotFoundError: new GraphQLError('User(s) could not be found.', {
     extensions: {
       code: 'RESOURCE NOT FOUND',
       error: {},
     },
   }),
-  PostNotFoundError: new GraphQLError('Post could not be found.', {
+  PostNotFoundError: new GraphQLError('Post(s) could not be found.', {
     extensions: {
       code: 'RESOURCE NOT FOUND',
       error: {},
     },
   }),
-  CommentNotFoundError: new GraphQLError('Comment could not be found.', {
+  CommentNotFoundError: new GraphQLError('Comment(s) could not be found.', {
     extensions: {
       code: 'RESOURCE NOT FOUND',
       error: {},
     },
   }),
-  ChatNotFoundError: new GraphQLError('Chat could not be found.', {
+  ChatNotFoundError: new GraphQLError('Chat(s) could not be found.', {
     extensions: {
       code: 'RESOURCE NOT FOUND',
       error: {},
     },
   }),
-  MessageNotFoundError: new GraphQLError('Message could not be found.', {
+  MessageNotFoundError: new GraphQLError('Message(s) could not be found.', {
     extensions: {
       code: 'RESOURCE NOT FOUND',
       error: {},
     },
   }),
-  NotificationNotFoundError: new GraphQLError('Notification could not be found.', {
+  NotificationNotFoundError: new GraphQLError('Notification(s) could not be found.', {
     extensions: {
       code: 'RESOURCE NOT FOUND',
       error: {},

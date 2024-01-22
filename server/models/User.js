@@ -35,7 +35,7 @@ const userSchema = new Schema(
         ref: 'user',
       },
     ],
-    chats: [
+    activeChats: [
       {
         type: Schema.Types.ObjectId,
         ref: 'chat',

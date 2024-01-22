@@ -7,7 +7,7 @@ const typeDefs = `
     password: String
     posts: [Post]
     friends: [User]
-    chats: [Chat]
+    activeChats: [Chat]
     notifications: [Notification]
     # likedPosts: [Post]
     # likedComments: [Comment]
@@ -70,15 +70,15 @@ const typeDefs = `
   # Define which queries the front end is allowed to make and what data is returned
   type Query {
     me: User
-    getFriends: [User]
+    getFriends(username: String!): [User]
     getPost(postId: ID!): Post
-    getPosts: [Post]
+    getPosts(username: String!): [Post]
     getComments: [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
     getNotifications: [Notification]
     getUser(username: String!): User
-    getUsers: [User]
+    getUsers: [User] 
   }
 
   input UserInput {
@@ -95,7 +95,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addFriend(me: ID!, friend: String!): User
     removeFriend(me: ID!, friend: String!): User
-    createPost(userId: ID!, content: String!): Post
+    createPost(username: String!, content: String!): Post
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!): Comment
     deleteComment(commentId: ID!): Comment

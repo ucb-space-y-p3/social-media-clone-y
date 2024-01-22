@@ -1,6 +1,6 @@
 const { User, Post, Comment, Chat, Message, Notification } = require('../models');
 const { signToken } = require('../utils/auth');
-const { AuthenticationError, PassAlongError, UserNotFoundError } = require('../utils/error');
+const { AuthenticationError, PostNotFoundError, UserNotFoundError } = require('../utils/error');
 
 const resolvers = {
   Query: {
@@ -8,6 +8,9 @@ const resolvers = {
       try {
         if (context.user) {
           const user = await User.findOne({ _id: context.user._id });
+          if (!user) {
+            throw UserNotFoundError;
+          };
           return user;
         }
         throw AuthenticationError;
@@ -19,7 +22,7 @@ const resolvers = {
         throw error;
       }
     },
-    getFriends: async (parent, { }, context) => {
+    getFriends: async (parent, { username }, context) => {
       try {
         // if (context.user) {
 
@@ -27,16 +30,21 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        // PassAlongError.extensions.error = {message: 'test'}
-        // throw PassAlongError;
-        console.log(AuthenticationError, 'test56');
-        throw AuthenticationError;
+        const usersFriends = await User.findOne(
+          { username },
+          '_id username friends',).populate('friends');
+
+        if (!usersFriends) {
+          throw UserNotFoundError;
+        };
+
+        return usersFriends;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    getPosts: async (parent, { }, context) => {
+    getPosts: async (parent, { username }, context) => {
       try {
         // if (context.user) {
 
@@ -44,6 +52,15 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const user = await User.findOne(
+          { username },
+          '_id username posts',).populate('posts');
+
+        if (!user) {
+          throw UserNotFoundError;
+        };
+
+        return user.posts;
 
       } catch (error) {
         console.log(error);
@@ -116,6 +133,9 @@ const resolvers = {
         // dev code
 
         const user = await User.findOne({ username: username });
+        if (!user) {
+          throw UserNotFoundError;
+        };
         return user;
       } catch (error) {
         console.log(error);
@@ -132,6 +152,9 @@ const resolvers = {
         // dev code
 
         const users = await User.find();
+        if (!users) {
+          throw UserNotFoundError;
+        };
         return users;
       } catch (error) {
         console.log(error);
@@ -144,13 +167,13 @@ const resolvers = {
       try {
         const user = await User.findOne({ email });
         if (!user) {
-          throw AuthenticationError;
-        }
+          throw UserNotFoundError;
+        };
 
         const correctPw = await user.isCorrectPassword(password);
         if (!correctPw) {
-          throw AuthenticationError;
-        }
+          throw UserNotFoundError;
+        };
 
         const token = signToken(user);
         return { token, user };
@@ -188,6 +211,9 @@ const resolvers = {
             runValidators: true
           }
         );
+        if (!user) {
+          throw UserNotFoundError;
+        };
         return user;
       } catch (error) {
         console.log(error);
@@ -212,6 +238,9 @@ const resolvers = {
             runValidators: true
           }
         );
+        if (!user) {
+          throw UserNotFoundError;
+        };
         return user;
       } catch (error) {
         console.log(error);
@@ -271,7 +300,7 @@ const resolvers = {
         if (!newFriend) {
           throw UserNotFoundError;
         };
-        
+
         const user = await User.findOneAndUpdate(
           { _id: me },
           { $addToSet: { friends: friend } },
@@ -297,13 +326,36 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const oldFriend = await User.findOneAndUpdate(
+          { _id: friend },
+          { $pull: { friends: me } },
+          {
+            new: true,
+            runValidators: true
+          }
+        )
+        if (!oldFriend) {
+          throw UserNotFoundError;
+        };
 
+        const user = await User.findOneAndUpdate(
+          { _id: me },
+          { $pull: { friends: friend } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+        if (!user) {
+          throw UserNotFoundError;
+        };
+        return oldFriend;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    createPost: async (parent, { userId, content }, context) => {
+    createPost: async (parent, { username, content }, context) => {
       try {
         // if (context.user) {
 
@@ -311,13 +363,28 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const post = await Post.create({ content, creator: username });
 
+        const user = await User.findOneAndUpdate(
+          { username },
+          { $addToSet: { posts: post._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!user) {
+          throw UserNotFoundError;
+        };
+
+        return post;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    deletePost: async (parent, { }, context) => {
+    deletePost: async (parent, { postId }, context) => {
       try {
         // if (context.user) {
 
@@ -325,7 +392,26 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const post = await Post.findOneAndDelete({ _id: postId });
 
+        if (!post) {
+          throw PostNotFoundError;
+        };
+
+        const user = await User.findOneAndUpdate(
+          { username: post.creator },
+          { $pull: { posts: post._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!user) {
+          throw UserNotFoundError;
+        };
+
+        return post;
       } catch (error) {
         console.log(error);
         throw error;
