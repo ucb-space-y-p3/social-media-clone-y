@@ -1,21 +1,14 @@
 const { Schema, model } = require('mongoose');
-const { DateTime } = require('luxon');
 
-const notificationSchema = new Schema(
+const requestSchema = new Schema(
   {
-    isCleared: {
-      type: Boolean,
+    requesterId: {
+      type: String,
       required: true,
-      default: false
     },
-    type: {
+    targetId: {
       type: String,
-      required: true
-    },
-    alert: {
-      type: String,
-      minLength: 1,
-      maxLength: 32,
+      required: true,
     },
     createdAt: {
       type: Date,
@@ -27,11 +20,13 @@ const notificationSchema = new Schema(
     },
   },
   {
-
+    toJSON: {
+      virtuals: true,
+    },
   }
 );
 
 
-const Notification = model('notification', notificationSchema);
+const FriendRequest = model('request', requestSchema);
 
-module.exports = Notification;
+module.exports = FriendRequest;

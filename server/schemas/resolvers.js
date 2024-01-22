@@ -1,6 +1,13 @@
-const { User, Post, Comment, Chat, Message, Notification } = require('../models');
+const { User, Post, Comment, Chat, Message, Notification, FriendRequest } = require('../models');
 const { signToken } = require('../utils/auth');
-const { AuthenticationError, PostNotFoundError, UserNotFoundError } = require('../utils/error');
+const {
+  AuthenticationError,
+  UserNotFoundError,
+  PostNotFoundError,
+  CommentNotFoundError,
+  ChatNotFoundError,
+  MessageNotFoundError
+} = require('../utils/error');
 
 const resolvers = {
   Query: {
@@ -44,6 +51,26 @@ const resolvers = {
         throw error;
       }
     },
+    getPost: async (parent, { postId }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const post = Post.findById(postId)
+
+        if (!post) {
+          throw PostNotFoundError;
+        };
+
+        return post;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
     getPosts: async (parent, { username }, context) => {
       try {
         // if (context.user) {
@@ -67,7 +94,7 @@ const resolvers = {
         throw error;
       }
     },
-    getComments: async (parent, { }, context) => {
+    getComment: async (parent, { commentId }, context) => {
       try {
         // if (context.user) {
 
@@ -75,6 +102,42 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+          throw CommentNotFoundError;
+        }
+
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    getComments: async (parent, { username, postId }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        if (!!username) {
+          const user = await User.findOne(
+            { username },
+            '_id username comments',).populate('comments');
+
+          if (!user) {
+            throw UserNotFoundError;
+          };
+
+          return user.comments;
+        } else if (!!postId) {
+          const post = await Post.findById(postId).populate('comments');
+          if (!post) {
+            throw PostNotFoundError;
+          };
+          return post.comments;
+        }
 
       } catch (error) {
         console.log(error);
@@ -96,6 +159,20 @@ const resolvers = {
       }
     },
     getChats: async (parent, { }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    getMessages: async (parent, { chatId }, context) => {
       try {
         // if (context.user) {
 
@@ -256,12 +333,23 @@ const resolvers = {
 
         // dev code
         const user = await User.findOneAndDelete({ _id: userId });
-
+        
         if (!user) {
           throw UserNotFoundError;
         };
 
-        await Post.deleteMany({ _id: { $in: user.posts } });
+        const posts = await Post.deleteMany({ _id: { $in: user.posts } });
+
+        const commentsToDelete = posts.map((post) => {
+          return post.comments
+        }).reduce((accumulator, currentArray) => accumulator.concat(currentArray), []);
+
+        await Comment.deleteMany({
+          $or: [
+            { _id: { $in: commentsToDelete } },
+            { _id: { $in: user.comments } },
+          ]
+        });
 
         await Notification.deleteMany({ _id: { $in: user.notifications } });
         // need to remove this friend from other friends' lists
@@ -281,7 +369,42 @@ const resolvers = {
         throw error;
       }
     },
-    addFriend: async (parent, { me, friend }, context) => {
+    requestFriend: async (parent, { requesterId, targetId }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const friendRequest = await FriendRequest.findOneAndUpdate(
+          { requesterId, targetId },
+          { $set: { requesterId, targetId } },
+          { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true },
+        );
+
+        return friendRequest;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    denyFriend: async (parent, { requestId }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const friendRequest = await FriendRequest.deleteOne({_id: requestId});
+
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    acceptFriend: async (parent, { requestId }, context) => {
       try {
         // if (context.user) {
 
@@ -375,6 +498,7 @@ const resolvers = {
         );
 
         if (!user) {
+          await Post.deleteOne({ _id: post._id });
           throw UserNotFoundError;
         };
 
@@ -417,7 +541,7 @@ const resolvers = {
         throw error;
       }
     },
-    createComment: async (parent, { }, context) => {
+    createComment: async (parent, { postId, content, username }, context) => {
       try {
         // if (context.user) {
 
@@ -425,7 +549,83 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
+        const comment = await Comment.create({ postId, content, creator: username });
 
+        const post = await Post.findOneAndUpdate(
+          { _id: postId },
+          { $addToSet: { comments: comment._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!post) {
+          await Comment.deleteOne({ _id: comment._id });
+          throw PostNotFoundError;
+        };
+
+        const user = await User.findOneAndUpdate(
+          { username },
+          { $addToSet: { comments: comment._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!user) {
+          await Comment.deleteOne({ _id: comment._id });
+          throw UserNotFoundError;
+        };
+
+        return comment;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    deleteComment: async (parent, { commentId }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const comment = await Comment.findOneAndDelete({ _id: commentId });
+
+        if (!comment) {
+          throw CommentNotFoundError;
+        };
+
+        const post = await Post.findOneAndUpdate(
+          { _id: postId },
+          { $pull: { comments: comment._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!post) {
+          throw PostNotFoundError;
+        };
+
+        const user = await User.findOneAndUpdate(
+          { username },
+          { $pull: { comments: comment._id } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+
+        if (!user) {
+          throw UserNotFoundError;
+        };
+
+        return comment;
       } catch (error) {
         console.log(error);
         throw error;

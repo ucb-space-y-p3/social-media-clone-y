@@ -20,7 +20,7 @@ const messageSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      default: DateTime.now(),
+      default: DateTime.now,
       get: function (value) {
         // ISO 8601 format (UTC)
         return DateTime.fromJSDate(value).toFormat('yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'');

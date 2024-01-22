@@ -5,14 +5,20 @@ const typeDefs = `
     username: String
     email: String
     password: String
-    posts: [Post]
+    friendCount: Int
     friends: [User]
+    requestCount: Int
+    friendRequests: [FriendRequest]
+    postCount: Int
+    posts: [Post]
+    commentCount: Int
+    comments: [Comment]
+    chatCount: Int
     activeChats: [Chat]
+    notificationCount: Int
     notifications: [Notification]
     # likedPosts: [Post]
     # likedComments: [Comment]
-    friendCount: Int
-    postCount: Int
     settings: Settings
   }
 
@@ -26,6 +32,13 @@ const typeDefs = `
     alert: String
     createdAt: String
     isCleared: Boolean
+  }
+
+  type FriendRequest {
+    _id: ID
+    requesterId: ID
+    targetId: ID
+    createdAt: String
   }
 
   type Post {
@@ -70,12 +83,16 @@ const typeDefs = `
   # Define which queries the front end is allowed to make and what data is returned
   type Query {
     me: User
+    getFriendRequest(requestID: ID!): FriendRequest
+    getFriendRequests(username: String!): [FriendRequest]
     getFriends(username: String!): [User]
     getPost(postId: ID!): Post
     getPosts(username: String!): [Post]
-    getComments: [Comment]
+    getComment(commentId: ID!): Comment
+    getComments(username: String, postId: ID): [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
+    getMessages(chatId: ID!): [Message]
     getNotifications: [Notification]
     getUser(username: String!): User
     getUsers: [User] 
@@ -93,11 +110,13 @@ const typeDefs = `
     changePassword(oldPassword: String!): User
     deleteUser(input: UserInput): User
     login(email: String!, password: String!): Auth
-    addFriend(me: ID!, friend: String!): User
+    requestFriend(requesterId: ID!, targetId: String!): FriendRequest
+    acceptFriend(requestId: ID!): User
+    denyFriend(requestId: ID!): FriendRequest
     removeFriend(me: ID!, friend: String!): User
     createPost(username: String!, content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(postId: ID!, content: String!): Comment
+    createComment(postId: ID!, content: String!, username: String): Comment
     deleteComment(commentId: ID!): Comment
     createChat(recipientIds: [ID]!, firstMessage: String!): Chat
     leaveChat(chatId: ID!): Chat
