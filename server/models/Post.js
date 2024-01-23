@@ -3,6 +3,7 @@ const { DateTime } = require('luxon');
 
 const postSchema = new Schema(
   {
+
     creator: {
       type: String,
       required: true
@@ -27,6 +28,7 @@ const postSchema = new Schema(
         ref: 'comment'
       }
     ]
+
   },
   {
     toJSON: {
