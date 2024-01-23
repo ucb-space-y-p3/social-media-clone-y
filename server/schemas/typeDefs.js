@@ -107,7 +107,7 @@ const typeDefs = `
   type Mutation {
     createUser(input: UserInput): Auth
     editUser(username: String, email: String, userId: ID!): User
-    changePassword(oldPassword: String!): User
+    changePassword(userId: ID!, password: String!): User
     deleteUser(input: UserInput): User
     login(email: String!, password: String!): Auth
     requestFriend(requesterId: ID!, targetId: String!): FriendRequest
@@ -116,7 +116,7 @@ const typeDefs = `
     removeFriend(me: ID!, friend: String!): User
     createPost(username: String!, content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(postId: ID!, content: String!, username: String): Comment
+    createComment(postId: ID!, content: String!, username: String!): Comment
     deleteComment(commentId: ID!): Comment
     createChat(recipientIds: [ID]!, firstMessage: String!): Chat
     leaveChat(chatId: ID!): Chat

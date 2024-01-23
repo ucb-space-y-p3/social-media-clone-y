@@ -22,17 +22,13 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      minLength: 8,
+      maxLength: 32,
     },
     posts: [
       {
         type: Schema.Types.ObjectId,
         ref: 'post',
-      },
-    ],
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'comment',
       },
     ],
     friends: [
@@ -94,7 +90,15 @@ userSchema.virtual('postCount').get(function () {
 })
 
 userSchema.virtual('commentCount').get(function () {
-  return this.comments.length;
+  return this.posts.reduce((accumulator, currentValue) => {
+    return [...accumulator, ...currentValue]
+  }, []).length;
+})
+
+userSchema.virtual('comments').get(function() {
+  return this.posts.reduce((accumulator, currentValue) => {
+    return [...accumulator, ...currentValue]
+  }, []);
 })
 
 userSchema.virtual('chatCount').get(function () {

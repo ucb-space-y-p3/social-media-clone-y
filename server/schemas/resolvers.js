@@ -7,8 +7,11 @@ const {
   CommentNotFoundError,
   ChatNotFoundError,
   MessageNotFoundError,
+  NotificationNotFoundError,
   RequestNotFoundError,
 } = require('../utils/error');
+
+
 
 const resolvers = {
   Query: {
@@ -52,6 +55,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     getPost: async (parent, { postId }, context) => {
       try {
         // if (context.user) {
@@ -72,6 +76,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     getPosts: async (parent, { username }, context) => {
       try {
         // if (context.user) {
@@ -95,6 +100,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     getComment: async (parent, { commentId }, context) => {
       try {
         // if (context.user) {
@@ -109,11 +115,13 @@ const resolvers = {
           throw CommentNotFoundError;
         }
 
+        return comment;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
+    // agith
     getComments: async (parent, { username, postId }, context) => {
       try {
         // if (context.user) {
@@ -140,11 +148,14 @@ const resolvers = {
           return post.comments;
         }
 
+        throw UserNotFoundError;
+
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
+    // not necessary
     getChat: async (parent, { }, context) => {
       try {
         // if (context.user) {
@@ -159,6 +170,7 @@ const resolvers = {
         throw error;
       }
     },
+    // not necessary
     getChats: async (parent, { }, context) => {
       try {
         // if (context.user) {
@@ -173,6 +185,7 @@ const resolvers = {
         throw error;
       }
     },
+    // not necessary
     getMessages: async (parent, { chatId }, context) => {
       try {
         // if (context.user) {
@@ -187,6 +200,7 @@ const resolvers = {
         throw error;
       }
     },
+    // not necessary
     getNotifications: async (parent, { }, context) => {
       try {
         // if (context.user) {
@@ -201,6 +215,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     getUser: async (parent, { username }, context) => {
       try {
         // if (context.user) {
@@ -220,6 +235,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     getUsers: async (parent, { }, context) => {
       try {
         // if (context.user) {
@@ -241,6 +257,7 @@ const resolvers = {
     },
   },
   Mutation: {
+    // agith
     login: async (parent, { email, password }) => {
       try {
         const user = await User.findOne({ email });
@@ -260,6 +277,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     createUser: async (parent, { input: { username, email, password } }) => {
       try {
         const user = await User.create({ username, email, password });
@@ -270,6 +288,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     editUser: async (parent, { userId, username, email }, context) => {
       try {
         // if (context.user) {
@@ -298,6 +317,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     changePassword: async (parent, { userId, password }, context) => {
       try {
         // if (context.user) {
@@ -306,19 +326,15 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const user = await User.findOneAndUpdate(
-          { _id: userId },
-          {
-            password
-          },
-          {
-            new: true,
-            runValidators: true
-          }
-        );
+        const user = await User.findById(userId);
         if (!user) {
           throw UserNotFoundError;
         };
+
+        user.password = password;
+        await user.validate();
+        await user.save();
+
         return user;
       } catch (error) {
         console.log(error);
@@ -513,6 +529,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     createPost: async (parent, { username, content }, context) => {
       try {
         // if (context.user) {
@@ -543,6 +560,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     deletePost: async (parent, { postId }, context) => {
       try {
         // if (context.user) {
@@ -556,6 +574,8 @@ const resolvers = {
         if (!post) {
           throw PostNotFoundError;
         };
+
+        
 
         const user = await User.findOneAndUpdate(
           { username: post.creator },
@@ -576,6 +596,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     createComment: async (parent, { postId, content, username }, context) => {
       try {
         // if (context.user) {
@@ -620,6 +641,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     deleteComment: async (parent, { commentId }, context) => {
       try {
         // if (context.user) {
@@ -635,7 +657,7 @@ const resolvers = {
         };
 
         const post = await Post.findOneAndUpdate(
-          { _id: postId },
+          { _id: comment.postId },
           { $pull: { comments: comment._id } },
           {
             new: true,
@@ -648,7 +670,7 @@ const resolvers = {
         };
 
         const user = await User.findOneAndUpdate(
-          { username },
+          { username: comment.creator },
           { $pull: { comments: comment._id } },
           {
             new: true,
@@ -666,6 +688,7 @@ const resolvers = {
         throw error;
       }
     },
+    // not necessary
     createChat: async (parent, { }, context) => {
       try {
         // if (context.user) {
@@ -680,6 +703,7 @@ const resolvers = {
         throw error;
       }
     },
+    // not necessary
     leaveChat: async (parent, { }, context) => {
       try {
         // if (context.user) {
@@ -694,6 +718,7 @@ const resolvers = {
         throw error;
       }
     },
+    // not necessary
     clearNotifications: async (parent, { }, context) => {
       try {
         // if (context.user) {
