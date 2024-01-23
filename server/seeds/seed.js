@@ -1,5 +1,5 @@
 const db = require('../config/connection');
-const { User, Post, Comment, Chat, Message, Notification } = require('../models');
+const { User, Post, Chat, Message, Notification } = require('../models');
 const cleanDB = require('./cleanDB');
 
 db.once('open', async () => {

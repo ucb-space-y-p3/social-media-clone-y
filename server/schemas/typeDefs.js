@@ -118,9 +118,15 @@ const typeDefs = `
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!, username: String!): Comment
     deleteComment(commentId: ID!): Comment
+
+
+
+    # websocket stuff
     createChat(recipientIds: [ID]!, firstMessage: String!): Chat
     leaveChat(chatId: ID!): Chat
     clearNotifications(notificationIds: [ID]!): [Notification]
+    # add more here
+
   }
 `;
 
