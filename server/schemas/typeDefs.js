@@ -4,15 +4,12 @@ const typeDefs = `
     _id: ID
     username: String
     email: String
-    password: String
     friendCount: Int
     friends: [User]
     requestCount: Int
     friendRequests: [FriendRequest]
     postCount: Int
     posts: [Post]
-    commentCount: Int
-    comments: [Comment]
     chatCount: Int
     activeChats: [Chat]
     notificationCount: Int
@@ -83,19 +80,22 @@ const typeDefs = `
   # Define which queries the front end is allowed to make and what data is returned
   type Query {
     me: User
-    getFriendRequest(requestID: ID!): FriendRequest
+    getFriendRequest(requestId: ID!): FriendRequest
     getFriendRequests(username: String!): [FriendRequest]
     getFriends(username: String!): [User]
     getPost(postId: ID!): Post
     getPosts(username: String!): [Post]
-    getComment(commentId: ID!): Comment
-    getComments(username: String, postId: ID): [Comment]
+    getComment(postId: ID!, commentId: ID!): Comment
+    getComments(postId: ID!): [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
     getMessages(chatId: ID!): [Message]
     getNotifications: [Notification]
     getUser(username: String!): User
-    getUsers: [User] 
+    # dev methods
+    getUsers: [User]
+    getAllPosts: [Post]
+    getAllRequests: [FriendRequest]
   }
 
   input UserInput {
@@ -108,16 +108,17 @@ const typeDefs = `
     createUser(input: UserInput): Auth
     editUser(username: String, email: String, userId: ID!): User
     changePassword(userId: ID!, password: String!): User
-    deleteUser(input: UserInput): User
+    deleteUser(userId: ID!, password: String!): User
     login(email: String!, password: String!): Auth
     requestFriend(requesterId: ID!, targetId: String!): FriendRequest
     acceptFriend(requestId: ID!): User
     denyFriend(requestId: ID!): FriendRequest
     removeFriend(me: ID!, friend: String!): User
+    deleteRequest(requestId: ID!): FriendRequest
     createPost(username: String!, content: String!): Post
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!, username: String!): Comment
-    deleteComment(commentId: ID!): Comment
+    deleteComment(postId: ID!, commentId: ID!): Comment
 
 
 
