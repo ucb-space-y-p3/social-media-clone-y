@@ -4,12 +4,21 @@ const typeDefs = `
     _id: ID
     username: String
     email: String
-    posts: [Post]
-    friends: [User]
-    chats: [Chat]
-    notifications: [Notification]
+    password: String
     friendCount: Int
+    friends: [User]
+    requestCount: Int
+    friendRequests: [FriendRequest]
     postCount: Int
+    posts: [Post]
+    commentCount: Int
+    comments: [Comment]
+    chatCount: Int
+    activeChats: [Chat]
+    notificationCount: Int
+    notifications: [Notification]
+    # likedPosts: [Post]
+    # likedComments: [Comment]
     settings: Settings
   }
 
@@ -20,9 +29,16 @@ const typeDefs = `
   type Notification {
     _id: ID
     type: String
-    message: String
+    alert: String
     createdAt: String
     isCleared: Boolean
+  }
+
+  type FriendRequest {
+    _id: ID
+    requesterId: ID
+    targetId: ID
+    createdAt: String
   }
 
   type Post {
@@ -30,7 +46,7 @@ const typeDefs = `
     creator: String
     content: String
     createdAt: String
-    likeCount: Int
+    # likeCount: Int
     commentCount: Int
     comments: [Comment]
   }
@@ -38,7 +54,7 @@ const typeDefs = `
   type Comment {
     _id: ID
     postId: ID
-    creatorName: String
+    creator: String
     createdAt: String
     content: String
   }
@@ -46,15 +62,17 @@ const typeDefs = `
   type Chat {
     _id: ID
     isGroupChat: Boolean
-    currentRecipients: [User]
-    pastRecipients: [User]
+    recipients: [User]
     messages: [Message]
   }
 
   type Message {
     _id: ID
-    creator: String!
-    createdAt: String!
+    chatId: ID
+    postId: ID
+    commentId: ID
+    creator: String
+    createdAt: String
   }
 
   type Auth {
@@ -65,28 +83,40 @@ const typeDefs = `
   # Define which queries the front end is allowed to make and what data is returned
   type Query {
     me: User
-    getFriends: User
+    getFriendRequest(requestID: ID!): FriendRequest
+    getFriendRequests(username: String!): [FriendRequest]
+    getFriends(username: String!): [User]
     getPost(postId: ID!): Post
-    getPosts: [Post]
-    getComments: [Comment]
+    getPosts(username: String!): [Post]
+    getComment(commentId: ID!): Comment
+    getComments(username: String, postId: ID): [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
+    getMessages(chatId: ID!): [Message]
     getNotifications: [Notification]
     getUser(username: String!): User
-    
+    getUsers: [User] 
+  }
+
+  input UserInput {
+    username: String!
+    email: String!
+    password: String!
   }
 
   type Mutation {
-    createUser(username: String!, email: String!, password: String!): Auth
-    editUser(username: String, email: String): User
-    changePassword(oldPassword: String!): User
-    deleteUser(username: String!, email: String!, password: String!): User
+    createUser(input: UserInput): Auth
+    editUser(username: String, email: String, userId: ID!): User
+    changePassword(userId: ID!, password: String!): User
+    deleteUser(input: UserInput): User
     login(email: String!, password: String!): Auth
-    addFriend(friend: String!): User
-    removeFriend(friend: String!): User
-    createPost(content: String!): Post
+    requestFriend(requesterId: ID!, targetId: String!): FriendRequest
+    acceptFriend(requestId: ID!): User
+    denyFriend(requestId: ID!): FriendRequest
+    removeFriend(me: ID!, friend: String!): User
+    createPost(username: String!, content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(postId: ID!, content: String!): Comment
+    createComment(postId: ID!, content: String!, username: String!): Comment
     deleteComment(commentId: ID!): Comment
     createChat(recipientIds: [ID]!, firstMessage: String!): Chat
     leaveChat(chatId: ID!): Chat
