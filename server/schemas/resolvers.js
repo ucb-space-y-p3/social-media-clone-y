@@ -1,5 +1,6 @@
 const { User, Post, Comment, Chat, Message, Notification, FriendRequest } = require('../models');
 const { signToken } = require('../utils/auth');
+// const { createWebsocket,  } = require('@apollo/server-ws');
 const {
   AuthenticationError,
   UserNotFoundError,
@@ -14,6 +15,7 @@ const {
 
 
 const resolvers = {
+  
   Query: {
     me: async (parent, { }, context) => {
       try {
@@ -688,6 +690,12 @@ const resolvers = {
         throw error;
       }
     },
+
+
+    // websockets
+
+    
+
     // not necessary
     createChat: async (parent, { }, context) => {
       try {
@@ -733,7 +741,11 @@ const resolvers = {
         throw error;
       }
     },
-  }
+  },
+  // websocket
+  // Subscriptions: {
+
+  // },
 };
 
 module.exports = resolvers;

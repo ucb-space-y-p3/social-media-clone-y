@@ -89,18 +89,6 @@ userSchema.virtual('postCount').get(function () {
   return this.posts.length;
 })
 
-userSchema.virtual('commentCount').get(function () {
-  return this.posts.reduce((accumulator, currentValue) => {
-    return [...accumulator, ...currentValue]
-  }, []).length;
-})
-
-userSchema.virtual('comments').get(function() {
-  return this.posts.reduce((accumulator, currentValue) => {
-    return [...accumulator, ...currentValue]
-  }, []);
-})
-
 userSchema.virtual('chatCount').get(function () {
   return this.activeChats.length;
 })
