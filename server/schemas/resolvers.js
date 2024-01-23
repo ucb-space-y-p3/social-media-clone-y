@@ -35,6 +35,7 @@ const resolvers = {
         throw error;
       }
     },
+    // agith
     getFriends: async (parent, { username }, context) => {
       try {
         // if (context.user) {
@@ -51,7 +52,7 @@ const resolvers = {
           throw UserNotFoundError;
         };
 
-        return usersFriends;
+        return usersFriends.friends;
       } catch (error) {
         console.log(error);
         throw error;
