@@ -15,7 +15,7 @@ const {
 
 
 const resolvers = {
-  
+
   Query: {
     me: async (parent, { }, context) => {
       try {
@@ -66,7 +66,7 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const post = Post.findById(postId)
+        const post = Post.findById(postId);
 
         if (!post) {
           throw PostNotFoundError;
@@ -103,7 +103,7 @@ const resolvers = {
       }
     },
     // agith
-    getComment: async (parent, { commentId }, context) => {
+    getComment: async (parent, { postId, commentId }, context) => {
       try {
         // if (context.user) {
 
@@ -111,20 +111,20 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const comment = await Comment.findById(commentId);
+        const post = await Post.findById(postId);
 
-        if (!comment) {
-          throw CommentNotFoundError;
+        if (!post) {
+          throw PostNotFoundError;
         }
 
-        return comment;
+        return post.comments.find((comment) => comment._id==commentId) || {};
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
     // agith
-    getComments: async (parent, { username, postId }, context) => {
+    getComments: async (parent, { postId }, context) => {
       try {
         // if (context.user) {
 
@@ -132,25 +132,11 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        if (!!username) {
-          const user = await User.findOne(
-            { username },
-            '_id username comments',).populate('comments');
-
-          if (!user) {
-            throw UserNotFoundError;
-          };
-
-          return user.comments;
-        } else if (!!postId) {
-          const post = await Post.findById(postId).populate('comments');
-          if (!post) {
-            throw PostNotFoundError;
-          };
-          return post.comments;
-        }
-
-        throw UserNotFoundError;
+        const post = await Post.findById(postId).populate('comments');
+        if (!post) {
+          throw PostNotFoundError;
+        };
+        return post.comments;
 
       } catch (error) {
         console.log(error);
@@ -237,6 +223,8 @@ const resolvers = {
         throw error;
       }
     },
+
+    // dev methods
     // agith
     getUsers: async (parent, { }, context) => {
       try {
@@ -252,6 +240,26 @@ const resolvers = {
           throw UserNotFoundError;
         };
         return users;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    // agith
+    getAllPosts: async (parent, { }, context) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+
+        const posts = await Post.find();
+        if (!posts) {
+          throw PostNotFoundError;
+        };
+        return posts;
       } catch (error) {
         console.log(error);
         throw error;
@@ -577,7 +585,7 @@ const resolvers = {
           throw PostNotFoundError;
         };
 
-        
+
 
         const user = await User.findOneAndUpdate(
           { username: post.creator },
@@ -607,11 +615,11 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const comment = await Comment.create({ postId, content, creator: username });
+        const comment = { postId, content, creator: username }
 
         const post = await Post.findOneAndUpdate(
           { _id: postId },
-          { $addToSet: { comments: comment._id } },
+          { $addToSet: { comments: comment } },
           {
             new: true,
             runValidators: true
@@ -619,32 +627,17 @@ const resolvers = {
         );
 
         if (!post) {
-          await Comment.deleteOne({ _id: comment._id });
           throw PostNotFoundError;
         };
 
-        const user = await User.findOneAndUpdate(
-          { username },
-          { $addToSet: { comments: comment._id } },
-          {
-            new: true,
-            runValidators: true
-          }
-        );
-
-        if (!user) {
-          await Comment.deleteOne({ _id: comment._id });
-          throw UserNotFoundError;
-        };
-
-        return comment;
+        return post.comments.find((newComment) => newComment.content == comment.content && newComment.creator == comment.creator);
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
     // agith
-    deleteComment: async (parent, { commentId }, context) => {
+    deleteComment: async (parent, { postId, commentId }, context) => {
       try {
         // if (context.user) {
 
@@ -652,18 +645,12 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const comment = await Comment.findOneAndDelete({ _id: commentId });
-
-        if (!comment) {
-          throw CommentNotFoundError;
-        };
-
         const post = await Post.findOneAndUpdate(
-          { _id: comment.postId },
-          { $pull: { comments: comment._id } },
+          { _id: postId },
+          { $pull: { comments: { _id: commentId} } },
           {
-            new: true,
-            runValidators: true
+            // new: true,
+            // runValidators: true
           }
         );
 
@@ -671,20 +658,7 @@ const resolvers = {
           throw PostNotFoundError;
         };
 
-        const user = await User.findOneAndUpdate(
-          { username: comment.creator },
-          { $pull: { comments: comment._id } },
-          {
-            new: true,
-            runValidators: true
-          }
-        );
-
-        if (!user) {
-          throw UserNotFoundError;
-        };
-
-        return comment;
+        return post.comments.find((comment) => comment._id == commentId);
       } catch (error) {
         console.log(error);
         throw error;
@@ -694,7 +668,7 @@ const resolvers = {
 
     // websockets
 
-    
+
 
     // not necessary
     createChat: async (parent, { }, context) => {

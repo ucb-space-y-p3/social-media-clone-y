@@ -11,8 +11,6 @@ const typeDefs = `
     friendRequests: [FriendRequest]
     postCount: Int
     posts: [Post]
-    commentCount: Int
-    comments: [Comment]
     chatCount: Int
     activeChats: [Chat]
     notificationCount: Int
@@ -88,14 +86,16 @@ const typeDefs = `
     getFriends(username: String!): [User]
     getPost(postId: ID!): Post
     getPosts(username: String!): [Post]
-    getComment(commentId: ID!): Comment
-    getComments(username: String, postId: ID): [Comment]
+    getComment(postId: ID!, commentId: ID!): Comment
+    getComments(postId: ID!): [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
     getMessages(chatId: ID!): [Message]
     getNotifications: [Notification]
     getUser(username: String!): User
-    getUsers: [User] 
+    # dev methods
+    getUsers: [User]
+    getAllPosts: [Post]
   }
 
   input UserInput {
@@ -117,7 +117,7 @@ const typeDefs = `
     createPost(username: String!, content: String!): Post
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!, username: String!): Comment
-    deleteComment(commentId: ID!): Comment
+    deleteComment(postId: ID!, commentId: ID!): Comment
 
 
 
