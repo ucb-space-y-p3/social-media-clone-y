@@ -13,6 +13,7 @@ const { useServer }=require( 'graphql-ws/lib/use/ws');
 
 const PORT = process.env.PORT || 3005;
 const app = express();
+
 //create a new http server to work with subscriptions
 const httpServer = createServer(app);
 //create an executable Graphql schema
@@ -21,6 +22,7 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const wsServer=new WebSocketServer({
   server:httpServer,
   path:'/suscriptions'//probchane
+
 });
 //use the ws en graphql-ws
 const serverCleanup = useServer(

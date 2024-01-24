@@ -22,6 +22,8 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      minLength: 8,
+      maxLength: 32,
     },
     posts: [
       {
@@ -35,7 +37,7 @@ const userSchema = new Schema(
         ref: 'user',
       },
     ],
-    chats: [
+    activeChats: [
       {
         type: Schema.Types.ObjectId,
         ref: 'chat',
@@ -44,7 +46,13 @@ const userSchema = new Schema(
     notifications: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'chat',
+        ref: 'notification',
+      },
+    ],
+    friendRequests: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'request',
       },
     ],
     settings: settingsSchema,
@@ -79,6 +87,18 @@ userSchema.virtual('friendCount').get(function () {
 
 userSchema.virtual('postCount').get(function () {
   return this.posts.length;
+})
+
+userSchema.virtual('chatCount').get(function () {
+  return this.activeChats.length;
+})
+
+userSchema.virtual('notificationCount').get(function () {
+  return this.notifications.length;
+})
+
+userSchema.virtual('requestCount').get(function () {
+  return this.friendRequests.length;
 })
 
 const User = model('user', userSchema);
