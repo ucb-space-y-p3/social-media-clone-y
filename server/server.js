@@ -5,6 +5,8 @@ const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
+
+
 const { createServer } = require('http');
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -25,9 +27,7 @@ const wsServer=new WebSocketServer({
 
 });
 //use the ws en graphql-ws
-const serverCleanup = useServer(
-  {
-    schema,},wsServer);
+const serverCleanup = useServer({schema,},wsServer);
 // Create a new instance of an Apollo server with the GraphQL schema
 const server = new ApolloServer({
   schema,

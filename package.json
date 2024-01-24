@@ -19,5 +19,6 @@
     "concurrently": "^8.2.0"
   },
   "dependencies": {
+    "ws": "^8.16.0"
   }
 }
