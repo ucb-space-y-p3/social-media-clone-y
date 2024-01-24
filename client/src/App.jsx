@@ -15,13 +15,13 @@ import { userReducer } from './utils/slices/userSlice';
 
 import './App.css';
 
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
+// import Header from './components/Header';
+// import Sidebar from './components/Sidebar';
+// import Footer from './components/Footer';
 
 
 const rootReducer = combineReducers({
-  globalState: stateReducer,
+  userState: userReducer,
 })
 
 const store = configureStore({
@@ -56,10 +56,10 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <Header />
+        {/* <Header /> */}
         <Outlet />
-        <Sidebar />
-        <Footer />
+        {/* <Sidebar /> */}
+        {/* <Footer /> */}
       </Provider>
     </ApolloProvider >
   );
