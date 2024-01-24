@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 
+import { redirect } from 'react-router-dom';
+
 
 
 function Home() {
 
     return (
-        <h1>test</h1>
+        <h1>Home</h1>
     );
 };
 
