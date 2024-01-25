@@ -68,7 +68,7 @@ function App() {
         {Auth.loggedIn() && <Sidebar />}
         {/* {Auth.loggedIn() ? <Outlet /> : <SignUp />} */}
         {Auth.loggedIn() ? <Outlet />
-          : (location == 'login' ? <Login /> : <SignUp />)}
+          : (location == 'signup' ? <SignUp /> : <Login />)}
         {Auth.loggedIn() && <Footer />}
       </Provider>
     </ApolloProvider >

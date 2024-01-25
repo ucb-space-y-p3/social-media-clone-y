@@ -18,7 +18,10 @@ import Typography from '@mui/material/Typography';
 
 
 import { useState, useEffect } from 'react';
+import { redirect } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
+
+import Auth from '../../utils/auth';
 
 const drawerWidth = 240;
 
@@ -41,6 +44,12 @@ function Sidebar(props) {
             setMobileOpen(!mobileOpen);
         }
     };
+
+    const handleLogOut = () => {
+        // console.log('logging out');
+        Auth.logout();
+        redirect('/');
+    }
 
     const drawer = (
         <div>
@@ -65,6 +74,14 @@ function Sidebar(props) {
                         <ListItemText primary={"testkb"} />
                     </ListItemButton>
                 </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"testkb1"} />
+                    </ListItemButton>
+                </ListItem>
             </List>
             <Divider />
             <List>
@@ -84,6 +101,14 @@ function Sidebar(props) {
                             <InboxIcon />
                         </ListItemIcon>
                         <ListItemText primary={"tatata"} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding  onClick={handleLogOut}>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <InboxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Log Out"} />
                     </ListItemButton>
                 </ListItem>
             </List>
@@ -156,7 +181,7 @@ function Sidebar(props) {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
-                
+
             </Box>
         </Box>
     );
