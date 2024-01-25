@@ -28,20 +28,5 @@ export default function Footer() {
         <BottomNavigationAction label="Messages" value="messages" icon={<LocationOnIcon />} />
       </BottomNavigation>
     </Paper>
-
-
-    // <Box sx={{ width: 500 }}>
-    //   <BottomNavigation
-    //     // showLabels
-    //     value={value}
-    //     onChange={(event, newValue) => {
-    //       setValue(newValue);
-    //     }}
-    //   >
-    //     <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
-    //     <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
-    //     <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
-    //   </BottomNavigation>
-    // </Box>
   );
 }

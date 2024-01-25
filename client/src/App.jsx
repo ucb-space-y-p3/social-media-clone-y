@@ -69,8 +69,8 @@ function App() {
   // console.log(prefersDarkMode, 'test');
 
   const theme = createTheme({
-    mode: prefersDarkMode ? 'dark' : 'light',
     palette: {
+      mode: prefersDarkMode ? 'dark' : 'light',
       primary: {
         main: red[500],
       },
@@ -84,7 +84,7 @@ function App() {
           {/* <CssBaseline enableColorScheme /> */}
 
           {/* {Auth.loggedIn() && <Header />} */}
-          
+
           {Auth.loggedIn() ?
             (<Sidebar>
               <Outlet />
