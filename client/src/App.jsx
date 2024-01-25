@@ -13,6 +13,10 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { userReducer } from './utils/slices/userSlice';
 
+import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { red } from '@mui/material/colors';
 import './App.css';
 
 
@@ -56,20 +60,43 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+
 function App() {
 
   const location = useLocation().pathname.split('/')[1];
 
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  // console.log(prefersDarkMode, 'test');
+
+  const theme = createTheme({
+    mode: prefersDarkMode ? 'dark' : 'light',
+    palette: {
+      primary: {
+        main: red[500],
+      },
+    },
+  });
 
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        {/* {Auth.loggedIn() && <Header />} */}
-        {Auth.loggedIn() && <Sidebar />}
-        {/* {Auth.loggedIn() ? <Outlet /> : <SignUp />} */}
-        {Auth.loggedIn() ? <Outlet />
-          : (location == 'signup' ? <SignUp /> : <Login />)}
-        {Auth.loggedIn() && <Footer />}
+        <ThemeProvider theme={theme}>
+          {/* <CssBaseline enableColorScheme /> */}
+
+          {/* {Auth.loggedIn() && <Header />} */}
+          
+          {Auth.loggedIn() ?
+            (<Sidebar>
+              <Outlet />
+            </Sidebar>)
+            : (location == 'signup' ? <SignUp /> : <Login />)}
+
+          {/* {Auth.loggedIn() ? <Outlet />
+            : (location == 'signup' ? <SignUp /> : <Login />)} */}
+
+          {Auth.loggedIn() && <Footer />}
+
+        </ThemeProvider>
       </Provider>
     </ApolloProvider >
   );
