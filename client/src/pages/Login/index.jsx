@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 
-
-
 function Login() {
 
     return (

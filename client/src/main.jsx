@@ -6,6 +6,7 @@ import App from './App.jsx';
 import ErrorNoResource from './pages/ErrorNoResource';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import Chats from './pages/Chats';
 import Notifications from './pages/Notifications';
 import UserProfile from './pages/UserProfile';
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/signup',
-                element: <Login isSignUp />
+                element: <SignUp />
             },
             {
                 path: '/chats',

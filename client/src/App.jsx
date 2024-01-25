@@ -15,9 +15,13 @@ import { userReducer } from './utils/slices/userSlice';
 
 import './App.css';
 
-// import Header from './components/Header';
-// import Sidebar from './components/Sidebar';
-// import Footer from './components/Footer';
+
+import Auth from './utils/auth';
+import Login from './pages/Login';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
+import SignUp from './pages/SignUp';
 
 
 const rootReducer = combineReducers({
@@ -57,7 +61,7 @@ function App() {
     <ApolloProvider client={client}>
       <Provider store={store}>
         {/* <Header /> */}
-        <Outlet />
+        {Auth.loggedIn() ? <Outlet /> : <SignUp />}
         {/* <Sidebar /> */}
         {/* <Footer /> */}
       </Provider>
