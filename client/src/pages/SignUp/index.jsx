@@ -38,11 +38,12 @@ function SignUp() {
             console.log(mutationResponse);
             const token = mutationResponse.data.createUser.token;
             Auth.login(token);
+            // rtk here
             redirect('/');
         } catch (error) {
             console.log(error);
             // do a timed popup
-            
+
         }
     };
 
@@ -55,7 +56,7 @@ function SignUp() {
     };
 
     const testChange = (event) => {
-        console.log("test input change -sd", event.target.value)
+        console.log("test input change -", event.target.value);
     }
 
     const defaultTheme = createTheme();
@@ -80,7 +81,8 @@ function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleFormSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            {/* <Grid item xs={12} sm={6}> */}
+                            <Grid item xs={12}>
                                 <TextField
                                     autoComplete="given-name"
                                     name="username"
@@ -143,7 +145,7 @@ function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/login" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

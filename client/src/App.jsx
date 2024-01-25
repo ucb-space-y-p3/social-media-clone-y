@@ -6,7 +6,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -57,13 +57,19 @@ const client = new ApolloClient({
 });
 
 function App() {
+
+  const location = useLocation().pathname.split('/')[1];
+
+
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        {/* <Header /> */}
-        {Auth.loggedIn() ? <Outlet /> : <SignUp />}
+        {Auth.loggedIn() && <Header />}
+        {/* {Auth.loggedIn() ? <Outlet /> : <SignUp />} */}
+        {Auth.loggedIn() ? <Outlet />
+          : (location == 'login' ? <Login /> : <SignUp />)}
         {/* <Sidebar /> */}
-        {/* <Footer /> */}
+        {Auth.loggedIn() && <Footer />}
       </Provider>
     </ApolloProvider >
   );
