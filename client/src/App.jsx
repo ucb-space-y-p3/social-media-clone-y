@@ -64,11 +64,11 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        {Auth.loggedIn() && <Header />}
+        {/* {Auth.loggedIn() && <Header />} */}
+        {Auth.loggedIn() && <Sidebar />}
         {/* {Auth.loggedIn() ? <Outlet /> : <SignUp />} */}
         {Auth.loggedIn() ? <Outlet />
           : (location == 'login' ? <Login /> : <SignUp />)}
-        {/* <Sidebar /> */}
         {Auth.loggedIn() && <Footer />}
       </Provider>
     </ApolloProvider >
