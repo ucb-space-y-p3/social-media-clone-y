@@ -66,6 +66,7 @@ function App() {
   const location = useLocation().pathname.split('/')[1];
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  // const prefersDarkMode = null;
   // console.log(prefersDarkMode, 'test');
 
   const theme = createTheme({
@@ -75,6 +76,16 @@ function App() {
         main: red[500],
       },
     },
+    components: {
+      MuiContainer: {
+        styleOverrides: {
+          root: {
+            paddingTop: 75,
+            paddingBottom: 150,
+          },
+        }
+      }
+    }
   });
 
   return (
@@ -87,7 +98,8 @@ function App() {
 
           {Auth.loggedIn() ?
             (<Sidebar>
-              <Outlet />
+              {/* <Outlet /> */}
+              <Outlet id="testttkbbb" style={{ marginTop: 10}}/>
             </Sidebar>)
             :
             (location == 'signup' ?

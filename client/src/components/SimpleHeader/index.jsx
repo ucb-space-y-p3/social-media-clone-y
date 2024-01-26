@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import ModeNightIcon from '@mui/icons-material/ModeNight';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -35,7 +37,8 @@ export default function SimpleHeader() {
               right: 40
             }}
           >
-            <MenuIcon />
+            {/* <ModeNightIcon />  */}
+            <LightModeIcon />
           </IconButton>
 
           <img src={Y} alt="y logo" width="80" style={{

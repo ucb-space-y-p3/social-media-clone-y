@@ -9,15 +9,15 @@ import Post from '../../components/Post';
 function Search() {
 
     return (
-        <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
-            <Stack id='testkb' spacing={2}>
+        // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
+        <Container maxWidth="sm" sx={{}}>
+            <Stack spacing={2}>
                 <h1>Search</h1>
                 {[...Array(20)].map((_, index) => (
                     <Post key={index} />
                 ))}
                 <h1>Last</h1>
             </Stack>
-
         </Container>
     );
 };

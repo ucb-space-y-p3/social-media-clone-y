@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../../utils/auth';
@@ -18,18 +18,15 @@ import Drawer from '@mui/material/Drawer';
 
 import CottageIcon from '@mui/icons-material/Cottage';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-// import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
-// import InboxIcon from '@mui/icons-material/MoveToInbox';
-// import MailIcon from '@mui/icons-material/Mail';
-// import MenuIcon from '@mui/icons-material/Menu';
+import ModeNightIcon from '@mui/icons-material/ModeNight';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-// import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import Avatar from '@mui/material/Avatar';
 
 import List from '@mui/material/List';
@@ -56,6 +53,7 @@ function Sidebar({ children }) {
     // const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
+    const navigate = useNavigate();
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -75,7 +73,11 @@ function Sidebar({ children }) {
     const handleLogOut = () => {
         // console.log('logging out');
         Auth.logout();
-        redirect('/');
+    }
+
+    const handleDirection = (newPage) => {
+        console.log(`/${newPage}`)
+        navigate(`/${newPage}`);
     }
 
     const settingsDrawer = (
@@ -94,10 +96,14 @@ function Sidebar({ children }) {
                 }}>
                 <Avatar>WX</Avatar>
                 <Typography noWrap>TesterGuy</Typography>
+                <IconButton sx={{}}>
+                    {/* <ModeNightIcon />  */}
+                    <LightModeIcon />
+                </IconButton>
             </Stack>
             <Divider />
             <List>
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={(() => handleDirection(''))}>
                     <ListItemButton>
                         <ListItemIcon>
 
@@ -107,7 +113,7 @@ function Sidebar({ children }) {
 
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={(() => handleDirection('notifications'))}>
                     <ListItemButton>
                         <ListItemIcon>
 
@@ -117,7 +123,7 @@ function Sidebar({ children }) {
 
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={(() => handleDirection('search'))}>
                     <ListItemButton>
                         <ListItemIcon>
 
@@ -127,7 +133,7 @@ function Sidebar({ children }) {
 
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={(() => handleDirection('favorites'))}>
                     <ListItemButton>
                         <ListItemIcon>
 
@@ -137,7 +143,7 @@ function Sidebar({ children }) {
 
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={(() => handleDirection('me'))}>
                     <ListItemButton>
                         <ListItemIcon>
 
@@ -150,7 +156,7 @@ function Sidebar({ children }) {
             </List>
             <Divider />
             <List>
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={(() => handleDirection('me/settings'))}>
                     <ListItemButton>
                         <ListItemIcon>
 
@@ -173,8 +179,6 @@ function Sidebar({ children }) {
     );
 
     const chatsDrawer = (
-
-
         <Box >
             <AppBar
                 position="fixed"
@@ -195,8 +199,6 @@ function Sidebar({ children }) {
                 </Toolbar>
             </AppBar>
             <Divider />
-
-
             <List sx={{ paddingTop: 8, paddingBottom: 24 }}>
                 <ListItem disablePadding >
                     <ListItemButton>
@@ -496,8 +498,6 @@ function Sidebar({ children }) {
                 </Toolbar>
             </AppBar>
 
-
-
             <Box
                 component="nav"
                 sx={{ width: { md: meduimDrawerWidth, lg: largeDrawerWidth }, flexShrink: { md: 0 } }}
@@ -567,6 +567,7 @@ function Sidebar({ children }) {
             >
                 {children}
             </Box>
+
         </Box >
     );
 };
