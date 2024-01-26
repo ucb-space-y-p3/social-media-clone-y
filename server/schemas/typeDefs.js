@@ -17,6 +17,7 @@ const typeDefs = `
     # likedPosts: [Post]
     # likedComments: [Comment]
     settings: Settings
+    chats: [Chat]
   }
 
   type Settings {
@@ -71,6 +72,9 @@ const typeDefs = `
     creator: String
     createdAt: String
   }
+  type Subscription {
+    messageSent(chatId: ID!): Message
+  }
 
   type Auth {
     token: ID!
@@ -90,7 +94,7 @@ const typeDefs = `
     getComments(postId: ID!): [Comment]
     getChat(chatId: ID!): Chat
     getChats: [Chat]
-    getMessages(chatId: ID!): [Message]
+    getMessages(chatId: ID!): [Message]  
     getNotifications: [Notification]
     # dev methods
     getUsers: [User]
@@ -118,14 +122,11 @@ const typeDefs = `
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!, username: String!): Comment
     deleteComment(postId: ID!, commentId: ID!): Comment
+sendMessage(chatId: ID!, content: String!, username: String!): Message
+createChat(recipients: [String]!): Chat
+deleteChat(chatId: ID!): Chat
+clearNotifications: User
 
-
-
-    # websocket stuff
-    createChat(recipientIds: [ID]!, firstMessage: String!): Chat
-    leaveChat(chatId: ID!): Chat
-    clearNotifications(notificationIds: [ID]!): [Notification]
-    # add more here
 
   }
 `;
