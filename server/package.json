@@ -12,9 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.10.0",
+    "@graphql-tools/schema": "^10.0.2",
     "bcrypt": "^4.0.1",
     "express": "^4.17.1",
     "graphql": "^16.8.1",
+    "graphql-ws": "^5.14.3",
     "jsonwebtoken": "^8.5.1",
     "luxon": "^3.4.4",
     "mongoose": "^7.0.2"
