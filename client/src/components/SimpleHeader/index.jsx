@@ -14,21 +14,19 @@ import { useMutation } from '@apollo/client';
 
 // import Auth from '../../utils/auth';
 
-import Sidebar from '../Sidebar';
-
-export default function Header() {
+export default function SimpleHeader() {
 
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
-        <Toolbar>
+        <Toolbar sx={{ flexDirection: 'row-reverse' }}>
           <IconButton
             size="large"
             // edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            // sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>

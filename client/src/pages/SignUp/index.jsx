@@ -2,8 +2,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -59,10 +57,10 @@ function SignUp() {
         console.log("test input change -", event.target.value);
     }
 
-    const defaultTheme = createTheme();
+    // const defaultTheme = createTheme();
 
     return (
-        <ThemeProvider theme={defaultTheme}>
+        // <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -94,17 +92,6 @@ function SignUp() {
                                     onChange={handleChange}
                                 />
                             </Grid>
-                            {/* <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="family-name"
-                                    onChange={handleChange}
-                                />
-                            </Grid> */}
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -128,12 +115,6 @@ function SignUp() {
                                     onChange={handleChange}
                                 />
                             </Grid>
-                            {/* <Grid item xs={12}>
-                    <FormControlLabel
-                      control={<Checkbox value="allowExtraEmails" color="primary" />}
-                      label="I want to receive inspiration, marketing promotions and updates via email."
-                    />
-                  </Grid> */}
                         </Grid>
                         <Button
                             type="submit"
@@ -152,9 +133,8 @@ function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
-                {/* <Copyright sx={{ mt: 5 }} /> */}
             </Container>
-        </ThemeProvider>
+        // {/* </ThemeProvider> */}
     );
 };
 

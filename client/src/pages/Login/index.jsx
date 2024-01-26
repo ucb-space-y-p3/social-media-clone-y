@@ -54,10 +54,10 @@ function Login() {
         console.log("test input change -", event.target.value);
     }
 
-    const defaultTheme = createTheme();
+    // const defaultTheme = createTheme();
 
     return (
-        <ThemeProvider theme={defaultTheme}>
+        // <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -118,7 +118,7 @@ function Login() {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
+        // </ThemeProvider>
     );
 };
 

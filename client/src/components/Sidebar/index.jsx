@@ -57,19 +57,10 @@ function Sidebar({ children }) {
 
     const drawer = (
         <div>
-            <Toolbar />
+            {/* <Toolbar /> */}
+            <h1>test</h1>
             <Divider />
             <List>
-                {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))} */}
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>

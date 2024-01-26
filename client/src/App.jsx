@@ -22,7 +22,7 @@ import './App.css';
 
 import Auth from './utils/auth';
 import Login from './pages/Login';
-import Header from './components/Header';
+import SimpleHeader from './components/SimpleHeader';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import SignUp from './pages/SignUp';
@@ -89,7 +89,17 @@ function App() {
             (<Sidebar>
               <Outlet />
             </Sidebar>)
-            : (location == 'signup' ? <SignUp /> : <Login />)}
+            :
+            (location == 'signup' ?
+              (<>
+                <SimpleHeader />
+                <SignUp />
+              </>)
+              :
+              (<>
+                <SimpleHeader />
+                <Login />
+              </>))}
 
           {/* {Auth.loggedIn() ? <Outlet />
             : (location == 'signup' ? <SignUp /> : <Login />)} */}
