@@ -4,13 +4,13 @@ import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../../utils/auth';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+// import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
+// import Paper from '@mui/material/Paper';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -18,16 +18,18 @@ import Drawer from '@mui/material/Drawer';
 
 import CottageIcon from '@mui/icons-material/Cottage';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+// import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
+// import InboxIcon from '@mui/icons-material/MoveToInbox';
+// import MailIcon from '@mui/icons-material/Mail';
+// import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+// import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import Avatar from '@mui/material/Avatar';
 
 import List from '@mui/material/List';
@@ -171,222 +173,267 @@ function Sidebar({ children }) {
     );
 
     const chatsDrawer = (
-        <Box style={{ zIndex: 10000000000 }}>
-            <Paper elevation={10} sx={{
-                // padding: 2,
-                position: 'sticky',
-                top: 0,
-                
-                // backgroundColor: 'red'
-            }}>
-                <Stack spacing={2} direction="row" alignItems="center" justifyContent="center"
-                    sx={{
-                        // padding: 2,
-                        // position: 'sticky',
-                        // top: 0
-                    }}>
+
+
+        <Box >
+            <AppBar
+                position="fixed"
+                sx={{
+                    height: 65,
+                    width: {
+                        md: `${meduimDrawerWidth}px`,
+                        lg: ` ${largeDrawerWidth}px`
+                    },
+                    left: 0,
+                }}
+            >
+                <Toolbar sx={{
+                    flexGrow: 1,
+                    justifyContent: "center"
+                }}>
                     <Typography noWrap>Chatrooms</Typography>
-                </Stack>
-            </Paper>
+                </Toolbar>
+            </AppBar>
             <Divider />
-            <List>
-                <ListItem disablePadding>
+
+
+            <List sx={{ paddingTop: 8, paddingBottom: 24 }}>
+                <ListItem disablePadding >
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar>WXZ</Avatar>
+                            <PersonIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        <ListItemText primary={"testkb"} />
+                        <ListItemText primary={"first"} />
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 33333</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <Typography noWrap>person 1, person 2, person 3</Typography>
                     </ListItemButton>
                 </ListItem>
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <Avatar></Avatar>
+                            <PeopleAltIcon sx={{
+                                marginTop: 1,
+                                marginBottom: 1,
+                                marginLeft: 1
+                            }} />
                         </ListItemIcon>
                         {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"person 1, person 2, person 3"} />
+                        <ListItemText primary={"last"} />
                     </ListItemButton>
                 </ListItem>
             </List>
-            {/* <List>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <InboxIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"tatata"} />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding onClick={handleLogOut}>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <InboxIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Log Out"} />
-                    </ListItemButton>
-                </ListItem>
-            </List>  */}
+
         </Box>
     );
 
@@ -423,7 +470,6 @@ function Sidebar({ children }) {
                             left: 40
                         }}
                     >
-                        {/* <MenuIcon /> */}
                         <Avatar>WX</Avatar>
                     </IconButton>
                     <IconButton
@@ -439,7 +485,6 @@ function Sidebar({ children }) {
                             right: 25
                         }}
                     >
-                        {/* <MenuIcon /> */}
                         <Avatar>WX</Avatar>
                     </IconButton>
 
@@ -447,13 +492,6 @@ function Sidebar({ children }) {
                         position: 'absolute',
                         top: -35,
                     }} />
-
-                    {/* <YIcon /> */}
-
-                    {/* <Typography variant="h6" noWrap component="div">
-                        Y
-                    </Typography> */}
-
 
                 </Toolbar>
             </AppBar>
