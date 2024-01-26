@@ -8,15 +8,27 @@ import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 
+import CottageIcon from '@mui/icons-material/Cottage';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import SearchIcon from '@mui/icons-material/Search';
+import TuneIcon from '@mui/icons-material/Tune';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+import Avatar from '@mui/material/Avatar';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -64,31 +76,300 @@ function Sidebar({ children }) {
         redirect('/');
     }
 
-    const drawer = (
-        <div>
+    const settingsDrawer = (
+        <div style={{ paddingLeft: 8 }}>
             {/* <Toolbar /> */}
-            <h1>test</h1>
+            {/* <Container sx={{
+                display: 'flex',
+                justifyContent: 'center',
+
+            }}>
+
+            </Container> */}
+            <Stack spacing={2} direction="row" alignItems="center" justifyContent=""
+                sx={{
+                    padding: 2,
+                }}>
+                <Avatar>WX</Avatar>
+                <Typography noWrap>TesterGuy</Typography>
+            </Stack>
             <Divider />
             <List>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <MailIcon />
+
+                            <CottageIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"testkb"} />
+                        <ListItemText primary={"Home"} />
+
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <MailIcon />
+
+                            <NotificationsIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"testkb1"} />
+                        <ListItemText primary={"Notifications"} />
+
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+
+                            <SearchIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Search"} />
+
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+
+                            <FavoriteIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Favorites"} />
+
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+
+                            <PersonIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Profile"} />
+
                     </ListItemButton>
                 </ListItem>
             </List>
             <Divider />
             <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+
+                            <TuneIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Settings"} />
+
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding onClick={handleLogOut}>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Log Out"} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </div>
+    );
+
+    const chatsDrawer = (
+        <Box style={{ zIndex: 10000000000 }}>
+            <Paper elevation={10} sx={{
+                // padding: 2,
+                position: 'sticky',
+                top: 0,
+                
+                // backgroundColor: 'red'
+            }}>
+                <Stack spacing={2} direction="row" alignItems="center" justifyContent="center"
+                    sx={{
+                        // padding: 2,
+                        // position: 'sticky',
+                        // top: 0
+                    }}>
+                    <Typography noWrap>Chatrooms</Typography>
+                </Stack>
+            </Paper>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar>WXZ</Avatar>
+                        </ListItemIcon>
+                        <ListItemText primary={"testkb"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <Avatar></Avatar>
+                        </ListItemIcon>
+                        {/* make the list item text turn into ellipsis */}
+                        <ListItemText primary={"person 1, person 2, person 3"} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+            {/* <List>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
@@ -105,9 +386,10 @@ function Sidebar({ children }) {
                         <ListItemText primary={"Log Out"} />
                     </ListItemButton>
                 </ListItem>
-            </List>
-        </div>
+            </List>  */}
+        </Box>
     );
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -141,7 +423,8 @@ function Sidebar({ children }) {
                             left: 40
                         }}
                     >
-                        <MenuIcon />
+                        {/* <MenuIcon /> */}
+                        <Avatar>WX</Avatar>
                     </IconButton>
                     <IconButton
                         color="inherit"
@@ -156,13 +439,14 @@ function Sidebar({ children }) {
                             right: 25
                         }}
                     >
-                        <MenuIcon />
+                        {/* <MenuIcon /> */}
+                        <Avatar>WX</Avatar>
                     </IconButton>
 
                     <img src={Y} alt="y logo" width="80" style={{
                         position: 'absolute',
                         top: -35,
-                    }}/>
+                    }} />
 
                     {/* <YIcon /> */}
 
@@ -194,7 +478,7 @@ function Sidebar({ children }) {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: smallDrawerWidth },
                     }}
                 >
-                    {drawer}
+                    {settingsDrawer}
                 </Drawer>
                 <Drawer
                     variant="temporary"
@@ -210,7 +494,7 @@ function Sidebar({ children }) {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: smallDrawerWidth },
                     }}
                 >
-                    {drawer}
+                    {settingsDrawer}
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -220,7 +504,7 @@ function Sidebar({ children }) {
                     }}
                     open
                 >
-                    {drawer}
+                    {chatsDrawer}
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -231,7 +515,7 @@ function Sidebar({ children }) {
                     }}
                     open
                 >
-                    {drawer}
+                    {settingsDrawer}
                 </Drawer>
             </Box>
 
