@@ -6,13 +6,13 @@ import Stack from '@mui/material/Stack';
 
 import Post from '../../components/Post';
 
-function Search() {
+function Favorites() {
 
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
         <Container maxWidth="sm" sx={{}}>
             <Stack spacing={2}>
-                <h1>Search</h1>
+                <h1>Favorites</h1>
                 {[...Array(20)].map((_, index) => (
                     <Post key={index} />
                 ))}
@@ -22,4 +22,4 @@ function Search() {
     );
 };
 
-export default Search;
+export default Favorites;

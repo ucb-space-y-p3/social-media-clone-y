@@ -433,7 +433,7 @@ const resolvers = {
       }
     },
     // agith
-    deleteUser: async (parent, { userId, password}, context) => {
+    deleteUser: async (parent, { userId, password }, context) => {
       try {
         // if (context.user) {
 
@@ -518,7 +518,7 @@ const resolvers = {
         // throw AuthenticationError;
 
         // dev code
-        const friendRequest = await FriendRequest.findOneAndDelete({ _id: requestId });
+        const friendRequest = await FriendRequest.findByIdAndDelete(requestId);
 
         if (!friendRequest) {
           return RequestNotFoundError;
@@ -628,41 +628,41 @@ const resolvers = {
       }
     },
     // agith
-    deleteRequest: async (parent, { requestId }, context) => {
-      try {
-        // if (context.user) {
+    // deleteRequest: async (parent, { requestId }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
-        const friendRequest = await FriendRequest.findByIdAndDelete(requestId);
+    //     // dev code
+    //     const friendRequest = await FriendRequest.findByIdAndDelete(requestId);
 
-        if (!friendRequest) {
-          throw RequestNotFoundError;
-        };
+    //     if (!friendRequest) {
+    //       throw RequestNotFoundError;
+    //     };
 
-        const user = await User.findOneAndUpdate(
-          { _id: friendRequest.targetId },
-          {
-            $pull: { friendRequests: requestId }
-          },
-          {
-            new: true,
-            runValidators: true
-          }
-        )
-        if (!user) {
-          throw UserNotFoundError;
-        };
+    //     const user = await User.findOneAndUpdate(
+    //       { _id: friendRequest.targetId },
+    //       {
+    //         $pull: { friendRequests: requestId }
+    //       },
+    //       {
+    //         new: true,
+    //         runValidators: true
+    //       }
+    //     )
+    //     if (!user) {
+    //       throw UserNotFoundError;
+    //     };
 
-        return friendRequest;
+    //     return friendRequest;
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     // agith
     createPost: async (parent, { username, content }, context) => {
       try {

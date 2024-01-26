@@ -3,11 +3,11 @@ import { useMutation } from '@apollo/client';
 
 
 
-function Chat() {
+function ErrorNoResource() {
 
     return (
-        <h1>Chat</h1>
+        <h1>Error</h1>
     );
 };
 
-export default Chat;
+export default ErrorNoResource;
