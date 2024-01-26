@@ -810,20 +810,20 @@ const resolvers = {
       }
     },
     // not necessary
-    leaveChat: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+    // leaveChat: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
     try {
       //save message to db
