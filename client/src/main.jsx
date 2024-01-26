@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Chats from './pages/Chats';
+import Favorites from './pages/Favorites';
+import Search from './pages/Search';
 import Notifications from './pages/Notifications';
 import UserProfile from './pages/UserProfile';
 import Settings from './pages/Settings';
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
             {
                 path: '/chats',
                 element: <Chats />
+            },
+            {
+                path: '/favorites',
+                element: <Favorites />
+            },
+            {
+                path: '/search',
+                element: <Search />
             },
             {
                 path: '/notifications',

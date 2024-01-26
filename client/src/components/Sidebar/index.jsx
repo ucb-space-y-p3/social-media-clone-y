@@ -1,3 +1,9 @@
+import { useState, useEffect } from 'react';
+import { redirect } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
+
+import Auth from '../../utils/auth';
+
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,14 +26,17 @@ import ListItemText from '@mui/material/ListItemText';
 
 import Typography from '@mui/material/Typography';
 
+import Y from '../../assets/fancy_Y.svg';
 
-import { useState, useEffect } from 'react';
-import { redirect } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
+// import { createSvgIcon } from '@mui/material/utils';
 
-import Auth from '../../utils/auth';
+// const YIcon = createSvgIcon(Y);
 
-const drawerWidth = 240;
+
+const largeDrawerWidth = 400;
+const meduimDrawerWidth = 320;
+const smallDrawerWidth = 240;
+
 
 function Sidebar({ children }) {
     // const { window } = props;
@@ -106,23 +115,62 @@ function Sidebar({ children }) {
             <AppBar
                 position="fixed"
                 sx={{
-                    width: { md: `calc(100% - ${drawerWidth}px)` },
-                    ml: { md: `${drawerWidth}px` },
+                    height: 80,
+                    width: {
+                        md: `calc(100% - ${meduimDrawerWidth}px)`,
+                        lg: `calc(100% - ${meduimDrawerWidth + largeDrawerWidth}px)`
+                    },
+                    ml: { md: `${meduimDrawerWidth}px`, lg: `${largeDrawerWidth}px` },
+                    mr: { lg: `${meduimDrawerWidth}px` },
                 }}
             >
-                <Toolbar>
+                <Toolbar sx={{
+                    flexGrow: 1,
+                    justifyContent: "center"
+                }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { md: 'none' } }}
+                        sx={{
+                            mr: 2,
+                            display: { md: 'none' },
+                            position: "absolute",
+                            top: 15,
+                            left: 40
+                        }}
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Responsive drawer
-                    </Typography>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={handleDrawerToggle}
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'none', md: 'block', lg: 'none' },
+                            position: "absolute",
+                            top: 15,
+                            right: 25
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+
+                    <img src={Y} alt="y logo" width="80" style={{
+                        position: 'absolute',
+                        top: -35,
+                    }}/>
+
+                    {/* <YIcon /> */}
+
+                    {/* <Typography variant="h6" noWrap component="div">
+                        Y
+                    </Typography> */}
+
+
                 </Toolbar>
             </AppBar>
 
@@ -130,7 +178,7 @@ function Sidebar({ children }) {
 
             <Box
                 component="nav"
-                sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+                sx={{ width: { md: meduimDrawerWidth, lg: largeDrawerWidth }, flexShrink: { md: 0 } }}
                 aria-label="mailbox folders"
             >
                 <Drawer
@@ -143,7 +191,23 @@ function Sidebar({ children }) {
                     }}
                     sx={{
                         display: { xs: 'block', md: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: smallDrawerWidth },
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+                <Drawer
+                    variant="temporary"
+                    open={mobileOpen}
+                    onTransitionEnd={handleDrawerTransitionEnd}
+                    onClose={handleDrawerClose}
+                    anchor="right"
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                    sx={{
+                        display: { xs: 'none', md: 'block', lg: 'none' },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: smallDrawerWidth },
                     }}
                 >
                     {drawer}
@@ -152,7 +216,18 @@ function Sidebar({ children }) {
                     variant="permanent"
                     sx={{
                         display: { xs: 'none', md: 'block' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: { md: meduimDrawerWidth, lg: largeDrawerWidth } },
+                    }}
+                    open
+                >
+                    {drawer}
+                </Drawer>
+                <Drawer
+                    variant="permanent"
+                    anchor="right"
+                    sx={{
+                        display: { xs: 'none', lg: 'block' },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: meduimDrawerWidth },
                     }}
                     open
                 >
@@ -160,16 +235,17 @@ function Sidebar({ children }) {
                 </Drawer>
             </Box>
 
-
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, width: { md: `calc(100% - ${drawerWidth}px)` } }}
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    mr: { lg: `${meduimDrawerWidth}px` },
+                }}
             >
-
                 {children}
-
             </Box>
-        </Box>
+        </Box >
     );
 };
 

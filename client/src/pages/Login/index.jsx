@@ -34,7 +34,7 @@ function Login() {
             const token = mutationResponse.data.login.token;
             Auth.login(token);
             // rtk here
-            redirect('/');
+            // redirect('/');
         } catch (error) {
             console.log(error);
             // do a timed popup
