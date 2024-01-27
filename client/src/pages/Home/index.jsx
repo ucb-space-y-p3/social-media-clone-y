@@ -12,7 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 
-import Post from '../../components/Post';
+import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
 
 function Home() {
@@ -49,7 +49,7 @@ function Home() {
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Home</h1>
                 {[...Array(20)].map((_, index) => (
-                    <Post key={index} />
+                    <PostCard key={index} />
                 ))}
                 <h1>Last</h1>
             </Stack>

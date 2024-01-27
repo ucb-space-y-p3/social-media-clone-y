@@ -7,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Paper';
 
-import Post from '../../components/Post';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
 
 function Settings() {

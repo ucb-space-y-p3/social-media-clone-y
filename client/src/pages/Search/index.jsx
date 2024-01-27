@@ -11,7 +11,6 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TextField from '@mui/material/TextField';
 
-import Post from '../../components/Post';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
 
 function Search() {

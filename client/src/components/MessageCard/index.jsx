@@ -3,11 +3,11 @@ import { useMutation } from '@apollo/client';
 
 
 
-function Message() {
+function MessageCard() {
 
     return (
-        <h1>Message</h1>
+        <h1>MessageCard</h1>
     );
 };
 
-export default Message;
+export default MessageCard;

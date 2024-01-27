@@ -10,6 +10,8 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleThemeMode, } from '../../utils/slices/userSlice';
 
 import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
@@ -21,6 +23,8 @@ import Y from '../../assets/fancy_Y.svg';
 
 export default function SimpleHeader() {
 
+  const themeMode = useSelector((state) => state.userState.settings.mode);
+  const dispatch = useDispatch()
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -30,15 +34,18 @@ export default function SimpleHeader() {
             color="inherit"
             aria-label="open drawer"
             edge="start"
-            // onClick={}
+            onClick={() => dispatch(toggleThemeMode())}
             sx={{
               position: "absolute",
               top: 15,
               right: 40
             }}
           >
-            {/* <ModeNightIcon />  */}
-            <LightModeIcon />
+            {themeMode === 'dark' ?
+              <LightModeIcon />
+              :
+              <ModeNightIcon />
+            }
           </IconButton>
 
           <img src={Y} alt="y logo" width="80" style={{

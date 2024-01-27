@@ -11,12 +11,16 @@ import { combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
-import { userReducer } from './utils/slices/userSlice';
+import userReducer from './utils/slices/userSlice';
+
+import { useSelector, useDispatch } from 'react-redux';
+
 
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { red } from '@mui/material/colors';
+import Box from '@mui/material/Box';
 import './App.css';
 
 
@@ -60,17 +64,20 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+
+
+
+
 function App() {
 
-  const location = useLocation().pathname.split('/')[1];
+  const themeMode = useSelector((state) => state.userState.settings.mode);
 
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  // const prefersDarkMode = null;
-  // console.log(prefersDarkMode, 'test');
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? 'dark' : 'light',
+      // mode: prefersDarkMode ? 'dark' : 'light',
+      mode: themeMode,
       primary: {
         main: red[500],
       },
@@ -93,41 +100,52 @@ function App() {
       },
     }
   });
+  
+
+  const location = useLocation().pathname.split('/')[1];
+
+
+  return (
+    <ThemeProvider theme={theme}>
+      {
+        Auth.loggedIn() ?
+          (<Sidebar>
+            {/* <Outlet /> */}
+            <Outlet style={{ marginTop: 10 }} />
+          </Sidebar>)
+          :
+          (location == 'signup' ?
+            (<>
+              <SimpleHeader />
+              <SignUp />
+            </>)
+            :
+            (<>
+              <SimpleHeader />
+              <Login />
+            </>))
+      }
+
+      {Auth.loggedIn() && <Footer />}
+    </ThemeProvider>
+  );
+}
+
+
+
+export default function wrappedApp() {
+
+
 
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          {/* <CssBaseline enableColorScheme /> */}
 
-          {/* {Auth.loggedIn() && <Header />} */}
+        {/* <CssBaseline enableColorScheme /> */}
+        <App />
 
-          {Auth.loggedIn() ?
-            (<Sidebar>
-              {/* <Outlet /> */}
-              <Outlet style={{ marginTop: 10 }} />
-            </Sidebar>)
-            :
-            (location == 'signup' ?
-              (<>
-                <SimpleHeader />
-                <SignUp />
-              </>)
-              :
-              (<>
-                <SimpleHeader />
-                <Login />
-              </>))}
 
-          {/* {Auth.loggedIn() ? <Outlet />
-            : (location == 'signup' ? <SignUp /> : <Login />)} */}
-
-          {Auth.loggedIn() && <Footer />}
-
-        </ThemeProvider>
       </Provider>
     </ApolloProvider >
-  );
-}
-
-export default App;
+  )
+};

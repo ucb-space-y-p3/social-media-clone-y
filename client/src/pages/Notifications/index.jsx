@@ -9,7 +9,7 @@ import Tab from '@mui/material/Tab';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
-import Post from '../../components/Post';
+import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
 
 function Notifications() {
@@ -47,7 +47,7 @@ function Notifications() {
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Nofitications</h1>
                 {[...Array(20)].map((_, index) => (
-                    <Post key={index} />
+                    <PostCard key={index} />
                 ))}
                 <h1>Last</h1>
             </Stack>

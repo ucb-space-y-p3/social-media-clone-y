@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleThemeMode, } from '../../utils/slices/userSlice';
+
 import Auth from '../../utils/auth';
 
 import ScrollToTopSide from '../ScrollToTopSide';
@@ -55,6 +58,11 @@ const smallDrawerWidth = 240;
 
 
 function Sidebar({ children }) {
+
+    const themeMode = useSelector((state) => state.userState.settings.mode);
+    const dispatch = useDispatch()
+
+
     // const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
@@ -105,9 +113,13 @@ function Sidebar({ children }) {
                 }}>
                 <Avatar>WX</Avatar>
                 <Typography noWrap>TesterGuy</Typography>
-                <IconButton sx={{}}>
-                    {/* <ModeNightIcon />  */}
-                    <LightModeIcon />
+                <IconButton onClick={() => dispatch(toggleThemeMode())}
+                    sx={{}}>
+                    {themeMode === 'dark' ?
+                        <LightModeIcon />
+                        :
+                        <ModeNightIcon />
+                    }
                 </IconButton>
             </Stack>
             <Divider />
