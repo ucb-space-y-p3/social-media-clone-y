@@ -340,10 +340,29 @@ const resolvers = {
   },
   Subscription:  {
     messageSent:{
-      subscribe: (parent, { chatId }, { pubsub }) => {
-        return pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`);
+      messageSent: {
+        subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
       },
+      messageReceived: {
+        subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
+      },
+      userConnected: {
+        subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_CONNECTED_${userId}`)
+      },
+      userDisconnected: {
+        subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_DISCONNECTED_${userId}`)
+      },
+      friendAdded: {
+        subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_ADDED_${userId}_${friendId}`)
+      },
+      friendRemoved: {
+        subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_REMOVED_${userId}_${friendId}`)
+      },
+      friendRequestAccepted: {
+        subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
+      }
     },
+
     },
 
   
@@ -797,19 +816,28 @@ const resolvers = {
     // not necessary
     createChat: async (parent, { }, context) => {
       try {
-        // if (context.user) {
+        if (context.user) {
 
         // }
-        // throw AuthenticationError;
-
-        // dev code
-
+         throw AuthenticationError;
+        }
+        //create a new chat with db
+        const chat = await Chat.create({ recipients });
+        return chat;
       } catch (error) {
-        console.log(error);
+        console.error('Error al crear el chat:', error);
         throw error;
       }
     },
-    // not necessary
+  },
+        // dev code
+
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
     // leaveChat: async (parent, { }, context) => {
     //   try {
     //     // if (context.user) {
@@ -861,7 +889,7 @@ const resolvers = {
   // websocket
   // Subscriptions: {
 
-  // },
+  //   messageSent: { 
 };
 
 module.exports = resolvers;

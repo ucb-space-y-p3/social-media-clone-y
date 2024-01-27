@@ -23,7 +23,7 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 // new ws server
 const wsServer=new WebSocketServer({
   server:httpServer,
-  path:'/suscriptions'//probchane
+  path:'/subscriptions'//probchane
 
 });
 //use the ws en graphql-ws
