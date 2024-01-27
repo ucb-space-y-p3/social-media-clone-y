@@ -60,7 +60,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-
 function App() {
 
   const location = useLocation().pathname.split('/')[1];
@@ -84,7 +83,14 @@ function App() {
             paddingBottom: 150,
           },
         }
-      }
+      },
+      MuiFormControl: {
+        styleOverrides: {
+          root: {
+            width: '100%'
+          },
+        }
+      },
     }
   });
 
@@ -99,7 +105,7 @@ function App() {
           {Auth.loggedIn() ?
             (<Sidebar>
               {/* <Outlet /> */}
-              <Outlet id="testttkbbb" style={{ marginTop: 10}}/>
+              <Outlet style={{ marginTop: 10 }} />
             </Sidebar>)
             :
             (location == 'signup' ?
