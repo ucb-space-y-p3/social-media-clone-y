@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 import { WebSocketLink } from 'graphql-ws';
 import { setContext } from '@apollo/client/link/context';
-import { WebSocketLink } from '@apollo/client/link/ws';
+// import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { Outlet, useLocation } from 'react-router-dom';
 import { combineReducers } from 'redux';

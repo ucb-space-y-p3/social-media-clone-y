@@ -338,8 +338,8 @@ const resolvers = {
       }
     },
   },
-  Subscription:  {
-    messageSent:{
+  Subscription: {
+    messageSent: {
       messageSent: {
         subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
       },
@@ -363,9 +363,9 @@ const resolvers = {
       }
     },
 
-    },
+  },
 
-  
+
   Mutation: {
     // agith
     login: async (parent, { email, password }) => {
@@ -818,8 +818,8 @@ const resolvers = {
       try {
         if (context.user) {
 
-        // }
-         throw AuthenticationError;
+          // }
+          throw AuthenticationError;
         }
         //create a new chat with db
         const chat = await Chat.create({ recipients });
@@ -829,47 +829,24 @@ const resolvers = {
         throw error;
       }
     },
-  },
-        // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // // not necessary
-    // leaveChat: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
     sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
-    try {
-      //save message to db
-      const newMessage = await Message.create({
-        chatId,
-        content,
-        creator: username,
-        createdAt: new Date().toISOString(),
-      });
-      //add message to chat of suscribes
-      pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: newMessage });
-    return newMessage;
-    }catch (error) {
-      console.log(error);
-      throw error;
-    }
+      try {
+        //save message to db
+        const newMessage = await Message.create({
+          chatId,
+          content,
+          creator: username,
+          createdAt: new Date().toISOString(),
+        });
+        //add message to chat of suscribes
+        pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: newMessage });
+        return newMessage;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     },
-    
+
     // not necessary
     clearNotifications: async (parent, { }, context) => {
       try {
@@ -886,10 +863,8 @@ const resolvers = {
       }
     },
   },
-  // websocket
-  // Subscriptions: {
 
-  //   messageSent: { 
+
 };
 
 module.exports = resolvers;
