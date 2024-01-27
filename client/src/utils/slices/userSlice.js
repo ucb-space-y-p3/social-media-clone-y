@@ -1,15 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import useMediaQuery from '@mui/material/useMediaQuery';
-
-// const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
 
 const INITIAL_STATE = {
   posts: [],
+  comments: [],
   friends: [],
-  friendRequests: [],
-  activeChats: [],
-  notifications: [],
   settings: {
     mode: 'dark',
 
@@ -29,6 +23,12 @@ const userSlice = createSlice({
             } else {
                 state.settings.mode = 'light';
             }
+        },
+        addPost: (state, action) => {
+            state.posts = [...state.posts, action.payload.post];
+        },
+        addPosts: (state, action) => {
+            state.posts = [...state.posts, ...action.payload.posts];
         }
     }
 })

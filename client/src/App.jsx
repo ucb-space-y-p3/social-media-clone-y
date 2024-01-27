@@ -34,6 +34,7 @@ import SignUp from './pages/SignUp';
 
 const rootReducer = combineReducers({
   userState: userReducer,
+  
 })
 
 const store = configureStore({
@@ -72,11 +73,8 @@ function App() {
 
   const themeMode = useSelector((state) => state.userState.settings.mode);
 
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
   const theme = createTheme({
     palette: {
-      // mode: prefersDarkMode ? 'dark' : 'light',
       mode: themeMode,
       primary: {
         main: red[500],
@@ -100,7 +98,7 @@ function App() {
       },
     }
   });
-  
+
 
   const location = useLocation().pathname.split('/')[1];
 
@@ -140,10 +138,8 @@ export default function wrappedApp() {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-
         {/* <CssBaseline enableColorScheme /> */}
         <App />
-
 
       </Provider>
     </ApolloProvider >
