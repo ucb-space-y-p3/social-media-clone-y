@@ -31,8 +31,8 @@ export default function Footer() {
           display: { md: 'none' }
         }}
       >
-        <BottomNavigationAction label="Search" value="search" icon={<SearchIcon />} />
         <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
+        <BottomNavigationAction label="Search" value="search" icon={<SearchIcon />} />
         <BottomNavigationAction label="Home" value="" icon={<CottageIcon />} />
         <BottomNavigationAction label="Notifications" value="notifications" icon={<NotificationsIcon />} />
         <BottomNavigationAction label="Chats" value="chats" icon={<QuestionAnswerIcon />} />
@@ -49,10 +49,10 @@ export default function Footer() {
           display: { xs: 'none', md: 'flex', large: 'none' }
         }}
       >
-        <BottomNavigationAction label="Search" value="search" icon={<SearchIcon />} />
         <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Notifications" value="notifications" icon={<NotificationsIcon />} />
+        <BottomNavigationAction label="Search" value="search" icon={<SearchIcon />} />
         <BottomNavigationAction label="Home" value="" icon={<CottageIcon />} />
+        <BottomNavigationAction label="Notifications" value="notifications" icon={<NotificationsIcon />} />
       </BottomNavigation>
 
 

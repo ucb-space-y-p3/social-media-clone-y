@@ -8,7 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-function Post() {
+function PostCard() {
 
     return (
         <Card sx={{ minWidth: 275 }}>
@@ -35,4 +35,4 @@ function Post() {
     );
 };
 
-export default Post;
+export default PostCard;
