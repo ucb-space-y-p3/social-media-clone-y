@@ -38,6 +38,7 @@ const resolvers = {
         throw error;
       }
     },
+    // oth
     // agith
     getFriends: async (parent, { username }, context) => {
       try {
@@ -195,66 +196,66 @@ const resolvers = {
         throw error;
       }
     },
-    // not necessary
-    getChat: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+    // // not necessary
+    // getChat: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    // not necessary
-    getChats: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getChats: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    // not necessary
-    getMessages: async (parent, { chatId }, context) => {
-      try {
-        // if (context.user) {
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getMessages: async (parent, { chatId }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    // not necessary
-    getNotifications: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getNotifications: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     // agith
     getUser: async (parent, { username }, context) => {
       try {
@@ -339,7 +340,7 @@ const resolvers = {
     },
   },
   Subscription: {
-    messageSent: {
+    
       messageSent: {
         subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
       },
@@ -361,8 +362,7 @@ const resolvers = {
       friendRequestAccepted: {
         subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
       }
-    },
-
+    
   },
 
 
@@ -481,7 +481,7 @@ const resolvers = {
         );
 
         // await Chat.updateMany(
-        //   { _id: { $in: user.chats } },
+        //   { _id: {//n: user.chats } },
         //   { $pull: { friends: user._id } },
         // );
 
@@ -562,7 +562,7 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
+    // // agith
     acceptFriend: async (parent, { requestId }, context) => {
       try {
         // if (context.user) {
@@ -602,14 +602,18 @@ const resolvers = {
         if (!user) {
           throw UserNotFoundError;
         };
+        pubsub.publish(`FRIEND_ADDED_${friendRequest.requesterId}_${friendRequest.targetId}`, {
+          friendAdded: { userId: friendRequest.requesterId, friendId: friendRequest.targetId }
+        });
         return newFriend;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
+    
     // agith
-    removeFriend: async (parent, { me, friend }, context) => {
+    removeFriend: async (parent, { me, friend }, { pubsub }) => {
       try {
         // if (context.user) {
 
@@ -628,24 +632,34 @@ const resolvers = {
         if (!oldFriend) {
           throw UserNotFoundError;
         };
+           // Publish the event to notify subscribers about the friend removal
+     pubsub.publish(`FRIEND_REMOVED_${me}_${friend}`, { friendRemoved: { userId: me, friendId: friend } });  
+      // return some information about the friend removal
+      return { success: true, message: "Friend removed successfully" };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } 
+  },
 
-        const user = await User.findOneAndUpdate(
-          { _id: me },
-          { $pull: { friends: friend } },
-          {
-            new: true,
-            runValidators: true
-          }
-        );
-        if (!user) {
-          throw UserNotFoundError;
-        };
-        return oldFriend;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    
+     //     const user = await User.findOneAndUpdate(
+    //       { _id: me },
+    //       { $pull: { friends: friend } },
+    //       {
+    //         new: true,
+    //         runValidators: true
+    //       }
+    //     );
+    //     if (!user) {
+    //       throw UserNotFoundError;
+    //     };
+    //     return oldFriend;
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     // agith
     // deleteRequest: async (parent, { requestId }, context) => {
     //   try {
@@ -808,33 +822,28 @@ const resolvers = {
       }
     },
 
+    // // not necessary
+    // createChat: async (parent, { }, context) => {
+    //   try {
+    //     if (context.user) {
 
-    // websockets
-
-
-
-    // not necessary
-    createChat: async (parent, { }, context) => {
-      try {
-        if (context.user) {
-
-          // }
-         throw new AuthenticationError('You must be logged in');
-        }
-        //create a new chat with db
-        const chat = await Chat.create({ recipients });
-        return chat;
-      } catch (error) {
-        console.error('Error al crear el chat:', error);
-        throw error;
-      }
-    },
-    sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
+    //       // }
+    //      throw new AuthenticationError('You must be logged in');
+    //     }
+    //     //create a new chat with db
+    //     const chat = await Chat.create({ recipients });
+    //     return chat;
+    //   } catch (error) {
+    //     console.error('Error al crear el chat:', error);
+    //     throw error;
+    //   }
+    // },
+    sendMessage: async (parent, { chatId, message, username }, { pubsub }) => {
       try {
         //save message to db
         const newMessage = await Message.create({
           chatId,
-          content,
+          content: message,  // Assuming 'content' is the field in your Message model
           creator: username,
           createdAt: new Date().toISOString(),
         });
@@ -846,23 +855,44 @@ const resolvers = {
         throw error;
       }
     },
+      receiveMessage: async (parent, { userId, message }, { pubsub }) => {
+        try {
+         
+          const newMessage = await Message.create({
+            userId,
+            content: message,
+            createdAt: new Date().toISOString(),
+          });
+          pubsub.publish(`MESSAGE_RECEIVED_${userId}`, { messageReceived: newMessage });
+          return newMessage;
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      },
 
-    // not necessary
-    clearNotifications: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
 
-        // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+
     },
-  },
+    
+  //   // not necessary
+  //   clearNotifications: async (parent, { }, context) => {
+  //     try {
+  //       // if (context.user) {
+
+  //       // }
+  //       // throw AuthenticationError;
+
+  //       // dev code
+
+  //     } catch (error) {
+  //       console.log(error);
+  //       throw error;
+  //     }
+  //   },
+  // },
 
 
 };
