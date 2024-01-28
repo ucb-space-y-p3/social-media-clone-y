@@ -20,16 +20,16 @@ function Chats() {
         <Container maxWidth="md" sx={{}}>
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Chats</h1>
-                {[...Array(20)].map((_, index) => (
-                    <PostCard key={index} />
-                ))}
+
+                
+
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />
             <Fab
                 onClick={() => dispatch(toggleDialogChatBox({}))}
                 variant="extended"
-                color="primary"
+                color="secondary"
                 sx={{
                     position: "fixed",
                     bottom: { xs: 100, md: 90, lg: 80 },

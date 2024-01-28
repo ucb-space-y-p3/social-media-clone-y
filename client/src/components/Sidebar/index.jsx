@@ -122,9 +122,9 @@ function Sidebar({ children }) {
                 <IconButton onClick={() => dispatch(toggleThemeMode())}
                     sx={{}}>
                     {themeMode === 'dark' ?
-                        <LightModeIcon />
+                        <LightModeIcon color="secondary"/>
                         :
-                        <ModeNightIcon />
+                        <ModeNightIcon color="secondary"/>
                     }
                 </IconButton>
             </Stack>
@@ -134,7 +134,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <CottageIcon />
+                            <CottageIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Home"} />
 
@@ -144,7 +144,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <NotificationsIcon />
+                            <NotificationsIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Notifications"} />
 
@@ -154,7 +154,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <SearchIcon />
+                            <SearchIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Search"} />
 
@@ -164,7 +164,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <FavoriteIcon />
+                            <FavoriteIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Favorites"} />
 
@@ -174,7 +174,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <PersonIcon />
+                            <PersonIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Profile"} />
 
@@ -187,7 +187,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <TuneIcon />
+                            <TuneIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Settings"} />
 
@@ -196,7 +196,7 @@ function Sidebar({ children }) {
                 <ListItem disablePadding onClick={handleLogOut}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <LogoutIcon />
+                            <LogoutIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Log Out"} />
                     </ListItemButton>
@@ -596,7 +596,7 @@ function Sidebar({ children }) {
                     open
                 >
                     {chatsDrawer}
-                    <Fab variant="extended" color="primary" onClick={() => dispatch(toggleDialogChatBox({}))}
+                    <Fab variant="extended" color="secondary" onClick={() => dispatch(toggleDialogChatBox({}))}
                         sx={{
                             position: "fixed",
                             bottom: { md: 65 },

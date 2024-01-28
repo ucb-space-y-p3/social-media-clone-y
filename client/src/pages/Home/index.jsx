@@ -103,7 +103,7 @@ function Home() {
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />
-            <Fab color="primary" aria-label="add" onClick={() => dispatch(toggleDialogPostBox({}))}
+            <Fab color="secondary" aria-label="add" onClick={() => dispatch(toggleDialogPostBox({}))}
                 sx={{
                     position: "fixed",
                     bottom: { xs: 100, md: 90, lg: 80 },

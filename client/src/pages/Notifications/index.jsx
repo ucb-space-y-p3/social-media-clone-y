@@ -46,9 +46,9 @@ function Notifications() {
             </Box> */}
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Nofitications</h1>
-                {[...Array(20)].map((_, index) => (
-                    <PostCard key={index} />
-                ))}
+
+                
+
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />

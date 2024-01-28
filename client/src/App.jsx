@@ -28,7 +28,7 @@ import { populatePublicPosts, populateCirclePosts } from './utils/slices/feedSli
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { red } from '@mui/material/colors';
+import { red, purple } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import './App.css';
 
@@ -94,7 +94,7 @@ function App() {
     palette: {
       mode: themeMode ? 'dark' : 'light',
       primary: {
-        main: red[500],
+        main: purple['300'],
       },
     },
     components: {
