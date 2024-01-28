@@ -60,6 +60,7 @@ const smallDrawerWidth = 240;
 function Sidebar({ children }) {
 
     const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
+    const username = useSelector((state) => state.userState.username);
     const dispatch = useDispatch()
 
 
@@ -112,7 +113,7 @@ function Sidebar({ children }) {
                     padding: 2,
                 }}>
                 <Avatar>WX</Avatar>
-                <Typography noWrap>TesterGuy</Typography>
+                <Typography noWrap>{username}</Typography>
                 <IconButton onClick={() => dispatch(toggleThemeMode())}
                     sx={{}}>
                     {themeMode === 'dark' ?

@@ -21,10 +21,12 @@ const userSlice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         setUser: (state, action) => {
+            // console.log(action);
             state.username = action.payload.username;
             state.firstInitial = action.payload.firstInitial;
             state.lastInitial = action.payload.lastInitial;
             state.email = action.payload.email;
+            state.userRefresher = action.payload.userRefresher;
         },
         updateUser: (state, action) => {
             state.username = action.payload.username;

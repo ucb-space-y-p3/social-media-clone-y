@@ -3,6 +3,8 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
+  useQuery,
+  useLazyQuery,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
@@ -12,9 +14,11 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import userReducer from './utils/slices/userSlice';
+import { GET_ME, GET_PUBLIC_POSTS, GET_LIKED_COMMENTS, GET_LIKED_POSTS, GET_CHAT, GET_CHATS, GET_NOTIFICATIONS } from './utils/queries';
 
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { setUser } from './utils/slices/userSlice';
 
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
@@ -34,7 +38,7 @@ import SignUp from './pages/SignUp';
 
 const rootReducer = combineReducers({
   userState: userReducer,
-  
+
 })
 
 const store = configureStore({
@@ -71,6 +75,8 @@ const client = new ApolloClient({
 
 function App() {
 
+  const dispatch = useDispatch();
+
   const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
 
   const theme = createTheme({
@@ -99,9 +105,49 @@ function App() {
     }
   });
 
-
   const location = useLocation().pathname.split('/')[1];
 
+  const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
+  const { loading: publicPostsLoading, error: publicPostsError, data: publicPostsData, refetch: publicPostsRefetch } = useQuery(GET_PUBLIC_POSTS);
+
+  // maybe place these lazy queries into their corresponding pages
+  // const [getLikedPosts, { loading: likedPostsLoading, error: likedPostsError, data: likedPostsData }] = useLazyQuery(GET_LIKED_POSTS);
+  // const [getLikedComments, { loading: likedCommentsLoading, error: likedCommentsError, data: likedCommentsData }] = useLazyQuery(GET_LIKED_COMMENTS);
+  // const [getChat, { loading: chatLoading, error: chatError, data: chatData }] = useLazyQuery(GET_CHAT);
+  // const [getChats, { loading: chatsLoading, error: chatsError, data: chatsData }] = useLazyQuery(GET_CHATS);
+  // const [getNotifications, { loading: notificationsLoading, error: notificationsError, data: notificationsData }] = useLazyQuery(GET_NOTIFICATIONS);
+
+  useEffect(() => {
+    if (!getMeLoading) {
+      if (!getMeError) {
+        console.log(getMeData);
+        const { username, email, firstInitial, lastInitial } = getMeData.me;
+        dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch }));
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate posts
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate comments
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate friends
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate requests
+      } else {
+        // throw error on screen
+        console.log('There was an error loading me!')
+      }
+    }
+
+  }, [getMeLoading, getMeData]);
+
+  useEffect(() => {
+    if (!publicPostsLoading) {
+      if (!publicPostsError) {
+        console.log(publicPostsData);
+        // const { username, email, firstInitial, lastInitial } = publicPostsData.me;
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: publicPostsRefetch}));
+      } else {
+        // throw error on screen
+        console.log('There was an error loading me!')
+      }
+    }
+
+  }, [publicPostsLoading, publicPostsData]);
 
   return (
     <ThemeProvider theme={theme}>
