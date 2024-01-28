@@ -819,7 +819,7 @@ const resolvers = {
         if (context.user) {
 
           // }
-          throw AuthenticationError;
+         throw new AuthenticationError('You must be logged in');
         }
         //create a new chat with db
         const chat = await Chat.create({ recipients });
