@@ -8,6 +8,10 @@ const notificationSchema = new Schema(
       required: true,
       default: false
     },
+    isSystem: {
+      type: Boolean,
+      required: true,
+    },
     type: {
       type: String,
       required: true

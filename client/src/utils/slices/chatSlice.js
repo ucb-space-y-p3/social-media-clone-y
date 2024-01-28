@@ -15,8 +15,6 @@ const INITIAL_STATE = {
         newRecipients: [],
         open: false,
     },
-    activeChatsRefresher: () => {},
-    currentChatRefresher: () => {},
 };
 
 const chatSlice = createSlice({
@@ -40,12 +38,6 @@ const chatSlice = createSlice({
         },
         deleteMessages: (state, action) => {
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
-        },
-        setActiveChatsRefresher: (state, action) => {
-            state.activeChatsRefresher = action.payload.activeChatsRefresher;
-        },
-        setCurrentChatRefresher: (state, action) => {
-            state.currentChatRefresher = action.payload.currentChatRefresher;
         },
         toggleDialogChatBox: (state, action) => {
             state.newChat.open = !state.newChat.open;
@@ -71,8 +63,6 @@ export const {
     addMessage,
     populateMessages,
     deleteMessages,
-    setActiveChatsRefresher,
-    setCurrentChatRefresher,
     toggleDialogChatBox,
     populateCurrentChat,
     closeCurrentChat,

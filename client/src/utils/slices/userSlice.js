@@ -13,7 +13,6 @@ const INITIAL_STATE = {
         isDarkMode: true,
 
     },
-    userRefresher: () => {},
 };
 
 const userSlice = createSlice({
@@ -26,7 +25,6 @@ const userSlice = createSlice({
             state.firstInitial = action.payload.firstInitial;
             state.lastInitial = action.payload.lastInitial;
             state.email = action.payload.email;
-            state.userRefresher = action.payload.userRefresher;
         },
         updateUser: (state, action) => {
             state.username = action.payload.username;
@@ -76,9 +74,6 @@ const userSlice = createSlice({
         deleteFriendRequest: (state, action) => {
             state.friendRequests = state.friendRequests.filter((post) => post._id !== action.payload.id);
         },
-        setUserRefresher: (state, action) => {
-            state.userRefresher = action.payload.userRefresher;
-        }
     }
 })
 

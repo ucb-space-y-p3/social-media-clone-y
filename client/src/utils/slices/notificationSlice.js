@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     newNotifications: [],
     allNotifications: [],
-    notificationsRefresher: () => {},
 };
 
 const notificationSlice = createSlice({
@@ -21,18 +20,13 @@ const notificationSlice = createSlice({
             state.newNotifications = state.newNotifications.filter((notification) => notification._id !== action.payload.id);
             state.allNotifications = state.allNotifications.filter((notification) => notification._id !== action.payload.id);
         },
-        setNotificationRefresher: (state, action) => {
-            state.notificationsRefresher = action.payload.notificationsRefresher;
-        }
     }
 })
 
 export const {
     addNotification,
     clearNotification,
-    deleteNotification,
-    setNotificationRefresher,
-    
+    deleteNotification,    
 
 } = notificationSlice.actions;
 export default notificationSlice.reducer;

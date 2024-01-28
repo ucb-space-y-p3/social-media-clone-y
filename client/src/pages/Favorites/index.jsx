@@ -38,7 +38,7 @@ function Favorites() {
                     }}
                 >
                     <Tab value="post" label="Posts" />
-                    <Tab value="comment" label="Comments" disabled/>
+                    <Tab value="comment" label="Comments" />
                 </Tabs>
             </Box>
             <Stack spacing={0.7}>

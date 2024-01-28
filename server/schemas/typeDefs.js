@@ -31,6 +31,7 @@ const typeDefs = `
 
   type Notification {
     _id: ID
+    isSystem: Boolean
     type: String
     alert: String
     createdAt: String
@@ -58,6 +59,7 @@ const typeDefs = `
   type Comment {
     _id: ID
     postId: ID
+    creatorId: ID
     creator: String
     createdAt: String
     content: String
@@ -130,7 +132,7 @@ const typeDefs = `
     removeFriend(friend: String!): User
     createPost(content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(content: String!): Comment
+    createComment(postId: ID!, content: String!): Comment
     deleteComment(commentId: ID!): Comment
 
     sendMessage(chatId: ID!, content: String!, username: String!): Message

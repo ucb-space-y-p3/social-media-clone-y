@@ -3,8 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     likedPosts: [],
     likedComments: [],
-    likedPostsRefresher: () => {},
-    likedCommentsRefresher: () => {},
 };
 
 const favoriteSlice = createSlice({
@@ -23,12 +21,6 @@ const favoriteSlice = createSlice({
         removeLikedComment: (state, action) => {
             state.likedComments = state.likedComments.filter((comment) => comment._id !== action.payload.id);
         },
-        setLikedPostsRefresher: (state, action) => {
-            state.likedPostsRefresher = action.payload.likedPostsRefresher;
-        },
-        setLikedCommentsRefresher: (state, action) => {
-            state.likedCommentsRefresher = action.payload.likedCommentsRefresher;
-        },
     }
 })
 
@@ -37,8 +29,6 @@ export const {
     addLikedComment,
     removeLikedPost,
     removeLikedComment,
-    setLikedPostsRefresher,
-    setLikedCommentsRefresher,
 
 } = favoriteSlice.actions;
 export default favoriteSlice.reducer;

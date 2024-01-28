@@ -11,8 +11,7 @@ const INITIAL_STATE = {
         content: '',
         open: false,
     },
-    publicPostsRefresher: () => {},
-    circlePostsRefresher: () => {},
+    currentFeed: 'public',
 };
 
 const feedSlice = createSlice({
@@ -22,8 +21,14 @@ const feedSlice = createSlice({
         addPublicPost: (state, action) => {
             state.publicPosts = [...state.publicPosts, action.payload];
         },
+        populatePublicPosts: (state, action) => {
+            state.publicPosts = [...state.publicPosts, ...action.payload.posts];
+        },
         addCirclePost: (state, action) => {
             state.circlePosts = [...state.circlePosts, action.payload];
+        },
+        populateCirclePosts: (state, action) => {
+            state.circlePosts = [...state.circlePosts, ...action.payload.posts];
         },
         removePublicPost: (state, action) => {
             state.publicPosts = state.publicPosts.filter((post) => post._id !== action.payload.id);
@@ -37,12 +42,6 @@ const feedSlice = createSlice({
         updateNewComment: (state, action) => {
             state.newComment.content = action.payload.content;
         },
-        setPublicRefresher: (state, action) => {
-            state.publicPostsRefresher = action.payload.publicRefresher;
-        },
-        setCircleRefresher: (state, action) => {
-            state.circlePostsRefresher = action.payload.circleRefresher;
-        },
         toggleDialogPostBox: (state) => {
             state.newPost.open = !state.newPost.open;
         },
@@ -53,21 +52,25 @@ const feedSlice = createSlice({
             state.newComment.open = true;
             state.newPost.content = '';
         },
+        setFeed: (state, action) => {
+            state.currentFeed = action.payload.feed;
+        },
     }
 })
 
 export const {
     addPublicPost,
     addCirclePost,
+    populatePublicPosts,
+    populateCirclePosts,
     removePublicPost,
     removeCircleComment,
     updateNewPost,
     updateNewComment,
-    setPublicRefresher,
-    setCircleRefresher,
     toggleDialogPostBox,
     openDialogCommentBox,
     closeDialogCommentBox,
-    
+    setFeed,
+
 } = feedSlice.actions;
 export default feedSlice.reducer;
