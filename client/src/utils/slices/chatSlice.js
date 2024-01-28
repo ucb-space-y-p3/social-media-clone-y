@@ -3,13 +3,17 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     activeChats: [],
     currentChat: {
+        id: '',
+        chatName: '',
         messages: [],
         recipients: [],
-        draftMessage: ''
+        draftMessage: '',
+        connected: false,
     },
     newChat: {
         firstMessage: '',
-        newRecipients: []
+        newRecipients: [],
+        open: false,
     },
     activeChatsRefresher: () => {},
     currentChatRefresher: () => {},
@@ -38,11 +42,25 @@ const chatSlice = createSlice({
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
         },
         setActiveChatsRefresher: (state, action) => {
-            state.userRefresher = action.payload.activeChatsRefresher;
+            state.activeChatsRefresher = action.payload.activeChatsRefresher;
         },
         setCurrentChatRefresher: (state, action) => {
-            state.userRefresher = action.payload.currentChatRefresher;
+            state.currentChatRefresher = action.payload.currentChatRefresher;
         },
+        toggleDialogChatBox: (state, action) => {
+            state.newChat.open = !state.newChat.open;
+        },
+        populateCurrentChat: (state, action) => {
+            state.currentChat.id = action.payload.id;
+            state.currentChat.messages = [...action.payload.messages];
+            state.currentChat.recipients = [...action.payload.recipients];
+            state.currentChat.draftMessage = action.payload.draftMessage;
+            state.currentChat.chatName = action.payload.chatName;
+            state.currentChat.connected = true;
+        },
+        closeCurrentChat: (state) => {
+            state.currentChat.connected = false;
+        }
     }
 })
 
@@ -55,6 +73,9 @@ export const {
     deleteMessages,
     setActiveChatsRefresher,
     setCurrentChatRefresher,
+    toggleDialogChatBox,
+    populateCurrentChat,
+    closeCurrentChat,
 
 } = chatSlice.actions;
 export default chatSlice.reducer;

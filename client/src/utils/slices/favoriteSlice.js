@@ -24,10 +24,10 @@ const favoriteSlice = createSlice({
             state.likedComments = state.likedComments.filter((comment) => comment._id !== action.payload.id);
         },
         setLikedPostsRefresher: (state, action) => {
-            state.userRefresher = action.payload.likedPostsRefresher;
+            state.likedPostsRefresher = action.payload.likedPostsRefresher;
         },
         setLikedCommentsRefresher: (state, action) => {
-            state.userRefresher = action.payload.likedCommentsRefresher;
+            state.likedCommentsRefresher = action.payload.likedCommentsRefresher;
         },
     }
 })

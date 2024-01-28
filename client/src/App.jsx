@@ -14,6 +14,10 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import userReducer from './utils/slices/userSlice';
+import notificationReducer from './utils/slices/notificationSlice';
+import feedReducer from './utils/slices/feedSlice';
+import favoriteReducer from './utils/slices/favoriteSlice';
+import chatReducer from './utils/slices/chatSlice';
 import { GET_ME, GET_PUBLIC_POSTS, GET_LIKED_COMMENTS, GET_LIKED_POSTS, GET_CHAT, GET_CHATS, GET_NOTIFICATIONS } from './utils/queries';
 
 import { useState, useEffect } from 'react';
@@ -34,11 +38,17 @@ import SimpleHeader from './components/SimpleHeader';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import SignUp from './pages/SignUp';
+import NewChatDialog from './components/NewChatDialog';
+import NewPostDialog from './components/NewPostDialog';
+import NewCommentDialog from './components/NewCommentDialog';
 
 
 const rootReducer = combineReducers({
   userState: userReducer,
-
+  notificationState: notificationReducer,
+  feedState: feedReducer,
+  favoriteState: favoriteReducer,
+  chatState: chatReducer,
 })
 
 const store = configureStore({
@@ -120,13 +130,13 @@ function App() {
   useEffect(() => {
     if (!getMeLoading) {
       if (!getMeError) {
-        console.log(getMeData);
+        // console.log(getMeData);
         const { username, email, firstInitial, lastInitial } = getMeData.me;
-        dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch }));
-        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate posts
-        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate comments
-        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate friends
-        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: getMeRefetch})); // populate requests
+        dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch }));
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate posts
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate comments
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate friends
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate requests
       } else {
         // throw error on screen
         console.log('There was an error loading me!')
@@ -138,9 +148,9 @@ function App() {
   useEffect(() => {
     if (!publicPostsLoading) {
       if (!publicPostsError) {
-        console.log(publicPostsData);
+        // console.log(publicPostsData);
         // const { username, email, firstInitial, lastInitial } = publicPostsData.me;
-        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresh: publicPostsRefetch}));
+        // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: publicPostsRefetch}));
       } else {
         // throw error on screen
         console.log('There was an error loading me!')
@@ -156,6 +166,9 @@ function App() {
           (<Sidebar>
             {/* <Outlet /> */}
             <Outlet style={{ marginTop: 10 }} />
+            <NewChatDialog />
+            <NewPostDialog />
+            {/* <NewCommentDialog /> */}
           </Sidebar>)
           :
           (location == 'signup' ?

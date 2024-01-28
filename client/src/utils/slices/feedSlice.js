@@ -5,6 +5,11 @@ const INITIAL_STATE = {
     circlePosts: [],
     newPost: {
         content: '',
+        open: false,
+    },
+    newComment: {
+        content: '',
+        open: false,
     },
     publicPostsRefresher: () => {},
     circlePostsRefresher: () => {},
@@ -27,13 +32,26 @@ const feedSlice = createSlice({
             state.circlePosts = state.circlePosts.filter((comment) => comment._id !== action.payload.id);
         },
         updateNewPost: (state, action) => {
-            state.newPost = action.payload;
+            state.newPost.content = action.payload.content;
+        },
+        updateNewComment: (state, action) => {
+            state.newComment.content = action.payload.content;
         },
         setPublicRefresher: (state, action) => {
-            state.userRefresher = action.payload.publicRefresher;
+            state.publicPostsRefresher = action.payload.publicRefresher;
         },
         setCircleRefresher: (state, action) => {
-            state.userRefresher = action.payload.circleRefresher;
+            state.circlePostsRefresher = action.payload.circleRefresher;
+        },
+        toggleDialogPostBox: (state) => {
+            state.newPost.open = !state.newPost.open;
+        },
+        openDialogCommentBox: (state) => {
+            state.newComment.open = true;
+        },
+        closeDialogCommentBox: (state) => {
+            state.newComment.open = true;
+            state.newPost.content = '';
         },
     }
 })
@@ -43,8 +61,13 @@ export const {
     addCirclePost,
     removePublicPost,
     removeCircleComment,
+    updateNewPost,
+    updateNewComment,
     setPublicRefresher,
     setCircleRefresher,
-
+    toggleDialogPostBox,
+    openDialogCommentBox,
+    closeDialogCommentBox,
+    
 } = feedSlice.actions;
 export default feedSlice.reducer;

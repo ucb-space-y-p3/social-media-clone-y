@@ -68,6 +68,7 @@ const typeDefs = `
   type Chat {
     _id: ID
     isGroupChat: Boolean
+    chatName: String
     recipients: [User]
     messages: [Message]
   }

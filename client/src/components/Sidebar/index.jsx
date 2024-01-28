@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleThemeMode, } from '../../utils/slices/userSlice';
+import { toggleDialogChatBox, } from '../../utils/slices/chatSlice';
 
 import Auth from '../../utils/auth';
 
-import ScrollToTopSide from '../ScrollToTopSide';
+// import ScrollToTopSide from '../ScrollToTopSide';
+import ChatItem from '../ChatItem';
 
 // import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -15,9 +17,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Fab from '@mui/material/Fab';
-import Modal from '@mui/material/Modal';
+// import Modal from '@mui/material/Modal';
 // import Container from '@mui/material/Container';
 // import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -57,10 +60,16 @@ const meduimDrawerWidth = 320;
 const smallDrawerWidth = 240;
 
 
+// const Transition = forwardRef(function Transition(props, ref) {
+//     return <Slide direction="up" ref={ref} {...props} />;
+// });
+
+
 function Sidebar({ children }) {
 
     const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
     const username = useSelector((state) => state.userState.username);
+    
     const dispatch = useDispatch()
 
 
@@ -68,10 +77,6 @@ function Sidebar({ children }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const navigate = useNavigate();
-
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -243,18 +248,7 @@ function Sidebar({ children }) {
                     </ListItemButton>
                 </ListItem>
                 <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 33333</Typography>
-                    </ListItemButton>
-                </ListItem>
+                <ChatItem chatId='testId123' chatName='Cool Guys' />
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
@@ -541,7 +535,7 @@ function Sidebar({ children }) {
                 </Toolbar>
             </AppBar>
 
-            <Modal
+            {/* <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
@@ -555,7 +549,7 @@ function Sidebar({ children }) {
                         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
                     </Typography>
                 </Box>
-            </Modal>
+            </Modal> */}
 
             <Box
                 component="nav"
@@ -602,7 +596,7 @@ function Sidebar({ children }) {
                     open
                 >
                     {chatsDrawer}
-                    <Fab variant="extended" color="primary" onClick={handleOpen}
+                    <Fab variant="extended" color="primary" onClick={() => dispatch(toggleDialogChatBox({}))}
                         sx={{
                             position: "fixed",
                             bottom: { md: 65 },

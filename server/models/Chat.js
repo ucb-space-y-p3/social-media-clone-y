@@ -6,6 +6,9 @@ const chatSchema = new Schema(
       type: Boolean,
       required: true
     },
+    chatName: {
+      type: String
+    },
     recipients: [
       {
         type: Schema.Types.ObjectId,

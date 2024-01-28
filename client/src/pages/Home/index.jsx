@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { redirect } from 'react-router-dom';
 
@@ -14,6 +15,7 @@ import Tab from '@mui/material/Tab';
 
 import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
+import { toggleDialogPostBox, } from '../../utils/slices/feedSlice';
 
 function Home() {
     const [value, setValue] = useState('public');
@@ -21,6 +23,8 @@ function Home() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const dispatch = useDispatch()
 
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
@@ -54,11 +58,12 @@ function Home() {
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />
-            <Fab color="primary" aria-label="add" sx={{
-                position: "fixed",
-                bottom: { xs: 100, md: 90, lg: 80 },
-                right: { xs: 40, md: 60, lg: 380 }
-            }}>
+            <Fab color="primary" aria-label="add" onClick={() => dispatch(toggleDialogPostBox({}))}
+                sx={{
+                    position: "fixed",
+                    bottom: { xs: 100, md: 90, lg: 80 },
+                    right: { xs: 40, md: 60, lg: 380 }
+                }}>
                 <AddIcon />
             </Fab>
         </Container>
