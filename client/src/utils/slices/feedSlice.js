@@ -28,7 +28,13 @@ const feedSlice = createSlice({
         },
         updateNewPost: (state, action) => {
             state.newPost = action.payload;
-        }
+        },
+        setPublicRefresher: (state, action) => {
+            state.userRefresher = action.payload.publicRefresher;
+        },
+        setCircleRefresher: (state, action) => {
+            state.userRefresher = action.payload.circleRefresher;
+        },
     }
 })
 
@@ -36,7 +42,9 @@ export const {
     addPublicPost,
     addCirclePost,
     removePublicPost,
-    removeCircleComment
+    removeCircleComment,
+    setPublicRefresher,
+    setCircleRefresher,
 
 } = feedSlice.actions;
 export default feedSlice.reducer;

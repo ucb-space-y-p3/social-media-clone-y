@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const INITIAL_STATE = {
     username: '',
+    firstInitial: '',
+    lastInitial: '',
+    email: '',
     posts: [],
     comments: [],
     friends: [],
@@ -17,8 +20,20 @@ const userSlice = createSlice({
     name: 'userState',
     initialState: INITIAL_STATE,
     reducers: {
+        setUser: (state, action) => {
+            state.username = action.payload.username;
+            state.firstInitial = action.payload.firstInitial;
+            state.lastInitial = action.payload.lastInitial;
+            state.email = action.payload.email;
+        },
+        updateUser: (state, action) => {
+            state.username = action.payload.username;
+            state.firstInitial = action.payload.firstInitial;
+            state.lastInitial = action.payload.lastInitial;
+            state.email = action.payload.email;
+        },
         updateUserSettings: (state, action) => {
-            state.settings = { ...state.settings, ...action.payload };
+            state.settings = { ...state.settings, ...action.payload.settings };
         },
         toggleThemeMode: (state) => {
             state.settings.isDarkMode = !state.settings.isDarkMode;
@@ -59,10 +74,15 @@ const userSlice = createSlice({
         deleteFriendRequest: (state, action) => {
             state.friendRequests = state.friendRequests.filter((post) => post._id !== action.payload.id);
         },
+        setUserRefresher: (state, action) => {
+            state.userRefresher = action.payload.userRefresher;
+        }
     }
 })
 
 export const {
+    setUser,
+    updateUser,
     updateUserSettings,
     toggleThemeMode,
     addPost,
@@ -74,6 +94,7 @@ export const {
     addFriendRequest,
     populateFriendRequests,
     deleteFriendRequest,
+    setUserRefresher,
 
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -3,13 +3,18 @@ const typeDefs = `
   type User {
     _id: ID
     username: String
+    firstInitial: String
+    lastInitial: String
     email: String
     friendCount: Int
     friends: [User]
     requestCount: Int
-    friendRequests: [FriendRequest]
+    incomingFriendRequests: [FriendRequest]
+    outgoingFriendRequests: [FriendRequest]
     postCount: Int
     posts: [Post]
+    commentCount: Int
+    comments: [Comment]
     chatCount: Int
     activeChats: [Chat]
     notificationCount: Int
@@ -69,6 +74,7 @@ const typeDefs = `
 
   type Message {
     _id: ID
+    content: String
     chatId: ID
     postId: ID
     commentId: ID
@@ -114,21 +120,22 @@ const typeDefs = `
   type Mutation {
     login(email: String!, password: String!): Auth
     createUser(input: UserInput): Auth
-    editUser(username: String, email: String, userId: ID!): Auth
-    changePassword(userId: ID!, password: String!): User
-    deleteUser(userId: ID!, password: String!): User
-    requestFriend(requesterId: ID!, targetId: String!): FriendRequest
+    editUser(username: String, email: String): User
+    changePassword(password: String!): User
+    deleteUser(password: String!): User
+    requestFriend(targetId: String!): FriendRequest
     acceptFriend(requestId: ID!): User
     denyFriend(requestId: ID!): FriendRequest
-    removeFriend(me: ID!, friend: String!): User
-    createPost(username: String!, content: String!): Post
+    removeFriend(friend: String!): User
+    createPost(content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(postId: ID!, content: String!, username: String!): Comment
-    deleteComment(postId: ID!, commentId: ID!): Comment
-sendMessage(chatId: ID!, content: String!, username: String!): Message
-createChat(recipients: [String]!): Chat
-deleteChat(chatId: ID!): Chat
-clearNotifications: User
+    createComment(content: String!): Comment
+    deleteComment(commentId: ID!): Comment
+
+    sendMessage(chatId: ID!, content: String!, username: String!): Message
+    createChat(recipients: [String]!): Chat
+    deleteChat(chatId: ID!): Chat
+    clearNotifications: User
 
 
   }

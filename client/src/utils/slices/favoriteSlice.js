@@ -22,7 +22,13 @@ const favoriteSlice = createSlice({
         },
         removeLikedComment: (state, action) => {
             state.likedComments = state.likedComments.filter((comment) => comment._id !== action.payload.id);
-        }
+        },
+        setLikedPostsRefresher: (state, action) => {
+            state.userRefresher = action.payload.likedPostsRefresher;
+        },
+        setLikedCommentsRefresher: (state, action) => {
+            state.userRefresher = action.payload.likedCommentsRefresher;
+        },
     }
 })
 
@@ -31,7 +37,8 @@ export const {
     addLikedComment,
     removeLikedPost,
     removeLikedComment,
-
+    setLikedPostsRefresher,
+    setLikedCommentsRefresher,
 
 } = favoriteSlice.actions;
 export default favoriteSlice.reducer;

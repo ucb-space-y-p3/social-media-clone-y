@@ -27,89 +27,129 @@ mutation CreateUser($input: UserInput) {
 `;
 
 export const EDIT_USER = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation EditUser {
+  editUser {
+    _id
+    username
+    email
+    firstInitial
+    lastInitial
   }
 }
 `;
 
 export const CHANGE_PASSWORD = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation ChangePassword($password: String!) {
+  changePassword(password: $password) {
+    _id
+    username
+    email
+    firstInitial
+    lastInitial
   }
 }
 `;
 
 export const DELETE_USER = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation DeleteUser($password: String!) {
+  deleteUser(password: $password) {
+    _id
+    username
+    email
+    firstInitial
+    lastInitial
   }
 }
 `;
 
 export const REQUEST_FRIEND = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation RequestFriend($targetId: String!) {
+  requestFriend(targetId: $targetId) {
+    _id
+    requesterId
+    targetId
+    createdAt
   }
 }
 `;
 
 export const ACCEPT_FRIEND = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation AcceptFriend($requestId: ID!) {
+  acceptFriend(requestId: $requestId) {
+    _id
+    username
+    firstInitial
+    lastInitial
   }
 }
 `;
 
 export const DENY_FRIEND = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation DenyFriend($requestId: ID!) {
+  denyFriend(requestId: $requestId) {
+    _id
+    targetId
+    requesterId
+    createdAt
   }
 }
 `;
 
 export const REMOVE_FRIEND = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation RemoveFriend($friend: String!) {
+  removeFriend(friend: $friend) {
+    _id
+    username
+    firstInitial
+    lastInitial
   }
 }
 `;
 
 export const CREATE_POST = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation CreatePost($content: String!) {
+  createPost(content: $content) {
+    _id
+    content
+    creator
+    createdAt
   }
 }
 `;
 
 export const DELETE_POST = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation DeletePost($postId: ID!) {
+  deletePost(postId: $postId) {
+    _id
+    content
+    creator
+    createdAt
+    commentCount
+    likeCount
   }
 }
 `;
 
 export const CREATE_COMMENT = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation CreateComment($postId: ID!, $content: String!) {
+  createComment(postId: $postId, content: $content) {
+    _id
+    content
+    createdAt
+    postId
   }
 }
 `;
 
 export const DELETE_COMMENT = gql`
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token    
+mutation DeleteComment($commentId: ID!) {
+  deleteComment(commentId: $commentId) {
+    _id
+    creator
+    content
+    createdAt
+    postId
+    likeCount
   }
 }
 `;

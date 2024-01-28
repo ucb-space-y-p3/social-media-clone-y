@@ -36,7 +36,13 @@ const chatSlice = createSlice({
         },
         deleteMessages: (state, action) => {
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
-        }
+        },
+        setActiveChatsRefresher: (state, action) => {
+            state.userRefresher = action.payload.activeChatsRefresher;
+        },
+        setCurrentChatRefresher: (state, action) => {
+            state.userRefresher = action.payload.currentChatRefresher;
+        },
     }
 })
 
@@ -47,6 +53,8 @@ export const {
     addMessage,
     populateMessages,
     deleteMessages,
+    setActiveChatsRefresher,
+    setCurrentChatRefresher,
 
 } = chatSlice.actions;
 export default chatSlice.reducer;
