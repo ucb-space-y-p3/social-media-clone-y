@@ -71,11 +71,11 @@ const client = new ApolloClient({
 
 function App() {
 
-  const themeMode = useSelector((state) => state.userState.settings.mode);
+  const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
 
   const theme = createTheme({
     palette: {
-      mode: themeMode,
+      mode: themeMode ? 'dark' : 'light',
       primary: {
         main: red[500],
       },

@@ -23,7 +23,7 @@ import Y from '../../assets/fancy_Y.svg';
 
 export default function SimpleHeader() {
 
-  const themeMode = useSelector((state) => state.userState.settings.mode);
+  const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
   const dispatch = useDispatch()
 
   return (

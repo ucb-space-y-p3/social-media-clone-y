@@ -31,6 +31,12 @@ const userSchema = new Schema(
         ref: 'post',
       },
     ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'comment',
+      },
+    ],
     friends: [
       {
         type: Schema.Types.ObjectId,
@@ -47,6 +53,18 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'notification',
+      },
+    ],
+    likedPosts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'post',
+      },
+    ],
+    likedComments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'comment',
       },
     ],
     friendRequests: [
@@ -87,6 +105,10 @@ userSchema.virtual('friendCount').get(function () {
 
 userSchema.virtual('postCount').get(function () {
   return this.posts.length;
+})
+
+userSchema.virtual('commentCount').get(function () {
+  return this.comments.length;
 })
 
 userSchema.virtual('chatCount').get(function () {

@@ -338,15 +338,15 @@ const resolvers = {
       }
     },
   },
-  Subscription:  {
-    messageSent:{
+  Subscription: {
+    messageSent: {
       subscribe: (parent, { chatId }, { pubsub }) => {
         return pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`);
       },
     },
-    },
+  },
 
-  
+
   Mutation: {
     // agith
     login: async (parent, { email, password }) => {
@@ -825,23 +825,23 @@ const resolvers = {
     //   }
     // },
     sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
-    try {
-      //save message to db
-      const newMessage = await Message.create({
-        chatId,
-        content,
-        creator: username,
-        createdAt: new Date().toISOString(),
-      });
-      //add message to chat of suscribes
-      pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: newMessage });
-    return newMessage;
-    }catch (error) {
-      console.log(error);
-      throw error;
-    }
+      try {
+        //save message to db
+        const newMessage = await Message.create({
+          chatId,
+          content,
+          creator: username,
+          createdAt: new Date().toISOString(),
+        });
+        //add message to chat of suscribes
+        pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: newMessage });
+        return newMessage;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     },
-    
+
     // not necessary
     clearNotifications: async (parent, { }, context) => {
       try {

@@ -14,14 +14,14 @@ const typeDefs = `
     activeChats: [Chat]
     notificationCount: Int
     notifications: [Notification]
-    # likedPosts: [Post]
-    # likedComments: [Comment]
+    likedPosts: [Post]
+    likedComments: [Comment]
     settings: Settings
     chats: [Chat]
   }
 
   type Settings {
-    silentMode: Boolean
+    isDarkMode: Boolean
   }
 
   type Notification {
@@ -44,7 +44,8 @@ const typeDefs = `
     creator: String
     content: String
     createdAt: String
-    # likeCount: Int
+    likedBy: [User]
+    likeCount: Int
     commentCount: Int
     comments: [Comment]
   }
@@ -55,6 +56,8 @@ const typeDefs = `
     creator: String
     createdAt: String
     content: String
+    likedBy: [User]
+    likeCount: Int
   }
 
   type Chat {

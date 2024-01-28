@@ -59,7 +59,7 @@ const smallDrawerWidth = 240;
 
 function Sidebar({ children }) {
 
-    const themeMode = useSelector((state) => state.userState.settings.mode);
+    const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
     const dispatch = useDispatch()
 
 
