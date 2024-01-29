@@ -1,6 +1,6 @@
 const { Schema, model, Types } = require('mongoose');
 const { DateTime } = require('luxon');
-const { Comment: commentSchema } = require('./index.js');
+// const { Comment: commentSchema } = require('./index.js');
 
 // const commentSchema = new Schema(
 //   {

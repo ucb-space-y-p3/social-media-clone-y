@@ -166,7 +166,6 @@ export const GET_CHAT = gql`
 query GetChat($chatId: ID!) {
   getChat(chatId: $chatId) {
     _id
-    isGroupChat
     recipients {
       _id
       username
@@ -190,7 +189,6 @@ query GetChats {
   me {
     activeChats {
       _id
-      isGroupChat
       recipients {
         _id
         username

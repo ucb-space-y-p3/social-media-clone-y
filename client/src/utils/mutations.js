@@ -155,3 +155,12 @@ mutation DeleteComment($commentId: ID!) {
   }
 }
 `;
+
+export const CREATE_CHAT = gql`
+
+`;
+
+export const SEND_MESSAGE = gql`
+  
+`;
+

@@ -742,7 +742,7 @@ const resolvers = {
           if (!user) {
             throw UserNotFoundError;
           };
-          
+
           const post = await Post.findOneAndUpdate(
             { _id: postId },
             { $pull: { comments: comment._id } },
@@ -776,37 +776,35 @@ const resolvers = {
     // websockets
 
 
-
-    // not necessary
-    createChat: async (parent, { }, context) => {
+    createChat: async (parent, { chatName, recipients }, context) => {
       try {
-        // if (context.user) {
+        if (context.user) {
+          // console.log(recipients);
+          const chat = await Chat.create({ chatName, recipients });
+          for (const user of recipients) {
+            // console.log(user);
+            const returnedUser = await User.findOneAndUpdate(
+              { _id: user },
+              { $addToSet: { activeChats: chat._id } },
+              {
+                new: true,
+                runValidators: true
+              }
+            );
 
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
+            if (!returnedUser) {
+              await Chat.deleteOne({ _id: chat._id });
+              throw UserNotFoundError;
+            };
+          }
+          return chat;
+        }
+        throw AuthenticationError;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    // not necessary
-    // leaveChat: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
     sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
       try {
         //save message to db
@@ -824,6 +822,38 @@ const resolvers = {
         throw error;
       }
     },
+
+    // leaveChat: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
+
+    //     // }
+    //     // throw AuthenticationError;
+
+    //     // dev code
+
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
+    //   try {
+    //     //save message to db
+    //     const newMessage = await Message.create({
+    //       chatId,
+    //       content,
+    //       creator: username,
+    //       createdAt: new Date().toISOString(),
+    //     });
+    //     //add message to chat of suscribes
+    //     pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: newMessage });
+    //     return newMessage;
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
 
     // not necessary
     clearNotifications: async (parent, { }, context) => {

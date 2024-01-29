@@ -50,7 +50,7 @@ function Post() {
             >Post - {postId}</Typography>
 
 
-            {/* {!loading && <PostCard post={data.getPost} isDirect />} */}
+            {!loading && <PostCard post={data.getPost} isDirect />}
 
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Post</h1>

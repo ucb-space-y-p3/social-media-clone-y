@@ -22,7 +22,6 @@ const typeDefs = `
     likedPosts: [Post]
     likedComments: [Comment]
     settings: Settings
-    chats: [Chat]
   }
 
   type Settings {
@@ -64,6 +63,8 @@ const typeDefs = `
     postId: ID
     creatorId: ID
     creator: String
+    creatorFirstInitial: String
+    creatorLastInitial: String
     createdAt: String
     content: String
     likedBy: [User]
@@ -72,7 +73,6 @@ const typeDefs = `
 
   type Chat {
     _id: ID
-    isGroupChat: Boolean
     chatName: String
     recipients: [User]
     messages: [Message]
@@ -140,8 +140,8 @@ const typeDefs = `
     createComment(postId: ID!, content: String!): Comment
     deleteComment(commentId: ID!): Comment
 
+    createChat(chatName: String!, recipients: [String]!): Chat
     sendMessage(chatId: ID!, content: String!, username: String!): Message
-    createChat(recipients: [String]!): Chat
     deleteChat(chatId: ID!): Chat
     clearNotifications: User
 

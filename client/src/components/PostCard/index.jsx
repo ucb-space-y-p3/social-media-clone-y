@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DELETE_POST } from '../../utils/mutations';
 import { removePublicPost } from '../../utils/slices/feedSlice';
 
@@ -22,6 +22,8 @@ function PostCard({ post, feedState, isDirect }) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const userId = useSelector((state) => state.userState.userId);
 
     const handleDeletePost = async (postId) => {
         console.log('going to delete post', postId);
@@ -63,12 +65,14 @@ function PostCard({ post, feedState, isDirect }) {
 
                 }
 
-                <IconButton onClick={() => handleDeletePost(post._id)}
-                    sx={{
-                        color: red[400],
-                    }}>
-                    <DeleteOutlineIcon />
-                </IconButton>
+                {post.creatorId === userId &&
+                    <IconButton onClick={() => handleDeletePost(post._id)}
+                        sx={{
+                            color: red[400],
+                        }}>
+                        <DeleteOutlineIcon />
+                    </IconButton>}
+
             </CardActions>
         </Card>
     );

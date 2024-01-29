@@ -2,12 +2,9 @@ const { Schema, model } = require('mongoose');
 
 const chatSchema = new Schema(
   {
-    isGroupChat: {
-      type: Boolean,
-      required: true
-    },
     chatName: {
-      type: String
+      type: String,
+      required: true
     },
     recipients: [
       {

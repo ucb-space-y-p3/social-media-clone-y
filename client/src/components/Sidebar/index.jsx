@@ -69,6 +69,8 @@ function Sidebar({ children }) {
 
     const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
     const username = useSelector((state) => state.userState.username);
+    const firstInitial = useSelector((state) => state.userState.firstInitial);
+    const lastInitial = useSelector((state) => state.userState.lastInitial);
     
     const dispatch = useDispatch()
 
@@ -117,7 +119,7 @@ function Sidebar({ children }) {
                 sx={{
                     padding: 2,
                 }}>
-                <Avatar>WX</Avatar>
+                <Avatar>{`${firstInitial}${lastInitial}`}</Avatar>
                 <Typography noWrap>{username}</Typography>
                 <IconButton onClick={() => dispatch(toggleThemeMode())}
                     sx={{}}>
@@ -509,7 +511,7 @@ function Sidebar({ children }) {
                             left: 40
                         }}
                     >
-                        <Avatar>WX</Avatar>
+                        <Avatar>{`${firstInitial}${lastInitial}`}</Avatar>
                     </IconButton>
                     <IconButton
                         color="inherit"

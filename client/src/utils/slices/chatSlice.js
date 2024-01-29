@@ -36,7 +36,7 @@ const chatSlice = createSlice({
         populateMessages: (state, action) => {
             state.currentChat.messages = [...state.currentChat.messages, ...action.payload.message]
         },
-        deleteMessages: (state, action) => {
+        deleteMessage: (state, action) => {
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
         },
         toggleDialogChatBox: (state, action) => {
@@ -52,6 +52,20 @@ const chatSlice = createSlice({
         },
         closeCurrentChat: (state) => {
             state.currentChat.connected = false;
+        },
+        setFirstMessage: (state, action) => {
+            state.newChat.firstMessage = action.payload.firstMessage;
+        },
+        addNewRecipient: (state, action) => {
+            state.newChat.recipients = [ ...state.newChat.recipients, action.payload.user ];
+        },
+        removeNewRecipient: (state, action) => {
+            state.newChat.recipients = state.newChat.recipients.filter((user) => user.username !== action.payload.username);
+        },
+        resetNewChat: (state) => {
+            state.newChat.firstMessage = '';
+            state.newChat.recipients = [];
+            state.newChat.open = false;
         }
     }
 })
@@ -62,10 +76,12 @@ export const {
     deleteChat,
     addMessage,
     populateMessages,
-    deleteMessages,
+    deleteMessage,
     toggleDialogChatBox,
     populateCurrentChat,
     closeCurrentChat,
+    addNewRecipient,
+    removeNewRecipient,
 
 } = chatSlice.actions;
 export default chatSlice.reducer;
