@@ -3,8 +3,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { GET_PUBLIC_POSTS, } from '../../utils/queries';
-
-import { setFeed } from '../../utils/slices/feedSlice';
+import { populatePublicPosts, populateCirclePosts, toggleDialogPostBox, setFeed } from '../../utils/slices/feedSlice';
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -18,7 +17,6 @@ import Tab from '@mui/material/Tab';
 
 import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
-import { populatePublicPosts, populateCirclePosts, toggleDialogPostBox } from '../../utils/slices/feedSlice';
 
 function Home() {
 
@@ -38,7 +36,7 @@ function Home() {
         if (!loading) {
             if (!error) {
                 if (data) {
-                    console.log('test effect:', data);
+                    // console.log('home effect:', data);
                     dispatch(populatePublicPosts({ posts: data.getAllPosts }));
                 }
             } else {
@@ -57,7 +55,7 @@ function Home() {
             // console.log('data from refresh hopefully', data);
             dispatch(populatePublicPosts({ posts: data.data.getAllPosts }));
         } catch (error) {
-            console.log('refetch error', error);
+            console.log('home refetch error', error);
         }
     }
 
@@ -95,13 +93,6 @@ function Home() {
                     ))
                 }
 
-                {/* {data?.getAllPosts?.length > 0 &&
-                    data.getAllPosts.map((post, index) => (
-                        <PostCard key={index} post={post} />
-                    ))
-                } */}
-
-                {/* <h1>Last</h1> */}
             </Stack>
             <ScrollToTopMain />
             <Fab color="secondary" aria-label="add" onClick={() => dispatch(toggleDialogPostBox({}))}

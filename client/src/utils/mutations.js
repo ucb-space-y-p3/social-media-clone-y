@@ -171,6 +171,30 @@ mutation CreateChat($chatName: String!, $recipients: [String]!) {
 }
 `;
 
+export const ADD_TO_CHAT = gql`
+mutation AddToChat($chatId: String!, $recipients: [String]!) {
+  addToChat(chatId: $chatId, recipients: $recipients) {
+    _id
+    chatName
+    recipients {
+      _id
+      username
+      firstInitial
+      lastInitial
+    }
+  }
+}
+`;
+
+export const LEAVE_CHAT = gql`
+mutation LeaveChat($chatId: ID!) {
+  leaveChat(chatId: $chatId) {
+    _id
+    chatName
+  }
+}
+`;
+
 export const SEND_MESSAGE = gql`
 mutation SendMessage($chatId: ID!, $content: String!) {
   sendMessage(chatId: $chatId, content: $content) {

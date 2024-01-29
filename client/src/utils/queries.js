@@ -175,6 +175,8 @@ query GetChat($chatId: ID!) {
   getChat(chatId: $chatId) {
     _id
     chatName
+    userCount
+    messageCount
     recipients {
       _id
       username
@@ -194,6 +196,8 @@ query GetChats {
     activeChats {
       _id
       chatName
+      userCount
+      messageCount
       recipients {
         _id
         username
