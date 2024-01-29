@@ -38,14 +38,14 @@ function Favorites() {
                     }}
                 >
                     <Tab value="post" label="Posts" />
-                    <Tab value="comment" label="Comments" disabled/>
+                    <Tab value="comment" label="Comments" />
                 </Tabs>
             </Box>
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Favorites</h1>
-                {[...Array(20)].map((_, index) => (
-                    <PostCard key={index} />
-                ))}
+
+                
+
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />

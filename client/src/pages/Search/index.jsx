@@ -63,8 +63,8 @@ function Search() {
                         aria-label="secondary tabs example"
                     >
                         <Tab value="user" label="Users" />
-                        <Tab value="post" label="Posts" disabled/>
-                        <Tab value="message" label="Messages" disabled/>
+                        <Tab value="post" label="Posts" />
+                        <Tab value="chat" label="Chats" />
                     </Tabs>
                 </Box>
             </Paper>

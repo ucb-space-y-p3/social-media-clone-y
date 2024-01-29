@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleThemeMode, } from '../../utils/slices/userSlice';
+import { toggleDialogChatBox, } from '../../utils/slices/chatSlice';
 
 import Auth from '../../utils/auth';
 
-import ScrollToTopSide from '../ScrollToTopSide';
+// import ScrollToTopSide from '../ScrollToTopSide';
+import ChatItem from '../ChatItem';
 
 // import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -15,9 +17,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Fab from '@mui/material/Fab';
-import Modal from '@mui/material/Modal';
+// import Modal from '@mui/material/Modal';
 // import Container from '@mui/material/Container';
 // import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -57,9 +60,16 @@ const meduimDrawerWidth = 320;
 const smallDrawerWidth = 240;
 
 
+// const Transition = forwardRef(function Transition(props, ref) {
+//     return <Slide direction="up" ref={ref} {...props} />;
+// });
+
+
 function Sidebar({ children }) {
 
-    const themeMode = useSelector((state) => state.userState.settings.mode);
+    const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
+    const username = useSelector((state) => state.userState.username);
+    
     const dispatch = useDispatch()
 
 
@@ -67,10 +77,6 @@ function Sidebar({ children }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const navigate = useNavigate();
-
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -93,7 +99,7 @@ function Sidebar({ children }) {
     }
 
     const handleDirection = (newPage) => {
-        console.log(`/${newPage}`)
+        // console.log(`/${newPage}`)
         navigate(`/${newPage}`);
     }
 
@@ -112,13 +118,13 @@ function Sidebar({ children }) {
                     padding: 2,
                 }}>
                 <Avatar>WX</Avatar>
-                <Typography noWrap>TesterGuy</Typography>
+                <Typography noWrap>{username}</Typography>
                 <IconButton onClick={() => dispatch(toggleThemeMode())}
                     sx={{}}>
-                    {themeMode === 'dark' ?
-                        <LightModeIcon />
+                    {isDarkMode ?
+                        <LightModeIcon color="secondary"/>
                         :
-                        <ModeNightIcon />
+                        <ModeNightIcon color="secondary"/>
                     }
                 </IconButton>
             </Stack>
@@ -128,7 +134,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <CottageIcon />
+                            <CottageIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Home"} />
 
@@ -138,7 +144,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <NotificationsIcon />
+                            <NotificationsIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Notifications"} />
 
@@ -148,7 +154,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <SearchIcon />
+                            <SearchIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Search"} />
 
@@ -158,7 +164,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <FavoriteIcon />
+                            <FavoriteIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Favorites"} />
 
@@ -168,7 +174,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <PersonIcon />
+                            <PersonIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Profile"} />
 
@@ -181,7 +187,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <TuneIcon />
+                            <TuneIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Settings"} />
 
@@ -190,7 +196,7 @@ function Sidebar({ children }) {
                 <ListItem disablePadding onClick={handleLogOut}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <LogoutIcon />
+                            <LogoutIcon color="secondary"/>
                         </ListItemIcon>
                         <ListItemText primary={"Log Out"} />
                     </ListItemButton>
@@ -242,18 +248,7 @@ function Sidebar({ children }) {
                     </ListItemButton>
                 </ListItem>
                 <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 33333</Typography>
-                    </ListItemButton>
-                </ListItem>
+                <ChatItem chatId='testId123' chatName='Cool Guys' />
                 <Divider />
                 <ListItem disablePadding>
                     <ListItemButton>
@@ -540,7 +535,7 @@ function Sidebar({ children }) {
                 </Toolbar>
             </AppBar>
 
-            <Modal
+            {/* <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
@@ -554,7 +549,7 @@ function Sidebar({ children }) {
                         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
                     </Typography>
                 </Box>
-            </Modal>
+            </Modal> */}
 
             <Box
                 component="nav"
@@ -601,7 +596,7 @@ function Sidebar({ children }) {
                     open
                 >
                     {chatsDrawer}
-                    <Fab variant="extended" color="primary" onClick={handleOpen}
+                    <Fab variant="extended" color="secondary" onClick={() => dispatch(toggleDialogChatBox({}))}
                         sx={{
                             position: "fixed",
                             bottom: { md: 65 },

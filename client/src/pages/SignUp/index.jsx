@@ -18,7 +18,7 @@ import Auth from '../../utils/auth';
 import { CREATE_USER } from '../../utils/mutations';
 
 function SignUp() {
-    const [formState, setFormState] = useState({ email: '', password: '', username: '' });
+    const [formState, setFormState] = useState({ email: '', password: '', username: '', firstInitial: '', lastInitial: '' });
     const [addUser] = useMutation(CREATE_USER);
 
     const handleFormSubmit = async (event) => {
@@ -29,7 +29,9 @@ function SignUp() {
                     input: {
                         email: formState.email,
                         password: formState.password,
-                        username: formState.username
+                        username: formState.username,
+                        firstInitial: formState.firstInitial,
+                        lastInitial: formState.lastInitial,
                     }
                 },
             });
@@ -94,10 +96,10 @@ function SignUp() {
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                name="firstI"
+                                name="firstInitial"
                                 required
                                 // fullWidth
-                                id="firstI"
+                                id="firstInitial"
                                 label="Some First Initial"
                                 // autoFocus
                                 onChange={handleChange}
@@ -105,10 +107,10 @@ function SignUp() {
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                name="lastI"
+                                name="lastInitial"
                                 required
                                 // fullWidth
-                                id="lastI"
+                                id="lastInitial"
                                 label="Some Last Initial"
                                 // autoFocus
                                 onChange={handleChange}

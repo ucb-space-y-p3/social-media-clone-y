@@ -2,7 +2,7 @@ const { Schema } = require('mongoose');
 
 const settingsSchema = new Schema(
   {
-    isSilentMode: {
+    isDarkMode: {
       type: Boolean,
       required: true,
       default: false,

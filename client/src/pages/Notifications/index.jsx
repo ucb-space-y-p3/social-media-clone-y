@@ -21,8 +21,8 @@ function Notifications() {
 
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
-        <Container maxWidth="md" sx={{ paddingTop: 14 }}>
-            <Box sx={{
+        <Container maxWidth="md" sx={{  }}>
+            {/* <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 width: '100'
@@ -43,12 +43,12 @@ function Notifications() {
                     <Tab value="comment" label="Comments" disabled />
                     <Tab value="message" label="Messages" disabled />
                 </Tabs>
-            </Box>
+            </Box> */}
             <Stack spacing={0.7}>
                 <h1 id="back-to-top-anchor">Nofitications</h1>
-                {[...Array(20)].map((_, index) => (
-                    <PostCard key={index} />
-                ))}
+
+                
+
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />

@@ -27,6 +27,7 @@ export default function Footer() {
           setValue(newValue);
           navigate(`/${newValue}`);
         }}
+        // color="secondary"
         sx={{
           display: { md: 'none' }
         }}
@@ -41,6 +42,7 @@ export default function Footer() {
       <BottomNavigation
         // showLabels
         value={value}
+        // color="secondary"
         onChange={(event, newValue) => {
           setValue(newValue);
           navigate(`/${newValue}`);
