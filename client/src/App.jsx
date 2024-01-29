@@ -23,7 +23,6 @@ import { GET_ME, GET_PUBLIC_POSTS, GET_LIKED_COMMENTS, GET_LIKED_POSTS, GET_CHAT
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, } from './utils/slices/userSlice';
-import { populatePublicPosts, populateCirclePosts } from './utils/slices/feedSlice';
 
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
@@ -119,16 +118,7 @@ function App() {
   const location = useLocation().pathname.split('/')[1];
 
   const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
-  // const { loading: publicPostsLoading, error: publicPostsError, data: publicPostsData, refetch: publicPostsRefetch } = useQuery(GET_PUBLIC_POSTS);
-  // const [circlePostsRefetch, { loading: circlePostsLoading, error: circlePostsError, data: circlePostsData }] = useLazyQuery(GET_CIRCLE_POSTS);
-
-  // maybe place these lazy queries into their corresponding pages
-  // const [getLikedPosts, { loading: likedPostsLoading, error: likedPostsError, data: likedPostsData }] = useLazyQuery(GET_LIKED_POSTS);
-  // const [getLikedComments, { loading: likedCommentsLoading, error: likedCommentsError, data: likedCommentsData }] = useLazyQuery(GET_LIKED_COMMENTS);
-  // const [getChat, { loading: chatLoading, error: chatError, data: chatData }] = useLazyQuery(GET_CHAT);
-  // const [getChats, { loading: chatsLoading, error: chatsError, data: chatsData }] = useLazyQuery(GET_CHATS);
-  // const [getNotifications, { loading: notificationsLoading, error: notificationsError, data: notificationsData }] = useLazyQuery(GET_NOTIFICATIONS);
-
+  
   // useEffect(() => {
   //   if (Auth.loggedIn()) {
   //     console.log('first app load/render');
@@ -143,13 +133,9 @@ function App() {
     if (!getMeLoading) {
       if (!getMeError) {
         if (getMeData) {
-          console.log(getMeData);
-          const { username, email, firstInitial, lastInitial } = getMeData.me;
-          dispatch(setUser({ username, email, firstInitial, lastInitial }));
-          // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate posts
-          // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate comments
-          // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate friends
-          // dispatch(setUser({ username, email, firstInitial, lastInitial, userRefresher: getMeRefetch})); // populate requests
+          // console.log(getMeData);
+          const { _id: userId , username, email, firstInitial, lastInitial } = getMeData.me;
+          dispatch(setUser({ userId, username, email, firstInitial, lastInitial }));
         }
       } else {
         // throw error on screen
@@ -158,21 +144,6 @@ function App() {
     }
 
   }, [getMeLoading, getMeData]);
-
-  // useEffect(() => {
-  //   if (!publicPostsLoading) {
-  //     if (!publicPostsError) {
-  //       if (publicPostsData) {
-  //         console.log(publicPostsData);
-  //         dispatch(populatePublicPosts({ posts: publicPostsData.getAllPosts }));
-  //       }
-  //     } else {
-  //       // throw error on screen
-  //       console.log('There was an error loading posts!')
-  //     }
-  //   }
-
-  // }, [publicPostsLoading, publicPostsData]);
 
   return (
     <ThemeProvider theme={theme}>

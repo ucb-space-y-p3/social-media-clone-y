@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const INITIAL_STATE = {
+    userId: '',
     username: '',
     firstInitial: '',
     lastInitial: '',
@@ -21,6 +22,7 @@ const userSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             // console.log(action);
+            state.userId = action.payload.userId;
             state.username = action.payload.username;
             state.firstInitial = action.payload.firstInitial;
             state.lastInitial = action.payload.lastInitial;

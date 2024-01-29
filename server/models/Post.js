@@ -45,6 +45,14 @@ const postSchema = new Schema(
       type: String,
       required: true
     },
+    creatorFirstInitial: {
+      type: String,
+      required: true
+    },
+    creatorLastInitial: {
+      type: String,
+      required: true
+    },
     content: {
       type: String,
       required: true,

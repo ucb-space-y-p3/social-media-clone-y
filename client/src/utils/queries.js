@@ -3,9 +3,11 @@ import { gql } from '@apollo/client';
 export const GET_ME = gql`
 query Me {
   me {
+    _id
     username
     firstInitial
     lastInitial
+    email
     posts {
       _id
       content
@@ -104,7 +106,8 @@ export const GET_PUBLIC_POSTS = gql`
 query GetAllPosts {
   getAllPosts {
     _id
-    creator
+    creatorFirstInitial
+    creatorLastInitial
     content
     commentCount
     likeCount

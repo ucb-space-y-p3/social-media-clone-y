@@ -99,7 +99,7 @@ function Sidebar({ children }) {
     }
 
     const handleDirection = (newPage) => {
-        console.log(`/${newPage}`)
+        // console.log(`/${newPage}`)
         navigate(`/${newPage}`);
     }
 

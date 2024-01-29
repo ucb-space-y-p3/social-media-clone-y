@@ -19,7 +19,7 @@ const userSchema = new Schema(
       trim: true,
       maxLength: 1,
     },
-    LastInitial: {
+    lastInitial: {
       type: String,
       required: true,
       trim: true,

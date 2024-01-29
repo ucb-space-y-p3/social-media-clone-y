@@ -317,13 +317,13 @@ const resolvers = {
   },
 
 
-  Subscription: {
-    messageSent: {
-      subscribe: (parent, { chatId }, { pubsub }) => {
-        return pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`);
-      },
-    },
-  },
+  // Subscription: {
+  //   messageSent: {
+  //     subscribe: (parent, { chatId }, { pubsub }) => {
+  //       return pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`);
+  //     },
+  //   },
+  // },
 
 
   Mutation: {
@@ -348,9 +348,9 @@ const resolvers = {
       }
     },
     // agith
-    createUser: async (parent, { input: { username, email, password } }) => {
+    createUser: async (parent, { input: { username, email, password, firstInitial, lastInitial } }) => {
       try {
-        const user = await User.create({ username, email, password });
+        const user = await User.create({ username, email, password, firstInitial, lastInitial });
         const token = signToken(user);
         return { token, user };
       } catch (error) {
@@ -621,8 +621,9 @@ const resolvers = {
     // agith
     createPost: async (parent, { content }, context) => {
       try {
+        console.log('test');
         if (context.user) {
-          const post = await Post.create({ content, creator: context.user.username });
+          const post = await Post.create({ content, creator: context.user.username, creatorFirstInitial: context.user.firstInitial, creatorLastInitial: context.user.lastInitial });
 
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },

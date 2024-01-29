@@ -112,6 +112,8 @@ mutation CreatePost($content: String!) {
     _id
     content
     creator
+    creatorFirstInitial
+    creatorLastInitial
     createdAt
   }
 }

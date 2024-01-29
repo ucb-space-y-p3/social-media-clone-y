@@ -1,6 +1,8 @@
 import { forwardRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleDialogPostBox, updateNewPost, } from '../../utils/slices/feedSlice';
+import { useMutation } from '@apollo/client';
+import { CREATE_POST } from '../../utils/mutations';
+import { toggleDialogPostBox, updateNewPost, addPublicPost } from '../../utils/slices/feedSlice';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -19,25 +21,35 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export default function NewPostDialog({ }) {
 
+  const [createPost] = useMutation(CREATE_POST);
+
   const isNewPostDialogOpen = useSelector((state) => state.feedState.newPost.open);
   const newPostContent = useSelector((state) => state.feedState.newPost.content);
+  const userId = useSelector((state) => state.userState.userId);
+  const firstInitial = useSelector((state) => state.userState.firstInitial);
+  const lastInitial = useSelector((state) => state.userState.lastInitial);
 
   const dispatch = useDispatch();
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
 
   const handleClose = () => {
     dispatch(toggleDialogPostBox({}))
   };
 
-  const [content, setContent] = useState('');
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log('pushing new post');
     dispatch(updateNewPost({ content: '' }));
     dispatch(toggleDialogPostBox({}));
+    try {
+      console.log('new post content:', newPostContent);
+      const post = await createPost({
+        variables: { content: newPostContent },
+      });
+      console.log('newly created post from backend', post);
+      dispatch(addPublicPost({ _id: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, createdAt: post.createdAt }))
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleContent = (event) => {
@@ -45,22 +57,6 @@ export default function NewPostDialog({ }) {
     dispatch(updateNewPost({ content: event.target.value }));
   }
 
-
-  // const closePostModal = () => {
-  //   // other logic here
-  //   dispatch(toggleDialogPostBox({}))
-  // }
-
-  // const pushNewPost = () => {
-  //   console.log('pushing new post');
-  //   dispatch(updateNewPost({ content: '' }));
-  //   dispatch(toggleDialogPostBox({}));
-  // }
-
-  // const handleContentChange = (event) => {
-  //   console.log(event.target.value);
-  //   dispatch(updateNewPost({ content: event.target.value }));
-  // }
 
   return (
     <Dialog

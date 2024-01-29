@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { GET_PUBLIC_POSTS, } from '../../utils/queries';
@@ -21,51 +21,49 @@ import Tab from '@mui/material/Tab';
 
 import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
-import { toggleDialogPostBox, } from '../../utils/slices/feedSlice';
+import { populatePublicPosts, populateCirclePosts, toggleDialogPostBox } from '../../utils/slices/feedSlice';
 
 function Home() {
-    const [refresh, triggerRefresh] = useState(false);
-    const feedState = useSelector((state) => state.feedState.currentFeed);
-    const publicPosts = useSelector((state) => state.feedState.publicPosts);
-
-    const [refreshPublicPosts, { publicPostsCalled, publicPostsLoading, publicPostsData, publicPostsError }] = useLazyQuery(GET_PUBLIC_POSTS, {
-        nextFetchPolicy: 'network-only',
-    });
-
-    // const [refreshPublicPosts, { publicPostsCalled, publicPostsLoading, publicPostsData, publicPostsError }] = useLazyQuery(GET_PUBLIC_POSTS);
 
     const dispatch = useDispatch();
 
-    const handleRefresh = () => {
-        console.log('refreshing feed');
-        if (feedState === 'public') {
+    const feedState = useSelector((state) => state.feedState.currentFeed);
+    const publicPosts = useSelector((state) => state.feedState.publicPosts);
 
-        } else if (feedState === 'circle') {
-
-        }
-    }
-
-    useEffect(() => {
-        console.log('testing refresh:', refresh);
-        refreshPublicPosts({});
-    }, [refresh])
+    const { loading, error, data, refetch } = useQuery(GET_PUBLIC_POSTS, {
+        fetchPolicy: 'no-cache', // Used for first execution
+        nextFetchPolicy: 'no-cache', // Used for subsequent executions
+    });
 
     useEffect(() => {
-        console.log('testing use effect for refresh');
-        console.log('publicPostsData', publicPostsData);
-        if (!publicPostsLoading) {
-            if (!publicPostsError) {
-                if (publicPostsData) {
-                    console.log(publicPostsData);
-                    dispatch(populatePublicPosts({ posts: publicPostsData.getAllPosts }));
+        // console.log('testing graphql fetching');
+
+        if (!loading) {
+            if (!error) {
+                if (data) {
+                    console.log('test effect:', data);
+                    dispatch(populatePublicPosts({ posts: data.getAllPosts }));
                 }
             } else {
                 // throw error on screen
-                console.log('There was an error loading posts!')
+                console.log('There was an error loading me!')
             }
         }
 
-    }, [refresh, publicPostsCalled, publicPostsLoading, publicPostsData]);
+    }, [loading, error, data])
+
+
+    const handleRefresh = async () => {
+        try {
+            // console.log('handling refresh');
+            const data = await refetch();
+            console.log('data from refresh hopefully', data);
+            dispatch(populatePublicPosts({ posts: data.data.getAllPosts }));
+        } catch (error) {
+            console.log('refetch error', error);
+        }
+    }
+
 
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
@@ -100,6 +98,12 @@ function Home() {
                     ))
                 }
 
+                {/* {data?.getAllPosts?.length > 0 &&
+                    data.getAllPosts.map((post, index) => (
+                        <PostCard key={index} post={post} />
+                    ))
+                } */}
+
                 <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />
@@ -111,7 +115,8 @@ function Home() {
                 }}>
                 <AddIcon />
             </Fab>
-            <IconButton color="secondary" onClick={() => triggerRefresh(!refresh)}
+            {/* <IconButton color="secondary" onClick={() => triggerRefresh(!refresh)} */}
+            <IconButton color="secondary" onClick={handleRefresh}
                 sx={{
                     position: "fixed",
                     // top: { xs: 120, md: 120, lg: 120 },

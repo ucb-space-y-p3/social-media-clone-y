@@ -19,10 +19,11 @@ const feedSlice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         addPublicPost: (state, action) => {
-            state.publicPosts = [...state.publicPosts, action.payload];
+            state.publicPosts = [ action.payload, ...state.publicPosts];
         },
         populatePublicPosts: (state, action) => {
-            state.publicPosts = [...state.publicPosts, ...action.payload.posts];
+            // state.publicPosts = [...state.publicPosts, ...action.payload.posts];
+            state.publicPosts = [ ...action.payload.posts ];
         },
         addCirclePost: (state, action) => {
             state.circlePosts = [...state.circlePosts, action.payload];

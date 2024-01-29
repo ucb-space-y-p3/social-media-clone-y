@@ -48,6 +48,8 @@ const typeDefs = `
   type Post {
     _id: ID
     creator: String
+    creatorFirstInitial: String
+    creatorLastInitial: String
     content: String
     createdAt: String
     likedBy: [User]
@@ -118,6 +120,8 @@ const typeDefs = `
     username: String!
     email: String!
     password: String!
+    firstInitial: String!
+    lastInitial: String!
   }
 
   type Mutation {
