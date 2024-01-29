@@ -109,6 +109,7 @@ const typeDefs = `
     getAllRequests: [FriendRequest]
     chat:[Message]
     getPushNotifications(userId: ID!): [PushNotification]
+
   }
 
   input UserInput {
@@ -136,7 +137,16 @@ createChat(recipients: [String]!): Chat
 deleteChat(chatId: ID!): Chat
 clearNotifications: User
 sendPushNotification(userId: ID!, message: String!): Boolean
-  }
+receiveMessage(userId: ID!, message: String!): Message
+friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
+userConnected(userId: ID!): SuccessResponse
+userDisconnected(userId: ID!): SuccessResponse
+}
+
+type SuccessResponse {
+  success: Boolean!
+  message: String
+}
 
   type PushNotification {
     userId: ID!

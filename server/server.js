@@ -48,6 +48,9 @@ const server = new ApolloServer({
       },
     },
   ],
+  subscriptions: {
+    path: '/subscriptions',
+  },
 });
 console.log('Apollo Server instance createddd');
 async function startApolloServer() {
@@ -63,7 +66,7 @@ async function startApolloServer() {
   app.use('/graphql', expressMiddleware(server, {
     context: authMiddleware
   }));
-
+  app.use('/subscriptions', expressMiddleware(server, { context: authMiddleware }));
   // Production mode
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
