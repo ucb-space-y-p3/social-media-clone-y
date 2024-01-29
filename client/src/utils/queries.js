@@ -88,12 +88,17 @@ query GetPost($postId: ID!) {
   getPost(postId: $postId) {
     _id
     creator
+    creatorId
+    creatorFirstInitial
+    creatorLastInitial
     content
     likeCount
     commentCount
     comments {
       _id
       creator
+      creatorFirstInitial
+      creatorLastInitial
       content
       createdAt
       likeCount
@@ -106,6 +111,7 @@ export const GET_PUBLIC_POSTS = gql`
 query GetAllPosts {
   getAllPosts {
     _id
+    creatorId
     creatorFirstInitial
     creatorLastInitial
     content
@@ -145,6 +151,8 @@ query LikedComments {
     likedComments {
       _id
       creator
+      creatorFirstInitial
+      creatorLastInitial
       content
       postId
       likeCount

@@ -6,8 +6,6 @@ import { GET_PUBLIC_POSTS, } from '../../utils/queries';
 
 import { setFeed } from '../../utils/slices/feedSlice';
 
-import { redirect } from 'react-router-dom';
-
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -17,7 +15,6 @@ import AddIcon from '@mui/icons-material/Add';
 import LoopIcon from '@mui/icons-material/Loop';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-
 
 import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
@@ -57,7 +54,7 @@ function Home() {
         try {
             // console.log('handling refresh');
             const data = await refetch();
-            console.log('data from refresh hopefully', data);
+            // console.log('data from refresh hopefully', data);
             dispatch(populatePublicPosts({ posts: data.data.getAllPosts }));
         } catch (error) {
             console.log('refetch error', error);
@@ -67,7 +64,7 @@ function Home() {
 
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
-        <Container id="ooooooee" maxWidth="md" sx={{ paddingTop: 14 }}>
+        <Container maxWidth="md" sx={{ paddingTop: 14 }}>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -94,7 +91,7 @@ function Home() {
 
                 {publicPosts.length > 0 &&
                     publicPosts.map((post, index) => (
-                        <PostCard key={index} post={post} />
+                        <PostCard key={index} post={post} feedState={feedState} />
                     ))
                 }
 
@@ -104,7 +101,7 @@ function Home() {
                     ))
                 } */}
 
-                <h1>Last</h1>
+                {/* <h1>Last</h1> */}
             </Stack>
             <ScrollToTopMain />
             <Fab color="secondary" aria-label="add" onClick={() => dispatch(toggleDialogPostBox({}))}

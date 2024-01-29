@@ -621,9 +621,8 @@ const resolvers = {
     // agith
     createPost: async (parent, { content }, context) => {
       try {
-        console.log('test');
         if (context.user) {
-          const post = await Post.create({ content, creator: context.user.username, creatorFirstInitial: context.user.firstInitial, creatorLastInitial: context.user.lastInitial });
+          const post = await Post.create({ content, creator: context.user.username, creatorId: context.user._id, creatorFirstInitial: context.user.firstInitial, creatorLastInitial: context.user.lastInitial });
 
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
@@ -647,24 +646,14 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
+    // get the post and check if it creator is the same as the context user
+    // same with comments
     deletePost: async (parent, { postId }, context) => {
       try {
         if (context.user) {
-          // we need to find all the comments and delete them
-          // this includes from everyone's liked list
-          // users/clients will be responsible for updating their own liked lists
-          const post = await Post.findOneAndDelete({ _id: postId }); 
-
-          if (!post) {
-            throw PostNotFoundError;
-          };
-
-          await Comment.deleteMany({ postId: postId });
-
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $pull: { posts: post._id } },
+            { $pull: { posts: postId } },
             {
               new: true,
               runValidators: true
@@ -674,6 +663,18 @@ const resolvers = {
           if (!user) {
             throw UserNotFoundError;
           };
+
+          // we need to find all the comments and delete them
+          // this includes from everyone's liked list
+          // users/clients will be responsible for updating their own liked lists
+          const post = await Post.findOneAndDelete({ _id: postId });
+
+          if (!post) {
+            throw PostNotFoundError;
+          };
+
+          await Comment.deleteMany({ postId: postId });
+
 
           return post;
         }
@@ -729,12 +730,19 @@ const resolvers = {
     deleteComment: async (parent, { commentId }, context) => {
       try {
         if (context.user) {
-          const comment = await Comment.findOneAndDelete({ _id: commentId });
+          const user = await User.findOneAndUpdate(
+            { _id: context.user._id },
+            { $pull: { comments: comment._id } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
 
-          if (!comment) {
-            throw PostNotFoundError;
+          if (!user) {
+            throw UserNotFoundError;
           };
-
+          
           const post = await Post.findOneAndUpdate(
             { _id: postId },
             { $pull: { comments: comment._id } },
@@ -748,20 +756,14 @@ const resolvers = {
             throw UserNotFoundError;
           };
 
-          const user = await User.findOneAndUpdate(
-            { _id: context.user._id },
-            { $pull: { posts: post._id } },
-            {
-              new: true,
-              runValidators: true
-            }
-          );
+          const comment = await Comment.findOneAndDelete({ _id: commentId });
 
-          if (!user) {
-            throw UserNotFoundError;
+          if (!comment) {
+            throw PostNotFoundError;
           };
 
-          return post.comments.find((comment) => comment._id == commentId);
+
+          return comment;
         }
         throw AuthenticationError;
       } catch (error) {

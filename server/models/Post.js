@@ -45,6 +45,10 @@ const postSchema = new Schema(
       type: String,
       required: true
     },
+    creatorId: {
+      type: String,
+      required: true,
+    },
     creatorFirstInitial: {
       type: String,
       required: true

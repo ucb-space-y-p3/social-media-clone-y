@@ -48,6 +48,7 @@ const typeDefs = `
   type Post {
     _id: ID
     creator: String
+    creatorId: String
     creatorFirstInitial: String
     creatorLastInitial: String
     content: String

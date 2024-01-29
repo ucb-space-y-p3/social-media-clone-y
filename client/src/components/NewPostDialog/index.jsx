@@ -23,13 +23,14 @@ export default function NewPostDialog({ }) {
 
   const [createPost] = useMutation(CREATE_POST);
 
+  const dispatch = useDispatch();
+  
   const isNewPostDialogOpen = useSelector((state) => state.feedState.newPost.open);
   const newPostContent = useSelector((state) => state.feedState.newPost.content);
   const userId = useSelector((state) => state.userState.userId);
   const firstInitial = useSelector((state) => state.userState.firstInitial);
   const lastInitial = useSelector((state) => state.userState.lastInitial);
 
-  const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(toggleDialogPostBox({}))
@@ -45,7 +46,7 @@ export default function NewPostDialog({ }) {
         variables: { content: newPostContent },
       });
       console.log('newly created post from backend', post);
-      dispatch(addPublicPost({ _id: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, createdAt: post.createdAt }))
+      dispatch(addPublicPost({ _id: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
 
     } catch (error) {
       console.log(error);
