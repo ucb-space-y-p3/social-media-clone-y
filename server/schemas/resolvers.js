@@ -573,7 +573,10 @@ const resolvers = {
         // dev code
         const friendRequest = await FriendRequest.findOneAndDelete({ _id: requestId });
         // console.log(friendRequest);
-
+        if (!friendRequest) {
+          // Handle the case where no friend request is found with the given ID
+          throw new Error('Friend request not found');
+        }
         const newFriend = await User.findOneAndUpdate(
           { _id: friendRequest.targetId },
           {
