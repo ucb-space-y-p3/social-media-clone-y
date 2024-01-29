@@ -115,9 +115,10 @@ const typeDefs = `
     getMessages(chatId: ID!): [Message]  
     getNotifications: [Notification]
     # dev methods
-    getUsers: [User]
+    # getUsers: [User]
     getAllPosts: [Post]
-    getAllRequests: [FriendRequest]
+    getCirclePosts: [Post]
+    # getAllRequests: [FriendRequest]
   }
 
   input UserInput {

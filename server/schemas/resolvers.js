@@ -143,6 +143,29 @@ const resolvers = {
         throw error;
       }
     },
+    getCirclePosts: async (parent, { }, context) => {
+      try {
+        if (context.user) {
+          const user = await User.findById(context.user._id);
+          if (!user) {
+            throw UserNotFoundError;
+          };
+
+          const posts = await Post.find({
+            creatorId: { $in: [...user.friends, user._id] }
+          });
+          if (!posts) {
+            throw PostNotFoundError;
+          };
+          
+          return posts;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
     // agith
     // getPosts: async (parent, { username }, context) => {
     //   try {
@@ -675,7 +698,7 @@ const resolvers = {
 
           await User.findOneAndUpdate(
             { likedComments: { $elemMatch: { $in: post.comments } } },
-            { $pull: { likedComments: { $each: post.comments }}}
+            { $pull: { likedComments: { $each: post.comments } } }
           )
 
           return post;
@@ -849,7 +872,7 @@ const resolvers = {
         if (context.user) {
           const chat = await Chat.findOneAndUpdate(
             { _id: chatId },
-            { $addToSet: { recipients: { $each: recipients} } },
+            { $addToSet: { recipients: { $each: recipients } } },
             {
               new: true,
               runValidators: true

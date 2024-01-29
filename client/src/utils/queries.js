@@ -122,13 +122,21 @@ query GetAllPosts {
 }
 `;
 
-// export const GET_CIRCLE_POSTS = gql`
-// query GetUser($username: String!) {
-//   getUser(username: $username) {
-//     token
-//   }
-// }
-// `;
+export const GET_CIRCLE_POSTS = gql`
+query GetCirclePosts {
+  getCirclePosts {
+    _id
+    creatorId
+    creator
+    creatorFirstInitial
+    creatorLastInitial
+    content
+    commentCount
+    likeCount
+    createdAt
+  }
+}
+`;
 
 export const GET_LIKED_POSTS = gql`
 query LikedPosts {
