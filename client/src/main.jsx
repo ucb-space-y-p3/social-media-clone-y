@@ -7,7 +7,9 @@ import ErrorNoResource from './pages/ErrorNoResource';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import Post from './pages/Post';
 import Chats from './pages/Chats';
+import Chat from './pages/Chat';
 import Favorites from './pages/Favorites';
 import Search from './pages/Search';
 import Notifications from './pages/Notifications';
@@ -32,10 +34,17 @@ const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <SignUp />
+            },{
+                path: '/posts/:postId',
+                element: <Post />
             },
             {
                 path: '/chats',
                 element: <Chats />
+            },
+            {
+                path: '/chats/:chatId',
+                element: <Chat />
             },
             {
                 path: '/favorites',

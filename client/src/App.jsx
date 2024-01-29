@@ -88,11 +88,11 @@ function App() {
 
   const dispatch = useDispatch();
 
-  const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
+  const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
 
   const theme = createTheme({
     palette: {
-      mode: themeMode ? 'dark' : 'light',
+      mode: isDarkMode ? 'dark' : 'light',
       primary: {
         main: purple['300'],
       },

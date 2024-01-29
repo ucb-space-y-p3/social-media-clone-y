@@ -67,7 +67,7 @@ const smallDrawerWidth = 240;
 
 function Sidebar({ children }) {
 
-    const themeMode = useSelector((state) => state.userState.settings.isDarkMode);
+    const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
     const username = useSelector((state) => state.userState.username);
     
     const dispatch = useDispatch()
@@ -121,7 +121,7 @@ function Sidebar({ children }) {
                 <Typography noWrap>{username}</Typography>
                 <IconButton onClick={() => dispatch(toggleThemeMode())}
                     sx={{}}>
-                    {themeMode === 'dark' ?
+                    {isDarkMode ?
                         <LightModeIcon color="secondary"/>
                         :
                         <ModeNightIcon color="secondary"/>
