@@ -157,10 +157,29 @@ mutation DeleteComment($commentId: ID!) {
 `;
 
 export const CREATE_CHAT = gql`
-
+mutation CreateChat($chatName: String!, $recipients: [String]!) {
+  createChat(chatName: $chatName, recipients: $recipients) {
+    _id
+    chatName
+    recipients {
+      _id
+      username
+      firstInitial
+      lastInitial
+    }
+  }
+}
 `;
 
 export const SEND_MESSAGE = gql`
-  
+mutation SendMessage($chatId: ID!, $content: String!) {
+  sendMessage(chatId: $chatId, content: $content) {
+    _id
+    chatId
+    content
+    creator
+    createdAt
+  }
+} 
 `;
 

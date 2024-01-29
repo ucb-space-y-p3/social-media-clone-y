@@ -26,6 +26,13 @@ const chatSchema = new Schema(
   }
 );
 
+chatSchema.virtual('messageCount').get(function () {
+  return this.messages.length;
+})
+
+chatSchema.virtual('userCount').get(function () {
+  return this.recipients.length;
+})
 
 const Chat = model('chat', chatSchema);
 

@@ -74,7 +74,9 @@ const typeDefs = `
   type Chat {
     _id: ID
     chatName: String
+    userCount: Int
     recipients: [User]
+    messageCount: Int
     messages: [Message]
   }
 
@@ -85,6 +87,7 @@ const typeDefs = `
     postId: ID
     commentId: ID
     creator: String
+    creatorId: String
     createdAt: String
   }
   type Subscription {
@@ -139,10 +142,11 @@ const typeDefs = `
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!): Comment
     deleteComment(commentId: ID!): Comment
-
     createChat(chatName: String!, recipients: [String]!): Chat
-    sendMessage(chatId: ID!, content: String!, username: String!): Message
-    deleteChat(chatId: ID!): Chat
+    addToChat(chatId: String!, recipients: [String]!): Chat
+    leaveChat(chatId: ID!): Chat
+    sendMessage(chatId: ID!, content: String!): Message
+
     clearNotifications: User
 
 

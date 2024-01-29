@@ -166,19 +166,15 @@ export const GET_CHAT = gql`
 query GetChat($chatId: ID!) {
   getChat(chatId: $chatId) {
     _id
+    chatName
     recipients {
       _id
       username
-      firstInitial
-      lastInitial
     }
     messages {
       _id
-      content
       creator
-      createdAt
-      chatId
-      postId
+      content
     }
   }
 }
@@ -189,6 +185,7 @@ query GetChats {
   me {
     activeChats {
       _id
+      chatName
       recipients {
         _id
         username

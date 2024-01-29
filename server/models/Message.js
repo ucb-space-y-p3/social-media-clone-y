@@ -11,8 +11,13 @@ const messageSchema = new Schema(
     commentId: String,
     content: {
       type: String,
+      required: true,
       minLength: 1,
       maxLength: 120,
+    },
+    creatorId: {
+      type: String,
+      required: true
     },
     creator: {
       type: String,
