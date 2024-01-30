@@ -59,7 +59,7 @@ function PostCard({ post, feedState, isDirect }) {
             </CardContent>
             <CardActions>
                 {isDirect ?
-                    <Button size="small" >{post.commentCount} Comments</Button> :
+                    <Button size="small" disabled>{post.commentCount} Comments</Button> :
                     <Button size="small" onClick={() => navigate(`/posts/${post._id}`)}>{post.commentCount} Comments</Button>
 
                 }

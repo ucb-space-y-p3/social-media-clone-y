@@ -46,7 +46,7 @@ export default function NewPostDialog({ }) {
         variables: { content: newPostContent },
       });
       console.log('newly created post from backend', post);
-      dispatch(addPublicPost({ _id: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
+      dispatch(addPublicPost({ _id: post._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
 
     } catch (error) {
       console.log(error);

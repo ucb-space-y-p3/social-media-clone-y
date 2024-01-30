@@ -365,7 +365,7 @@ function Sidebar({ children }) {
                             right: 25
                         }}
                     >
-                        <Avatar>WX</Avatar>
+                        <Avatar>{`${firstInitial}${lastInitial}`}</Avatar>
                     </IconButton>
 
                     <img src={Y} alt="y logo" width="80" style={{
