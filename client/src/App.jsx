@@ -6,6 +6,7 @@ import {
   useQuery,
   split,
   HttpLink,
+  ApolloLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
@@ -57,10 +58,6 @@ const store = configureStore({
   reducer: rootReducer,
 });
 
-// Construct our main GraphQL API endpoint
-const httpLink = new HttpLink({
-  uri: '/graphql',
-});
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
 const authLink = setContext((_, { headers }) => {
@@ -75,6 +72,22 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// const authLink = new ApolloLink((operation, forward) => {
+//   operation.setContext(({ headers = {} }) => ({
+//     headers: {
+//       ...headers,
+//       authorization: authToken ? `Bearer ${authToken}` : '',
+//     },
+//   }));
+
+//   return forward(operation);
+// });
+
+// Construct our main GraphQL API endpoint
+const httpLink = new HttpLink({
+  uri: '/graphql',
+});
+
 // use react routers useLocation to inject the correct url
 const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:4000/subscriptions',
@@ -82,6 +95,18 @@ const wsLink = new GraphQLWsLink(createClient({
     // authToken: user.authToken,
   },
 }));
+
+// const wsLink =
+//     typeof window !== "undefined"
+//         ? new GraphQLWsLink(
+//             createClient({
+//                 url: 'ws://localhost:3000/subscriptions',
+//                 // connectionParams: async () => ({
+//                 //     authorization: getCookie('token')
+//                 // }),
+//             })
+//         )
+//         : null;
 
 const splitLink = split(
   ({ query }) => {
@@ -92,15 +117,32 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpLink,
+  // httpLink,
   // authLink.concat(httpLink),
 );
 
+// const link =
+//     typeof window !== "undefined" && wsLink != null
+//         ? split(
+//             ({ query }) => {
+//                 const def = getMainDefinition(query);
+//                 return (
+//                     def.kind === "OperationDefinition" &&
+//                     def.operation === "subscription"
+//                 );
+//             },
+//             wsLink,
+//             authLink.concat(httpLink)
+//         )
+//         : authLink.concat(httpLink);
 
 const client = new ApolloClient({
   // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
   // link: authLink.concat(splitLink),
+  // link: httpLink,
+  // link: splitLink,
   link: authLink.concat(httpLink),
+  // link,
   cache: new InMemoryCache(),
 });
 
@@ -111,9 +153,9 @@ const client = new ApolloClient({
 function App() {
 
   const dispatch = useDispatch();
-  
+
   const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
-  
+
   const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
 
   const location = useLocation().pathname.split('/')[1];
@@ -148,8 +190,8 @@ function App() {
     if (!getMeLoading) {
       if (!getMeError) {
         if (getMeData) {
-          console.log("me:",getMeData);
-          const { _id: userId , username, email, firstInitial, lastInitial, friends, incomingFriendRequests: friendRequests, posts, comments } = getMeData.me;
+          console.log("me:", getMeData);
+          const { _id: userId, username, email, firstInitial, lastInitial, friends, incomingFriendRequests: friendRequests, posts, comments } = getMeData.me;
           dispatch(setUser({ userId, username, email, firstInitial, lastInitial, friends, friendRequests, posts, comments }));
         }
       } else {
