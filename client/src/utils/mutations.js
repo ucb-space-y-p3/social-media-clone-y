@@ -161,6 +161,8 @@ mutation CreateChat($chatName: String!, $recipients: [String]!) {
   createChat(chatName: $chatName, recipients: $recipients) {
     _id
     chatName
+    userCount
+    messageCount
     recipients {
       _id
       username

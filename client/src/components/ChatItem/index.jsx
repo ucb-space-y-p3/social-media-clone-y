@@ -26,7 +26,7 @@ export default function ChatItem({ chat }) {
   const handleDeleteChat = async (chatId) => {
     console.log(`going to leave chat (${chat.chatName})`, chatId);
     try {
-      const post = await leaveChat({ variables: { chatId } });
+      const chat = await leaveChat({ variables: { chatId } });
       dispatch(deleteChat({ id: chatId }));
 
     } catch (error) {
@@ -35,8 +35,8 @@ export default function ChatItem({ chat }) {
   }
 
   return (
-    <ListItem onClick={() => navigate(`/chats/${chat._id}`)} disablePadding>
-      <ListItemButton>
+    <ListItem disablePadding>
+      <ListItemButton onClick={() => navigate(`/chats/${chat._id}`)}>
         <ListItemIcon>
           <PeopleAltIcon sx={{
             marginTop: 1,

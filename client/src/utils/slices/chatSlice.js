@@ -13,6 +13,7 @@ const INITIAL_STATE = {
     },
     newChat: {
         firstMessage: '',
+        newChatName: '',
         newRecipients: [],
         open: false,
     },
@@ -64,6 +65,9 @@ const chatSlice = createSlice({
         setFirstMessage: (state, action) => {
             state.newChat.firstMessage = action.payload.firstMessage;
         },
+        setNewName: (state, action) => {
+            state.newChat.newChatName = action.payload.newChatName;
+        },
         addNewRecipient: (state, action) => {
             state.newChat.recipients = [...state.newChat.recipients, action.payload.user];
         },
@@ -72,8 +76,9 @@ const chatSlice = createSlice({
         },
         resetNewChat: (state) => {
             state.newChat.firstMessage = '';
-            state.newChat.recipients = [];
+            state.newChat.newRecipients = [];
             state.newChat.open = false;
+            state.newChat.newChatName = '';
         }
     }
 })
@@ -91,6 +96,7 @@ export const {
     setCurrentRecipients,
     setDraftMessage,
     setFirstMessage,
+    setNewName,
     addNewRecipient,
     removeNewRecipient,
     resetNewChat,
