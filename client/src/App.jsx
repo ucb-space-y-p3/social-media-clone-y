@@ -11,6 +11,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
@@ -72,17 +73,6 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// const authLink = new ApolloLink((operation, forward) => {
-//   operation.setContext(({ headers = {} }) => ({
-//     headers: {
-//       ...headers,
-//       authorization: authToken ? `Bearer ${authToken}` : '',
-//     },
-//   }));
-
-//   return forward(operation);
-// });
-
 // Construct our main GraphQL API endpoint
 const httpLink = new HttpLink({
   uri: '/graphql',
@@ -96,18 +86,6 @@ const wsLink = new GraphQLWsLink(createClient({
   },
 }));
 
-// const wsLink =
-//     typeof window !== "undefined"
-//         ? new GraphQLWsLink(
-//             createClient({
-//                 url: 'ws://localhost:3000/subscriptions',
-//                 // connectionParams: async () => ({
-//                 //     authorization: getCookie('token')
-//                 // }),
-//             })
-//         )
-//         : null;
-
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
@@ -117,37 +95,14 @@ const splitLink = split(
     );
   },
   wsLink,
-  // httpLink,
-  // authLink.concat(httpLink),
+  authLink.concat(httpLink),
 );
-
-// const link =
-//     typeof window !== "undefined" && wsLink != null
-//         ? split(
-//             ({ query }) => {
-//                 const def = getMainDefinition(query);
-//                 return (
-//                     def.kind === "OperationDefinition" &&
-//                     def.operation === "subscription"
-//                 );
-//             },
-//             wsLink,
-//             authLink.concat(httpLink)
-//         )
-//         : authLink.concat(httpLink);
 
 const client = new ApolloClient({
   // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
-  // link: authLink.concat(splitLink),
-  // link: httpLink,
-  // link: splitLink,
-  link: authLink.concat(httpLink),
-  // link,
+  link: splitLink,
   cache: new InMemoryCache(),
 });
-
-
-
 
 
 function App() {
