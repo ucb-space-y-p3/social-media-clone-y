@@ -97,17 +97,7 @@ const typeDefs = `
     token: ID!
     user: User
   }
-
-  type Subscription {
-    messageSent(chatId: ID!): Message
-    messageReceived(userId: ID!): Message
-    userConnected(userId: ID!): User
-    userDisconnected(userId: ID!): User
-    friendAdded(userId: ID!, friendId: ID!): User
-    friendRemoved(userId: ID!, friendId: ID!): User
-    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
-  }
-
+  
   # Define which queries the front end is allowed to make and what data is returned
   type Query {
     me: User
@@ -131,7 +121,7 @@ const typeDefs = `
     # chat:[Message]
     getPushNotifications(userId: ID!): [PushNotification]
   }
-
+  
   input UserInput {
     username: String!
     email: String!
@@ -139,7 +129,7 @@ const typeDefs = `
     firstInitial: String!
     lastInitial: String!
   }
-
+  
   type Mutation {
     login(email: String!, password: String!): Auth
     createUser(input: UserInput): Auth
@@ -161,32 +151,49 @@ const typeDefs = `
     sendMessage(chatId: ID!, content: String!): Message
     # sendMessage(input: SendMessageInput!): Message
     clearNotifications: User
-
+    
     sendPushNotification(userId: ID!, message: String!): Boolean
     receiveMessage(userId: ID!, message: String!): Message
     friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
     userConnected(userId: ID!): SuccessResponse
     userDisconnected(userId: ID!): SuccessResponse
-}
-
-type SuccessResponse {
-  success: Boolean!
-  message: String
-}
-
+  }
+  
+  type SuccessResponse {
+    success: Boolean!
+    message: String
+  }
+  
   type PushNotification {
     userId: ID!
     message: String!
     sentAt: String!
   }
   
-input SendMessageInput {
-  chatId: ID!
-  content: String!
-  creator: String!
-
+  input SendMessageInput {
+    chatId: ID!
+    content: String!
+    creator: String!
+    
   }
- 
+  
+  type Subscription {
+    postCreated(userId: ID!): Post
+    commentCreated(postId: ID!): Comment
+    messageCreated(chatId: ID!): Message
+    requestCreated(userId: ID!): FriendRequest
+
+    messageSent(chatId: ID!): Message
+    messageReceived(userId: ID!): Message
+    userConnected(userId: ID!): User
+    userDisconnected(userId: ID!): User
+    friendAdded(userId: ID!, friendId: ID!): User
+    friendRemoved(userId: ID!, friendId: ID!): User
+    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
+  }
+
+  
+
 `;
 
 module.exports = typeDefs;

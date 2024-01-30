@@ -136,9 +136,13 @@ export const CREATE_COMMENT = gql`
 mutation CreateComment($postId: ID!, $content: String!) {
   createComment(postId: $postId, content: $content) {
     _id
+    creator
+    creatorId
+    creatorFirstInitial
+    creatorLastInitial
     content
     createdAt
-    postId
+    likeCount
   }
 }
 `;

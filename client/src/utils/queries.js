@@ -116,7 +116,9 @@ export const GET_FRIEND_REQUEST = gql`
 query GetFriendRequest($requestId: ID!) {
   getFriendRequest(requestId: $requestId) {
     _id
+    targetName
     targetId
+    requesterName
     requesterId
     createdAt
   }
@@ -137,6 +139,7 @@ query GetPost($postId: ID!) {
     comments {
       _id
       creator
+      creatorId
       creatorFirstInitial
       creatorLastInitial
       content

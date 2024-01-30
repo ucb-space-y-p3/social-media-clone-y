@@ -25,7 +25,7 @@ export default function NewPostDialog({ }) {
   const [createPost] = useMutation(CREATE_POST);
 
   const dispatch = useDispatch();
-  
+
   const isNewPostDialogOpen = useSelector((state) => state.feedState.newPost.open);
   const newPostContent = useSelector((state) => state.feedState.newPost.content);
   const userId = useSelector((state) => state.userState.userId);
@@ -47,8 +47,8 @@ export default function NewPostDialog({ }) {
         variables: { content: newPostContent },
       });
       console.log('newly created post from backend', post);
-      dispatch(addPublicPost({ _id: post._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
-      dispatch(addPost({ _id: post._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
+      dispatch(addPublicPost({ _id: post.data.createPost._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
+      dispatch(addPost({ post: { _id: post.data.createPost._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt } }))
 
     } catch (error) {
       console.log(error);

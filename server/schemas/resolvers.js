@@ -1,6 +1,6 @@
 const { User, Post, Comment, Chat, Message, Notification, FriendRequest } = require('../models');
 const { signToken } = require('../utils/auth');
-const { PubSub } = require('graphql-subscriptions');
+const { PubSub, withFilter } = require('graphql-subscriptions');
 
 const pubsub = new PubSub();
 // const { createWebsocket,  } = require('@apollo/server-ws');
@@ -189,13 +189,12 @@ const resolvers = {
   },
 
   Subscription: {
-
     messageSent: {
       subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
     },
-    messageReceived: {
-      subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
-    },
+    // messageReceived: {
+    //   subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
+    // },
     userConnected: {
       subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_CONNECTED_${userId}`)
     },
@@ -210,7 +209,52 @@ const resolvers = {
     },
     friendRequestAccepted: {
       subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
-    }
+    },
+
+    postCreated: {
+      // subscribe: () => pubsub.asyncIterator(['POST_CREATED']),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('POST_CREATED'), // maybe 'POST_CREATED' needs to be in []
+        (payload, variables) => {
+          return (
+            payload.postCreated.creatorId === variables.userId
+          );
+        },
+      ),
+    },
+    commentCreated: {
+      // subscribe: () => pubsub.asyncIterator(['COMMENT_CREATED']),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('COMMENT_CREATED'), 
+        (payload, variables) => {
+          return (
+            payload.commentCreated.postId === variables.postId
+          );
+        },
+      ),
+    },
+    messageCreated: {
+      // subscribe: () => pubsub.asyncIterator(['MESSAGE_CREATED']),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('MESSAGE_CREATED'), 
+        (payload, variables) => {
+          return (
+            payload.messageCreated.chatId === variables.chatId
+          );
+        },
+      ),
+    },
+    requestCreated: {
+      // subscribe: () => pubsub.asyncIterator(['REQUEST_CREATED']),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('REQUEST_CREATED'), 
+        (payload, variables) => {
+          return (
+            payload.requestCreated.targetId === variables.userId
+          );
+        },
+      ),
+    },
 
   },
 
@@ -564,8 +608,10 @@ const resolvers = {
 
           await User.findOneAndUpdate(
             { likedPosts: { $elemMatch: { _id: postId } } },
-            { $pull: { likedPosts: comment._id } },
+            { $pull: { likedPosts: postId } },
           )
+
+          await Comment.deleteMany({ postId: postId });
 
           const post = await Post.findOneAndDelete({ _id: postId });
 
@@ -573,11 +619,9 @@ const resolvers = {
             throw PostNotFoundError;
           };
 
-          await Comment.deleteMany({ postId: postId });
-
           await User.findOneAndUpdate(
             { likedComments: { $elemMatch: { $in: post.comments } } },
-            { $pull: { likedComments: { $each: post.comments } } }
+            { $pull: { likedComments: { $elemMatch: { $in: post.comments } } } }
           )
 
           return post;
@@ -592,7 +636,14 @@ const resolvers = {
     createComment: async (parent, { postId, content }, context) => {
       try {
         if (context.user) {
-          const comment = await Comment.create({ content, postId, creator: context.user.username, creatorId: context.user._id });
+          const comment = await Comment.create({
+            content,
+            postId,
+            creator: context.user.username,
+            creatorId: context.user._id,
+            creatorFirstInitial: context.user.firstInitial,
+            creatorLastInitial: context.user.lastInitial,
+          });
 
           const post = await Post.findOneAndUpdate(
             { _id: postId },
@@ -637,7 +688,7 @@ const resolvers = {
         if (context.user) {
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $pull: { comments: comment._id } },
+            { $pull: { comments: commentId } },
             {
               new: true,
               runValidators: true
@@ -652,8 +703,13 @@ const resolvers = {
             { $pull: { likedComments: commentId } },
           )
 
+          const comment = await Comment.findOneAndDelete({ _id: commentId });
+          if (!comment) {
+            throw PostNotFoundError;
+          };
+
           const post = await Post.findOneAndUpdate(
-            { _id: postId },
+            { _id: comment.postId },
             { $pull: { comments: commentId } },
             {
               new: true,
@@ -661,11 +717,6 @@ const resolvers = {
             }
           );
           if (!post) {
-            throw PostNotFoundError;
-          };
-
-          const comment = await Comment.findOneAndDelete({ _id: commentId });
-          if (!comment) {
             throw PostNotFoundError;
           };
 
