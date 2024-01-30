@@ -205,11 +205,11 @@ const resolvers = {
     //     };
     //     return post.comments;
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     // // not necessary
     // getChat: async (parent, { }, context) => {
     //   try {
