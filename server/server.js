@@ -1,5 +1,5 @@
 const express = require('express');
-const { ApolloServer } = require('@apollo/server');
+const { ApolloServer,PubSub } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
@@ -17,17 +17,21 @@ const PORT = process.env.PORT || 3005;
 const app = express();
 
 //create a new http server to work with subscriptions
-const httpServer = createServer(app);
+const httpServer = createServer(app)
+console.log('HTTP server created');;
 //create an executable Graphql schema
 const schema = makeExecutableSchema({ typeDefs, resolvers });
+console.log('GraphQL schema created');
 // new ws server
 const wsServer=new WebSocketServer({
   server:httpServer,
-  path:'/suscriptions'//probchane
+  path:'/subscriptions'//probchane
 
 });
+console.log('WebSocket server created');
 //use the ws en graphql-ws
 const serverCleanup = useServer({schema,},wsServer);
+console.log('GraphQL WebSocket server setup completed');
 // Create a new instance of an Apollo server with the GraphQL schema
 const server = new ApolloServer({
   schema,
@@ -38,12 +42,17 @@ const server = new ApolloServer({
         return {
           async drainServer() {
             await serverCleanup.dispose();
+            console.log('GraphQL WebSocket server cleaned up');
           },
         };
       },
     },
   ],
+  subscriptions: {
+    path: '/subscriptions',
+  },
 });
+console.log('Apollo Server instance createddd');
 async function startApolloServer() {
   await server.start();
 
@@ -57,7 +66,7 @@ async function startApolloServer() {
   app.use('/graphql', expressMiddleware(server, {
     context: authMiddleware
   }));
-
+  app.use('/subscriptions', expressMiddleware(server, { context: authMiddleware }));
   // Production mode
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));

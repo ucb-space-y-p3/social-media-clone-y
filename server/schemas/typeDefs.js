@@ -86,12 +86,19 @@ const typeDefs = `
     chatId: ID
     postId: ID
     commentId: ID
+    content: String
     creator: String
     creatorId: String
     createdAt: String
   }
   type Subscription {
     messageSent(chatId: ID!): Message
+    messageReceived(userId: ID!): Message
+    userConnected(userId: ID!): User
+    userDisconnected(userId: ID!): User
+    friendAdded(userId: ID!, friendId: ID!): User
+    friendRemoved(userId: ID!, friendId: ID!): User
+    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
   }
 
   type Auth {
@@ -119,6 +126,8 @@ const typeDefs = `
     getAllPosts: [Post]
     getCirclePosts: [Post]
     # getAllRequests: [FriendRequest]
+    # chat:[Message]
+    getPushNotifications(userId: ID!): [PushNotification]
   }
 
   input UserInput {
@@ -147,11 +156,34 @@ const typeDefs = `
     addToChat(chatId: String!, recipients: [String]!): Chat
     leaveChat(chatId: ID!): Chat
     sendMessage(chatId: ID!, content: String!): Message
-
+    # sendMessage(input: SendMessageInput!): Message
     clearNotifications: User
 
+    sendPushNotification(userId: ID!, message: String!): Boolean
+    receiveMessage(userId: ID!, message: String!): Message
+    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
+    userConnected(userId: ID!): SuccessResponse
+    userDisconnected(userId: ID!): SuccessResponse
+}
+
+type SuccessResponse {
+  success: Boolean!
+  message: String
+}
+
+  type PushNotification {
+    userId: ID!
+    message: String!
+    sentAt: String!
+  }
+  
+input SendMessageInput {
+  chatId: ID!
+  content: String!
+  creator: String!
 
   }
+ 
 `;
 
 module.exports = typeDefs;
