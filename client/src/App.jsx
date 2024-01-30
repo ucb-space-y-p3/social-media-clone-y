@@ -176,6 +176,7 @@ function App() {
 
 
 
+
 export default function wrappedApp() {
 
 
@@ -190,3 +191,4 @@ export default function wrappedApp() {
     </ApolloProvider >
   )
 };
+

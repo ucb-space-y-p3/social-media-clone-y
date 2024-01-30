@@ -83,11 +83,18 @@ const typeDefs = `
     chatId: ID
     postId: ID
     commentId: ID
+    content: String
     creator: String
     createdAt: String
   }
   type Subscription {
     messageSent(chatId: ID!): Message
+    messageReceived(userId: ID!): Message
+    userConnected(userId: ID!): User
+    userDisconnected(userId: ID!): User
+    friendAdded(userId: ID!, friendId: ID!): User
+    friendRemoved(userId: ID!, friendId: ID!): User
+    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
   }
 
   type Auth {
@@ -114,6 +121,9 @@ const typeDefs = `
     getUsers: [User]
     getAllPosts: [Post]
     getAllRequests: [FriendRequest]
+    chat:[Message]
+    getPushNotifications(userId: ID!): [PushNotification]
+
   }
 
   input UserInput {
@@ -136,16 +146,37 @@ const typeDefs = `
     removeFriend(friend: String!): User
     createPost(content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(postId: ID!, content: String!): Comment
-    deleteComment(commentId: ID!): Comment
+    createComment(postId: ID!, content: String!, username: String!): Comment
+    deleteComment(postId: ID!, commentId: ID!): Comment
+    sendMessage(input: SendMessageInput!): Message
+createChat(recipients: [String]!): Chat
+deleteChat(chatId: ID!): Chat
+clearNotifications: User
+sendPushNotification(userId: ID!, message: String!): Boolean
+receiveMessage(userId: ID!, message: String!): Message
+friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
+userConnected(userId: ID!): SuccessResponse
+userDisconnected(userId: ID!): SuccessResponse
+}
 
-    sendMessage(chatId: ID!, content: String!, username: String!): Message
-    createChat(recipients: [String]!): Chat
-    deleteChat(chatId: ID!): Chat
-    clearNotifications: User
+type SuccessResponse {
+  success: Boolean!
+  message: String
+}
 
+  type PushNotification {
+    userId: ID!
+    message: String!
+    sentAt: String!
+  }
+  
+input SendMessageInput {
+  chatId: ID!
+  content: String!
+  creator: String!
 
   }
+ 
 `;
 
 module.exports = typeDefs;

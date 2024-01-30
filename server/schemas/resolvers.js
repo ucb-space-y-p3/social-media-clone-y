@@ -35,7 +35,9 @@ const resolvers = {
         throw error;
       }
     },
-    getUser: async (parent, { username }, context) => {
+    // oth
+    // agith
+    getFriends: async (parent, { username }, context) => {
       try {
         if (context.user) {
           const user = await User.findOne({ username: username }).populate('posts');
@@ -203,42 +205,42 @@ const resolvers = {
     //     };
     //     return post.comments;
 
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    // // not necessary
+    // getChat: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
+
+    //     // }
+    //     // throw AuthenticationError;
+
+    //     // dev code
+
     //   } catch (error) {
     //     console.log(error);
     //     throw error;
     //   }
     // },
-    // not necessary
-    getChat: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+    // // not necessary
+    // getChats: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    // not necessary
-    getChats: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
-
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    // not necessary
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
     // getMessages: async (parent, { chatId }, context) => {
     //   try {
     //     // if (context.user) {
@@ -253,21 +255,21 @@ const resolvers = {
     //     throw error;
     //   }
     // },
-    // not necessary
-    getNotifications: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+    // // not necessary
+    // getNotifications: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
 
-        // }
-        // throw AuthenticationError;
+    //     // }
+    //     // throw AuthenticationError;
 
-        // dev code
+    //     // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     // agith
 
 
@@ -316,14 +318,32 @@ const resolvers = {
     // },
   },
 
+  Subscription: {
+    
+      messageSent: {
+        subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
+      },
+      messageReceived: {
+        subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
+      },
+      userConnected: {
+        subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_CONNECTED_${userId}`)
+      },
+      userDisconnected: {
+        subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_DISCONNECTED_${userId}`)
+      },
+      friendAdded: {
+        subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_ADDED_${userId}_${friendId}`)
+      },
+      friendRemoved: {
+        subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_REMOVED_${userId}_${friendId}`)
+      },
+      friendRequestAccepted: {
+        subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
+      }
+    
+  },
 
-  // Subscription: {
-  //   messageSent: {
-  //     subscribe: (parent, { chatId }, { pubsub }) => {
-  //       return pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`);
-  //     },
-  //   },
-  // },
 
 
   Mutation: {
@@ -431,10 +451,12 @@ const resolvers = {
             { $pull: { friends: user._id } },
           );
 
-          // await Chat.updateMany(
-          //   { _id: { $in: user.chats } },
-          //   { $pull: { friends: user._id } },
-          // );
+
+        // await Chat.updateMany(
+        //   { _id: {//n: user.chats } },
+        //   { $pull: { friends: user._id } },
+        // );
+
 
           return user;
         }
@@ -507,81 +529,143 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
+    // // agith
     acceptFriend: async (parent, { requestId }, context) => {
       try {
-        if (context.user) {
-          const friendRequest = await FriendRequest.findOneAndDelete({ _id: requestId });
+        // if (context.user) {
 
-          const newFriend = await User.findOneAndUpdate(
-            { _id: friendRequest.targetId },
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const friendRequest = await FriendRequest.findOneAndDelete({ _id: requestId });
+        // console.log(friendRequest);
+        if (!friendRequest) {
+          // Handle the case where no friend request is found with the given ID
+          throw new Error('Friend request not found');
+        }
+        const newFriend = await User.findOneAndUpdate(
+          { _id: friendRequest.targetId },
+          {
+            $addToSet: { friends: friendRequest.requesterId },
+            $pull: { friendRequests: requestId }
+          },
+          {
+            new: true,
+            runValidators: true
+          }
+        )
+        // console.log('first');
+        if (!newFriend) {
+          throw UserNotFoundError;
+        };
+
+        const user = await User.findOneAndUpdate(
+          { _id: friendRequest.requesterId },
+          { $addToSet: { friends: friendRequest.targetId } },
+          {
+            new: true,
+            runValidators: true
+          }
+        );
+        // console.log('second');
+        if (!user) {
+          throw UserNotFoundError;
+        };
+        pubsub.publish(`FRIEND_ADDED_${friendRequest.requesterId}_${friendRequest.targetId}`, {
+          friendAdded: { userId: friendRequest.requesterId, friendId: friendRequest.targetId }
+        });
+        return newFriend;
+
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+      friendRequestAccepted: async (parent, { userId, friendRequestId }, { pubsub }) => {
+        try {
+          // Find and remove the friend request from the database
+          const friendRequest = await FriendRequest.findByIdAndDelete(friendRequestId);
+          if (!friendRequest) {
+            throw new Error("Friend request not found");
+          }
+    
+          // Update the user who accepted the friend request
+          const user = await User.findOneAndUpdate(
+            { _id: userId },
             {
               $addToSet: { friends: friendRequest.requesterId },
-              $pull: { friendRequests: requestId }
+              $pull: { friendRequests: friendRequestId }
             },
-            {
-              new: true,
-              runValidators: true
-            }
-          )
-          if (!newFriend) {
-            throw UserNotFoundError;
-          };
-
-          const user = await User.findOneAndUpdate(
-            { _id: friendRequest.requesterId },
-            { $addToSet: { friends: friendRequest.targetId } },
-            {
-              new: true,
-              runValidators: true
-            }
+            { new: true }
           );
+    
           if (!user) {
-            throw UserNotFoundError;
-          };
-          return newFriend;
+            throw new Error("User not found");
+          }
+    
+          // Notify subscribers that the friend request has been accepted
+          pubsub.publish(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`, {
+            friendRequestAccepted: { userId, friendRequestId }
+          });
+          // Returnthe friend request acceptance
+          return { success: true, message: "Friend request accepted successfully", user };
+        } catch (error) {
+          console.log(error);
+          throw error;
         }
-        throw AuthenticationError;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+      },
+    
+
     // agith
-    removeFriend: async (parent, { friend }, context) => {
-      try {
-        if (context.user) {
-          const oldFriend = await User.findOneAndUpdate(
-            { _id: friend },
-            { $pull: { friends: context.user._id } },
-            {
-              new: true,
-              runValidators: true
-            }
-          )
-          if (!oldFriend) {
-            throw UserNotFoundError;
-          };
 
-          const user = await User.findOneAndUpdate(
-            { _id: context.user._id },
-            { $pull: { friends: friend } },
-            {
-              new: true,
-              runValidators: true
-            }
-          );
-          if (!user) {
-            throw UserNotFoundError;
-          };
-          return oldFriend;
-        }
-        throw AuthenticationError;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    removeFriend: async (parent, { me, friend }, { pubsub }) => {
+      try {
+        // if (context.user) {
+
+        // }
+        // throw AuthenticationError;
+
+        // dev code
+        const oldFriend = await User.findOneAndUpdate(
+          { _id: friend },
+          { $pull: { friends: me } },
+          {
+            new: true,
+            runValidators: true
+          }
+        )
+        if (!oldFriend) {
+          throw UserNotFoundError;
+        };
+           // Publish the event to notify subscribers about the friend removal
+     pubsub.publish(`FRIEND_REMOVED_${me}_${friend}`, { friendRemoved: { userId: me, friendId: friend } });  
+      // return some information about the friend removal
+      return { success: true, message: "Friend removed successfully" };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } 
+  },
+
+    
+     //     const user = await User.findOneAndUpdate(
+    //       { _id: me },
+    //       { $pull: { friends: friend } },
+    //       {
+    //         new: true,
+    //         runValidators: true
+    //       }
+    //     );
+    //     if (!user) {
+    //       throw UserNotFoundError;
+    //     };
+    //     return oldFriend;
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
     // agith
     // deleteRequest: async (parent, { requestId }, context) => {
     //   try {
@@ -770,47 +854,28 @@ const resolvers = {
       }
     },
 
-
-    // websockets
-
-
-
-    // not necessary
-    createChat: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
-
-        // }
-        // throw AuthenticationError;
-
-        // dev code
-
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    // not necessary
-    // leaveChat: async (parent, { }, context) => {
+    // // not necessary
+    // createChat: async (parent, { }, context) => {
     //   try {
-    //     // if (context.user) {
+    //     if (context.user) {
 
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
+    //       // }
+    //      throw new AuthenticationError('You must be logged in');
+    //     }
+    //     //create a new chat with db
+    //     const chat = await Chat.create({ recipients });
+    //     return chat;
     //   } catch (error) {
-    //     console.log(error);
+    //     console.error('Error al crear el chat:', error);
     //     throw error;
     //   }
     // },
-    sendMessage: async (parent, { chatId, content, username }, { pubsub }) => {
+    sendMessage: async (parent, { chatId, message, username }, { pubsub }) => {
       try {
         //save message to db
         const newMessage = await Message.create({
           chatId,
-          content,
+          content: message,  
           creator: username,
           createdAt: new Date().toISOString(),
         });
@@ -823,26 +888,86 @@ const resolvers = {
       }
     },
 
-    // not necessary
-    clearNotifications: async (parent, { }, context) => {
-      try {
-        // if (context.user) {
+      receiveMessage: async (parent, { userId, message }, { pubsub }) => {
+        try {
+         
+          const newMessage = await Message.create({
+            userId,
+            content: message,
+            createdAt: new Date().toISOString(),
+          });
+          pubsub.publish(`MESSAGE_RECEIVED_${userId}`, { messageReceived: newMessage });
+          return newMessage;
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      },
+      userConnected: async (parent, { userId }, { pubsub }) => {
+        try {
+          // Update user status to "online"
+          const user = await User.findByIdAndUpdate(userId, { status: 'online' }, { new: true });
+  
+          // Notify friends about user connection
+          const friends = await User.find({ _id: { $in: user.friends } });
+  
+          // Notify each friend about the user connection
+          friends.forEach(async (friend) => {
+            // Publish a friend connection event
+            pubsub.publish(`FRIEND_CONNECTED_${friend._id}_${userId}`, { friendConnected: { userId } });
+          });
+  
+          return { success: true, message: 'User connected successfully' };
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      },
+      userDisconnected: async (parent, { userId }, { pubsub }) => {
+        try {
+          // Update user status to "offline"
+          const user = await User.findByIdAndUpdate(userId, { status: 'offline' }, { new: true });
+  
+          // Notify friends about user disconnection
+          const friends = await User.find({ _id: { $in: user.friends } });
+  
+          // Notify each friend about the user disconnection
+          friends.forEach(async (friend) => {
+            // Publish a friend disconnection event
+            pubsub.publish(`FRIEND_DISCONNECTED_${friend._id}_${userId}`, { friendDisconnected: { userId } });
+          });
+  
+          return { success: true, message: 'User disconnected successfully' };
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      },
 
-        // }
-        // throw AuthenticationError;
 
-        // dev code
 
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+
     },
-  },
-  // websocket
-  // Subscriptions: {
+    
+  //   // not necessary
+  //   clearNotifications: async (parent, { }, context) => {
+  //     try {
+  //       // if (context.user) {
 
+
+  //       // }
+  //       // throw AuthenticationError;
+
+  //       // dev code
+
+  //     } catch (error) {
+  //       console.log(error);
+  //       throw error;
+  //     }
+  //   },
   // },
+
+
 };
 
 module.exports = resolvers;
