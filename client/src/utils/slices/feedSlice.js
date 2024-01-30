@@ -4,6 +4,7 @@ const INITIAL_STATE = {
     publicPosts: [],
     circlePosts: [],
     currentComments: [],
+    currentPostId: '',
     newPost: {
         content: '',
         open: false,
@@ -59,7 +60,10 @@ const feedSlice = createSlice({
             state.currentComments = state.currentComments.filter((comment) => comment._id !== action.payload.id);
         },
         addComment: (state, action) => {
-            state.currentComments = [action.payload, ...state.currentComments];
+            state.currentComments = [...state.currentComments, action.payload.comment];
+        },
+        setCurrentPostId: (state, action) => {
+            state.currentPostId = action.payload.currentPostId;
         },
     }
 })
@@ -79,6 +83,7 @@ export const {
     setCurrentComments,
     removeComment,
     addComment,
+    setCurrentPostId,
 
 } = feedSlice.actions;
 export default feedSlice.reducer;

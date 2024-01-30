@@ -1,6 +1,7 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
+import { useMutation } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleDialogCommentBox } from '../../utils/slices/feedSlice';
+import { toggleDialogCommentBox, addComment } from '../../utils/slices/feedSlice';
 import { CREATE_COMMENT } from '../../utils/mutations';
 
 import Dialog from '@mui/material/Dialog';
@@ -11,7 +12,6 @@ import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import Button from '@mui/material/Button';
-import { useMutation } from '@apollo/client';
 
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -27,8 +27,10 @@ export default function NewCommentDialog({ }) {
   const dispatch = useDispatch();
 
   const isNewCommentDialogOpen = useSelector((state) => state.feedState.newComment.open);
+  const currentPostId = useSelector((state) => state.feedState.currentPostId);
 
   const handleClose = () => {
+    setCommentContent('');
     dispatch(toggleDialogCommentBox({}));
   };
 
@@ -39,10 +41,11 @@ export default function NewCommentDialog({ }) {
       console.log('new comment content:', commentContent);
       // we also need the current post id!!
       const comment = await createComment({
-        variables: { content: commentContent },
+        variables: { postId: currentPostId, content: commentContent },
       });
       console.log('newly created comment from backend', comment);
-
+      setCommentContent('');
+      dispatch(addComment({ comment: comment.data.createComment }));
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +85,7 @@ export default function NewCommentDialog({ }) {
     New Post
   </DialogContentText> */}
         <TextField
+          focused
           autoFocus
           required
           margin="dense"
@@ -91,8 +95,6 @@ export default function NewCommentDialog({ }) {
           type="content"
           // value={newPostContent}
           fullWidth
-          multiline
-          rows={2}
           // onChange={handleContentChange}
           onChange={handleContent}
         // variant="standard"

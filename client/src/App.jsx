@@ -41,7 +41,7 @@ import SignUp from './pages/SignUp';
 import NewChatDialog from './components/NewChatDialog';
 import NewPostDialog from './components/NewPostDialog';
 import NewChatUserDialog from './components/NewChatUserDialog';
-// import NewCommentDialog from './components/NewCommentDialog';
+import NewCommentDialog from './components/NewCommentDialog';
 
 
 const rootReducer = combineReducers({
@@ -146,7 +146,7 @@ function App() {
             <NewChatDialog />
             <NewPostDialog />
             <NewChatUserDialog />
-            {/* <NewCommentDialog /> */}
+            <NewCommentDialog />
           </Sidebar>)
           :
           (location == 'signup' ?

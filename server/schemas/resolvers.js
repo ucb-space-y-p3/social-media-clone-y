@@ -564,20 +564,20 @@ const resolvers = {
 
           await User.findOneAndUpdate(
             { likedPosts: { $elemMatch: { _id: postId } } },
-            { $pull: { likedPosts: comment._id } },
+            { $pull: { likedPosts: postId } },
           )
 
+          await Comment.deleteMany({ postId: postId });
+          
           const post = await Post.findOneAndDelete({ _id: postId });
-
+          
           if (!post) {
             throw PostNotFoundError;
           };
 
-          await Comment.deleteMany({ postId: postId });
-
           await User.findOneAndUpdate(
             { likedComments: { $elemMatch: { $in: post.comments } } },
-            { $pull: { likedComments: { $each: post.comments } } }
+            { $pull: { likedComments: { $elemMatch: { $in: post.comments } } } }
           )
 
           return post;
@@ -592,7 +592,14 @@ const resolvers = {
     createComment: async (parent, { postId, content }, context) => {
       try {
         if (context.user) {
-          const comment = await Comment.create({ content, postId, creator: context.user.username, creatorId: context.user._id });
+          const comment = await Comment.create({ 
+            content, 
+            postId, 
+            creator: context.user.username, 
+            creatorId: context.user._id, 
+            creatorFirstInitial: context.user.firstInitial, 
+            creatorLastInitial: context.user.lastInitial, 
+          });
 
           const post = await Post.findOneAndUpdate(
             { _id: postId },
@@ -637,7 +644,7 @@ const resolvers = {
         if (context.user) {
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $pull: { comments: comment._id } },
+            { $pull: { comments: commentId } },
             {
               new: true,
               runValidators: true
@@ -652,8 +659,13 @@ const resolvers = {
             { $pull: { likedComments: commentId } },
           )
 
+          const comment = await Comment.findOneAndDelete({ _id: commentId });
+          if (!comment) {
+            throw PostNotFoundError;
+          };
+
           const post = await Post.findOneAndUpdate(
-            { _id: postId },
+            { _id: comment.postId },
             { $pull: { comments: commentId } },
             {
               new: true,
@@ -661,11 +673,6 @@ const resolvers = {
             }
           );
           if (!post) {
-            throw PostNotFoundError;
-          };
-
-          const comment = await Comment.findOneAndDelete({ _id: commentId });
-          if (!comment) {
             throw PostNotFoundError;
           };
 

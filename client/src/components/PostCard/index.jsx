@@ -30,12 +30,13 @@ function PostCard({ post, feedState, isDirect }) {
         try {
             const post = await deletePost({ variables: { postId } });
             dispatch(removePublicPost({ id: postId }));
-
+            if (isDirect) {
+                navigate('/');
+            }
         } catch (error) {
             console.log(error);
         }
     }
-
 
     return (
         <Card sx={{ minWidth: 275 }} >

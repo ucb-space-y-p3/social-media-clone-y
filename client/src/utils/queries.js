@@ -137,6 +137,7 @@ query GetPost($postId: ID!) {
     comments {
       _id
       creator
+      creatorId
       creatorFirstInitial
       creatorLastInitial
       content
