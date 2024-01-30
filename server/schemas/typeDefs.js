@@ -39,7 +39,9 @@ const typeDefs = `
 
   type FriendRequest {
     _id: ID
+    requesterName: String
     requesterId: ID
+    targetName: String
     targetId: ID
     createdAt: String
   }

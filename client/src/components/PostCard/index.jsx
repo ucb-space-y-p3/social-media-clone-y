@@ -42,7 +42,7 @@ function PostCard({ post, feedState, isDirect }) {
             <CardContent>
                 {feedState === 'circle' &&
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        post.creator
+                        {post.creator}
                     </Typography>
                 }
                 <Avatar

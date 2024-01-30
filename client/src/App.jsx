@@ -86,8 +86,12 @@ const client = new ApolloClient({
 function App() {
 
   const dispatch = useDispatch();
-
+  
+  const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
+  
   const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
+
+  const location = useLocation().pathname.split('/')[1];
 
   const theme = createTheme({
     palette: {
@@ -115,27 +119,13 @@ function App() {
     }
   });
 
-  const location = useLocation().pathname.split('/')[1];
-
-  const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
-  
-  // useEffect(() => {
-  //   if (Auth.loggedIn()) {
-  //     console.log('first app load/render');
-  //     getMeRefetch({});
-  //     publicPostsRefetch({});
-  //     // circlePostsRefetch({ });
-  //   }
-  // }, [])
-
-
   useEffect(() => {
     if (!getMeLoading) {
       if (!getMeError) {
         if (getMeData) {
-          // console.log(getMeData);
-          const { _id: userId , username, email, firstInitial, lastInitial } = getMeData.me;
-          dispatch(setUser({ userId, username, email, firstInitial, lastInitial }));
+          console.log("me:",getMeData);
+          const { _id: userId , username, email, firstInitial, lastInitial, friends, incomingFriendRequests: friendRequests, posts, comments } = getMeData.me;
+          dispatch(setUser({ userId, username, email, firstInitial, lastInitial, friends, friendRequests, posts, comments }));
         }
       } else {
         // throw error on screen

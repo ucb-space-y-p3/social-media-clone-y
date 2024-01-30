@@ -11,6 +11,14 @@ const requestSchema = new Schema(
       type: String,
       required: true,
     },
+    requesterName: {
+      type: String,
+      required: true,
+    },
+    targetName: {
+      type: String,
+      required: true,
+    },
     createdAt: {
       type: Date,
       default: DateTime.now,

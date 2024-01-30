@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '../../utils/mutations';
 import { toggleDialogPostBox, updateNewPost, addPublicPost } from '../../utils/slices/feedSlice';
+import { addPost } from '../../utils/slices/userSlice';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -47,6 +48,7 @@ export default function NewPostDialog({ }) {
       });
       console.log('newly created post from backend', post);
       dispatch(addPublicPost({ _id: post._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
+      dispatch(addPost({ _id: post._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
 
     } catch (error) {
       console.log(error);

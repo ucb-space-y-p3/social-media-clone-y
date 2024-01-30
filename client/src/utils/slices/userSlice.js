@@ -35,6 +35,10 @@ const userSlice = createSlice({
             state.firstInitial = action.payload.firstInitial;
             state.lastInitial = action.payload.lastInitial;
             state.email = action.payload.email;
+            state.posts = action.payload.posts;
+            state.comments = action.payload.comments;
+            state.friends = action.payload.friends;
+            state.friendRequests = action.payload.friendRequests;
         },
         setProfile: (state, action) => {
             state.profile.userId = action.payload.userId;

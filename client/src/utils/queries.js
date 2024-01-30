@@ -10,7 +10,13 @@ query Me {
     email
     posts {
       _id
+      creatorId
+      creatorFirstInitial
+      creatorLastInitial
+      creator
       content
+      commentCount
+      likeCount
       createdAt
     }
     comments {
@@ -53,8 +59,12 @@ query GetUser($username: String!) {
     }
     comments {
       _id
+      creator
+      creatorFirstInitial
+      creatorLastInitial
       content
       createdAt
+      likeCount
     }
     friends {
       _id
@@ -64,11 +74,13 @@ query GetUser($username: String!) {
     }
     incomingFriendRequests {
       _id
+      requesterName
       requesterId
       createdAt
     }
     outgoingFriendRequests {
       _id
+      targetName
       targetId
       createdAt
     }

@@ -210,7 +210,8 @@ function Sidebar({ children }) {
 
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding onClick={(() => handleDirection(`user/${username}`))}>
+                {/* <ListItem disablePadding onClick={(() => handleDirection(`user/${username}`))}> */}
+                <ListItem disablePadding onClick={(() => handleDirection('me'))}>
                     <ListItemButton>
                         <ListItemIcon>
 
