@@ -22,7 +22,6 @@ const typeDefs = `
     likedPosts: [Post]
     likedComments: [Comment]
     settings: Settings
-    chats: [Chat]
   }
 
   type Settings {
@@ -48,6 +47,7 @@ const typeDefs = `
   type Post {
     _id: ID
     creator: String
+    creatorId: String
     creatorFirstInitial: String
     creatorLastInitial: String
     content: String
@@ -63,6 +63,8 @@ const typeDefs = `
     postId: ID
     creatorId: ID
     creator: String
+    creatorFirstInitial: String
+    creatorLastInitial: String
     createdAt: String
     content: String
     likedBy: [User]
@@ -71,9 +73,10 @@ const typeDefs = `
 
   type Chat {
     _id: ID
-    isGroupChat: Boolean
     chatName: String
+    userCount: Int
     recipients: [User]
+    messageCount: Int
     messages: [Message]
   }
 
@@ -85,6 +88,7 @@ const typeDefs = `
     commentId: ID
     content: String
     creator: String
+    creatorId: String
     createdAt: String
   }
   type Subscription {
@@ -118,12 +122,12 @@ const typeDefs = `
     getMessages(chatId: ID!): [Message]  
     getNotifications: [Notification]
     # dev methods
-    getUsers: [User]
+    # getUsers: [User]
     getAllPosts: [Post]
-    getAllRequests: [FriendRequest]
-    chat:[Message]
+    getCirclePosts: [Post]
+    # getAllRequests: [FriendRequest]
+    # chat:[Message]
     getPushNotifications(userId: ID!): [PushNotification]
-
   }
 
   input UserInput {
@@ -146,17 +150,20 @@ const typeDefs = `
     removeFriend(friend: String!): User
     createPost(content: String!): Post
     deletePost(postId: ID!): Post
-    createComment(postId: ID!, content: String!, username: String!): Comment
-    deleteComment(postId: ID!, commentId: ID!): Comment
-    sendMessage(input: SendMessageInput!): Message
-createChat(recipients: [String]!): Chat
-deleteChat(chatId: ID!): Chat
-clearNotifications: User
-sendPushNotification(userId: ID!, message: String!): Boolean
-receiveMessage(userId: ID!, message: String!): Message
-friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
-userConnected(userId: ID!): SuccessResponse
-userDisconnected(userId: ID!): SuccessResponse
+    createComment(postId: ID!, content: String!): Comment
+    deleteComment(commentId: ID!): Comment
+    createChat(chatName: String!, recipients: [String]!): Chat
+    addToChat(chatId: String!, recipients: [String]!): Chat
+    leaveChat(chatId: ID!): Chat
+    sendMessage(chatId: ID!, content: String!): Message
+    # sendMessage(input: SendMessageInput!): Message
+    clearNotifications: User
+
+    sendPushNotification(userId: ID!, message: String!): Boolean
+    receiveMessage(userId: ID!, message: String!): Message
+    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
+    userConnected(userId: ID!): SuccessResponse
+    userDisconnected(userId: ID!): SuccessResponse
 }
 
 type SuccessResponse {

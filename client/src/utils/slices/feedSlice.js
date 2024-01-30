@@ -8,7 +8,6 @@ const INITIAL_STATE = {
         open: false,
     },
     newComment: {
-        content: '',
         open: false,
     },
     currentFeed: 'public',
@@ -46,12 +45,8 @@ const feedSlice = createSlice({
         toggleDialogPostBox: (state) => {
             state.newPost.open = !state.newPost.open;
         },
-        openDialogCommentBox: (state) => {
-            state.newComment.open = true;
-        },
-        closeDialogCommentBox: (state) => {
-            state.newComment.open = true;
-            state.newPost.content = '';
+        toggleDialogCommentBox: (state) => {
+            state.newComment.open = !state.newComment.open;
         },
         setFeed: (state, action) => {
             state.currentFeed = action.payload.feed;
@@ -69,8 +64,7 @@ export const {
     updateNewPost,
     updateNewComment,
     toggleDialogPostBox,
-    openDialogCommentBox,
-    closeDialogCommentBox,
+    toggleDialogCommentBox,
     setFeed,
 
 } = feedSlice.actions;

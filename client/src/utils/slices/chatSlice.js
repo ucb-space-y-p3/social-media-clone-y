@@ -7,6 +7,7 @@ const INITIAL_STATE = {
         chatName: '',
         messages: [],
         recipients: [],
+        newRecipients: [],
         draftMessage: '',
         connected: false,
     },
@@ -25,18 +26,18 @@ const chatSlice = createSlice({
             state.activeChats = [...state.activeChats, action.payload.newChat];
         },
         populateChats: (state, action) => {
-            state.activeChats = [...state.activeChats, ...action.payload.chats];
+            state.activeChats = [...action.payload.chats];
         },
         deleteChat: (state, action) => {
             state.activeChats = state.activeChats.filter((chat) => chat._id !== action.payload.id);
         },
         addMessage: (state, action) => {
-            state.currentChat.messages = [...state.currentChat.messages, action.payload.message]
+            state.currentChat.messages = [action.payload.message, ...state.currentChat.messages]
         },
         populateMessages: (state, action) => {
-            state.currentChat.messages = [...state.currentChat.messages, ...action.payload.message]
+            state.currentChat.messages = [...action.payload.messages]
         },
-        deleteMessages: (state, action) => {
+        deleteMessage: (state, action) => {
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
         },
         toggleDialogChatBox: (state, action) => {
@@ -46,12 +47,33 @@ const chatSlice = createSlice({
             state.currentChat.id = action.payload.id;
             state.currentChat.messages = [...action.payload.messages];
             state.currentChat.recipients = [...action.payload.recipients];
-            state.currentChat.draftMessage = action.payload.draftMessage;
+            state.currentChat.newRecipients = [];
+            state.currentChat.draftMessage = '';
             state.currentChat.chatName = action.payload.chatName;
             state.currentChat.connected = true;
         },
         closeCurrentChat: (state) => {
             state.currentChat.connected = false;
+        },
+        setCurrentRecipients: (state, action) => {
+            state.currentChat.recipients = action.payload.recipients;
+        },
+        setDraftMessage: (state, action) => {
+            state.currentChat.draftMessage = action.payload.draftMessage;
+        },
+        setFirstMessage: (state, action) => {
+            state.newChat.firstMessage = action.payload.firstMessage;
+        },
+        addNewRecipient: (state, action) => {
+            state.newChat.recipients = [...state.newChat.recipients, action.payload.user];
+        },
+        removeNewRecipient: (state, action) => {
+            state.newChat.recipients = state.newChat.recipients.filter((user) => user.username !== action.payload.username);
+        },
+        resetNewChat: (state) => {
+            state.newChat.firstMessage = '';
+            state.newChat.recipients = [];
+            state.newChat.open = false;
         }
     }
 })
@@ -62,10 +84,16 @@ export const {
     deleteChat,
     addMessage,
     populateMessages,
-    deleteMessages,
+    deleteMessage,
     toggleDialogChatBox,
     populateCurrentChat,
     closeCurrentChat,
+    setCurrentRecipients,
+    setDraftMessage,
+    setFirstMessage,
+    addNewRecipient,
+    removeNewRecipient,
+    resetNewChat,
 
 } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -23,7 +23,7 @@ const resolvers = {
     me: async (parent, { }, context) => {
       try {
         if (context.user) {
-          const user = await User.findOne({ _id: context.user._id }).populate(['posts', 'comments', 'incomingFriendRequests', 'outgoingFriendRequests']);
+          const user = await User.findOne({ _id: context.user._id }).populate(['posts', 'comments', 'incomingFriendRequests', 'outgoingFriendRequests', 'activeChats']);
           if (!user) {
             throw UserNotFoundError;
           };
@@ -52,30 +52,6 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
-    // getFriends: async (parent, { username }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-    //     const usersFriends = await User.findOne(
-    //       { username },
-    //       '_id username friends',).populate('friends');
-
-    //     if (!usersFriends) {
-    //       throw UserNotFoundError;
-    //     };
-
-    //     return usersFriends.friends;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // agith
     getFriendRequest: async (parent, { requestId }, context) => {
       try {
         if (context.user) {
@@ -91,30 +67,6 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
-    // getFriendRequests: async (parent, { username }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-    //     const usersRequests = await User.findOne(
-    //       { username },
-    //       '_id username friendRequests',).populate('friendRequests');
-
-    //     if (!usersRequests) {
-    //       throw UserNotFoundError;
-    //     };
-
-    //     return usersRequests.friendRequests;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // agith
     getPost: async (parent, { postId }, context) => {
       try {
         if (context.user) {
@@ -133,7 +85,7 @@ const resolvers = {
     getAllPosts: async (parent, { }, context) => {
       try {
         if (context.user) {
-          const posts = await Post.find();
+          const posts = await Post.find().sort({ 'createdAt': -1 });
           if (!posts) {
             throw PostNotFoundError;
           };
@@ -145,177 +97,80 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
-    // getPosts: async (parent, { username }, context) => {
-    //   try {
-    //     // if (context.user) {
+    getCirclePosts: async (parent, { }, context) => {
+      try {
+        if (context.user) {
+          const user = await User.findById(context.user._id);
+          if (!user) {
+            throw UserNotFoundError;
+          };
 
-    //     // }
-    //     // throw AuthenticationError;
+          const posts = await Post.find({
+            creatorId: { $in: [...user.friends, user._id] }
+          }).sort({ 'createdAt': -1 });
+          if (!posts) {
+            throw PostNotFoundError;
+          };
 
-    //     // dev code
-    //     const user = await User.findOne(
-    //       { username },
-    //       '_id username posts',).populate('posts');
-
-    //     if (!user) {
-    //       throw UserNotFoundError;
-    //     };
-
-    //     return user.posts;
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // agith
-    // getComment: async (parent, { postId, commentId }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-    //     const post = await Post.findById(postId);
-
-    //     if (!post) {
-    //       throw PostNotFoundError;
-    //     }
-
-    //     return post.comments.find((comment) => comment._id == commentId) || {};
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // agith
-    // getComments: async (parent, { postId }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-    //     const post = await Post.findById(postId).populate('comments');
-    //     if (!post) {
-    //       throw PostNotFoundError;
-    //     };
-    //     return post.comments;
-
+          return posts;
+        }
+        throw AuthenticationError;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    // // not necessary
-    // getChat: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // // not necessary
-    // getChats: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // // not necessary
-    // getMessages: async (parent, { chatId }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // // not necessary
-    // getNotifications: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
     // agith
 
+    // not necessary
+    getChat: async (parent, { chatId }, context) => {
+      try {
+        if (context.user) {
+          // the sort wasn't working with subdocuments
+          // const chat = await Chat.findById(chatId).populate('messages').sort({ 'messages.createdAt': -1 });
+          const chat = await Chat.findById(chatId);
+          if (!chat) {
+            ChatNotFoundError;
+          }
 
-    // dev methods
-    // agith
-    // getUsers: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
+          const user = await User.findById(context.user._id);
+          if (!user) {
+            throw UserNotFoundError;
+          };
 
-    //     // }
-    //     // throw AuthenticationError;
+          const messages = await Message.find({ chatId }).sort({ 'createdAt': -1 });
 
-    //     // dev code
+          chat.messages = messages;
 
-    //     const users = await User.find();
-    //     if (!users) {
-    //       throw UserNotFoundError;
-    //     };
-    //     return users;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // agith
-
-    // agith
-    // getAllRequests: async (parent, { }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-
-    //     const friendRequest = await FriendRequest.find();
-    //     if (!friendRequest) {
-    //       throw RequestNotFoundError;
-    //     };
-    //     return friendRequest;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
+          for (const tempChat of user.activeChats) {
+            if (chatId === tempChat._id.toString()) {
+              return chat;
+            }
+          }
+          // return chat;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    // not necessary
+    getChats: async (parent, { }, context) => {
+      try {
+        if (context.user) {
+          const user = await User.findById(context.user._id).populate('activeChats');
+          if (!user) {
+            throw UserNotFoundError;
+          };
+          return user.activeChats;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
   },
 
   Subscription: {
@@ -647,67 +502,11 @@ const resolvers = {
       throw error;
     } 
   },
-
-    
-     //     const user = await User.findOneAndUpdate(
-    //       { _id: me },
-    //       { $pull: { friends: friend } },
-    //       {
-    //         new: true,
-    //         runValidators: true
-    //       }
-    //     );
-    //     if (!user) {
-    //       throw UserNotFoundError;
-    //     };
-    //     return oldFriend;
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
-    // agith
-    // deleteRequest: async (parent, { requestId }, context) => {
-    //   try {
-    //     // if (context.user) {
-
-    //     // }
-    //     // throw AuthenticationError;
-
-    //     // dev code
-    //     const friendRequest = await FriendRequest.findByIdAndDelete(requestId);
-
-    //     if (!friendRequest) {
-    //       throw RequestNotFoundError;
-    //     };
-
-    //     const user = await User.findOneAndUpdate(
-    //       { _id: friendRequest.targetId },
-    //       {
-    //         $pull: { friendRequests: requestId }
-    //       },
-    //       {
-    //         new: true,
-    //         runValidators: true
-    //       }
-    //     )
-    //     if (!user) {
-    //       throw UserNotFoundError;
-    //     };
-
-    //     return friendRequest;
-
-    //   } catch (error) {
-    //     console.log(error);
-    //     throw error;
-    //   }
-    // },
     // agith
     createPost: async (parent, { content }, context) => {
       try {
-        console.log('test');
         if (context.user) {
-          const post = await Post.create({ content, creator: context.user.username, creatorFirstInitial: context.user.firstInitial, creatorLastInitial: context.user.lastInitial });
+          const post = await Post.create({ content, creator: context.user.username, creatorId: context.user._id, creatorFirstInitial: context.user.firstInitial, creatorLastInitial: context.user.lastInitial });
 
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
@@ -731,24 +530,13 @@ const resolvers = {
         throw error;
       }
     },
-    // agith
+    // get the post and check if it creator is the same as the context user
     deletePost: async (parent, { postId }, context) => {
       try {
         if (context.user) {
-          // we need to find all the comments and delete them
-          // this includes from everyone's liked list
-          // users/clients will be responsible for updating their own liked lists
-          const post = await Post.findOneAndDelete({ _id: postId }); 
-
-          if (!post) {
-            throw PostNotFoundError;
-          };
-
-          await Comment.deleteMany({ postId: postId });
-
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $pull: { posts: post._id } },
+            { $pull: { posts: postId } },
             {
               new: true,
               runValidators: true
@@ -758,6 +546,24 @@ const resolvers = {
           if (!user) {
             throw UserNotFoundError;
           };
+
+          await User.findOneAndUpdate(
+            { likedPosts: { $elemMatch: { _id: postId } } },
+            { $pull: { likedPosts: comment._id } },
+          )
+
+          const post = await Post.findOneAndDelete({ _id: postId });
+
+          if (!post) {
+            throw PostNotFoundError;
+          };
+
+          await Comment.deleteMany({ postId: postId });
+
+          await User.findOneAndUpdate(
+            { likedComments: { $elemMatch: { $in: post.comments } } },
+            { $pull: { likedComments: { $each: post.comments } } }
+          )
 
           return post;
         }
@@ -810,42 +616,182 @@ const resolvers = {
       }
     },
     // come back to later
+    // check if the user is the owner of the comment first 
     deleteComment: async (parent, { commentId }, context) => {
       try {
         if (context.user) {
-          const comment = await Comment.findOneAndDelete({ _id: commentId });
-
-          if (!comment) {
-            throw PostNotFoundError;
-          };
-
-          const post = await Post.findOneAndUpdate(
-            { _id: postId },
+          const user = await User.findOneAndUpdate(
+            { _id: context.user._id },
             { $pull: { comments: comment._id } },
             {
               new: true,
               runValidators: true
             }
           );
-
           if (!user) {
             throw UserNotFoundError;
           };
 
+          await User.findOneAndUpdate(
+            { likedComments: { $elemMatch: { _id: commentId } } },
+            { $pull: { likedComments: commentId } },
+          )
+
+          const post = await Post.findOneAndUpdate(
+            { _id: postId },
+            { $pull: { comments: commentId } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          if (!post) {
+            throw PostNotFoundError;
+          };
+
+          const comment = await Comment.findOneAndDelete({ _id: commentId });
+          if (!comment) {
+            throw PostNotFoundError;
+          };
+
+          return comment;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    createChat: async (parent, { chatName, recipients }, context) => {
+      try {
+        if (context.user) {
+          const chat = await Chat.create({ chatName, recipients });
+          console.log(chat);
+          for (const user of recipients) {
+            const returnedUser = await User.findOneAndUpdate(
+              { _id: user },
+              { $addToSet: { activeChats: chat._id } },
+              {
+                new: true,
+                runValidators: true
+              }
+            ).populate('activeChats');
+            // console.log(returnedUser);
+            // console.log(`Adding to chat(${chatName}), ${returnedUser.username}`)
+            if (!returnedUser) {
+              await Chat.deleteOne({ _id: chat._id });
+              throw UserNotFoundError;
+            };
+          }
+          return chat;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    leaveChat: async (parent, { chatId }, context) => {
+      try {
+        if (context.user) {
+          const chat = await Chat.findOneAndUpdate(
+            { _id: chatId },
+            { $pull: { recipients: context.user._id } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          if (!chat) {
+            throw ChatNotFoundError;
+          }
+
           const user = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $pull: { posts: post._id } },
+            { $pull: { activeChats: chat._id } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          if (!user) {
+            throw UserNotFoundError;
+          }
+
+          if (chat.userCount < 1) {
+            await Chat.deleteOne({ _id: chat._id });
+            console.log(`Chat (${chat.chatName}) has been deleted.`);
+          }
+
+          return chat;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    addToChat: async (parent, { chatId, recipients }, context) => {
+      try {
+        if (context.user) {
+          const chat = await Chat.findOneAndUpdate(
+            { _id: chatId },
+            { $addToSet: { recipients: { $each: recipients } } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          if (!chat) {
+            throw ChatNotFoundError;
+          }
+
+          await User.findOneAndUpdate(
+            { _id: { $in: recipients } },
+            { $addToSet: { activeChats: chat._id } },
             {
               new: true,
               runValidators: true
             }
           );
 
-          if (!user) {
+          return chat;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    sendMessage: async (parent, { chatId, content, commentId, postId }, context) => {
+      try {
+        if (context.user) {
+          //save message to db
+          const message = await Message.create({
+            chatId,
+            content,
+            creator: context.user.username,
+            creatorId: context.user._id,
+            commentId,
+            postId,
+          });
+
+          const chat = await Chat.findOneAndUpdate(
+            { _id: chatId },
+            { $addToSet: { messages: message._id } },
+            {
+              new: true,
+              runValidators: true
+            }
+          )
+
+          if (!chat) {
+            await Message.deleteOne({ _id: message._id });
             throw UserNotFoundError;
           };
-
-          return post.comments.find((comment) => comment._id == commentId);
+          //add message to chat of suscribes
+          // pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: message });
+          return message;
         }
         throw AuthenticationError;
       } catch (error) {
@@ -854,39 +800,6 @@ const resolvers = {
       }
     },
 
-    // // not necessary
-    // createChat: async (parent, { }, context) => {
-    //   try {
-    //     if (context.user) {
-
-    //       // }
-    //      throw new AuthenticationError('You must be logged in');
-    //     }
-    //     //create a new chat with db
-    //     const chat = await Chat.create({ recipients });
-    //     return chat;
-    //   } catch (error) {
-    //     console.error('Error al crear el chat:', error);
-    //     throw error;
-    //   }
-    // },
-    sendMessage: async (parent, { chatId, message, username }, { pubsub }) => {
-      try {
-        //save message to db
-        const newMessage = await Message.create({
-          chatId,
-          content: message,  
-          creator: username,
-          createdAt: new Date().toISOString(),
-        });
-        //add message to chat of suscribes
-        pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: newMessage });
-        return newMessage;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
 
       receiveMessage: async (parent, { userId, message }, { pubsub }) => {
         try {
@@ -946,28 +859,7 @@ const resolvers = {
 
 
 
-
     },
-    
-  //   // not necessary
-  //   clearNotifications: async (parent, { }, context) => {
-  //     try {
-  //       // if (context.user) {
-
-
-  //       // }
-  //       // throw AuthenticationError;
-
-  //       // dev code
-
-  //     } catch (error) {
-  //       console.log(error);
-  //       throw error;
-  //     }
-  //   },
-  // },
-
-
 };
 
 module.exports = resolvers;

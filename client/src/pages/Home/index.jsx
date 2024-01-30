@@ -3,10 +3,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { GET_PUBLIC_POSTS, } from '../../utils/queries';
-
-import { setFeed } from '../../utils/slices/feedSlice';
-
-import { redirect } from 'react-router-dom';
+import { populatePublicPosts, populateCirclePosts, toggleDialogPostBox, setFeed } from '../../utils/slices/feedSlice';
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -18,10 +15,8 @@ import LoopIcon from '@mui/icons-material/Loop';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-
 import PostCard from '../../components/PostCard';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
-import { populatePublicPosts, populateCirclePosts, toggleDialogPostBox } from '../../utils/slices/feedSlice';
 
 function Home() {
 
@@ -41,7 +36,7 @@ function Home() {
         if (!loading) {
             if (!error) {
                 if (data) {
-                    console.log('test effect:', data);
+                    // console.log('home effect:', data);
                     dispatch(populatePublicPosts({ posts: data.getAllPosts }));
                 }
             } else {
@@ -57,17 +52,17 @@ function Home() {
         try {
             // console.log('handling refresh');
             const data = await refetch();
-            console.log('data from refresh hopefully', data);
+            // console.log('data from refresh hopefully', data);
             dispatch(populatePublicPosts({ posts: data.data.getAllPosts }));
         } catch (error) {
-            console.log('refetch error', error);
+            console.log('home refetch error', error);
         }
     }
 
 
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
-        <Container id="ooooooee" maxWidth="md" sx={{ paddingTop: 14 }}>
+        <Container maxWidth="md" sx={{ paddingTop: 14 }}>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -94,17 +89,10 @@ function Home() {
 
                 {publicPosts.length > 0 &&
                     publicPosts.map((post, index) => (
-                        <PostCard key={index} post={post} />
+                        <PostCard key={index} post={post} feedState={feedState} />
                     ))
                 }
 
-                {/* {data?.getAllPosts?.length > 0 &&
-                    data.getAllPosts.map((post, index) => (
-                        <PostCard key={index} post={post} />
-                    ))
-                } */}
-
-                <h1>Last</h1>
             </Stack>
             <ScrollToTopMain />
             <Fab color="secondary" aria-label="add" onClick={() => dispatch(toggleDialogPostBox({}))}

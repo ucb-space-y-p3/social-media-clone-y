@@ -1,12 +1,13 @@
-import { useState, useEffect,  } from 'react';
+import { useState, useEffect, } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
-
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleThemeMode, } from '../../utils/slices/userSlice';
-import { toggleDialogChatBox, } from '../../utils/slices/chatSlice';
 
 import Auth from '../../utils/auth';
+import { GET_CHATS, } from '../../utils/queries';
+
+import { toggleThemeMode, } from '../../utils/slices/userSlice';
+import { toggleDialogChatBox, populateChats, } from '../../utils/slices/chatSlice';
 
 // import ScrollToTopSide from '../ScrollToTopSide';
 import ChatItem from '../ChatItem';
@@ -17,9 +18,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Fab from '@mui/material/Fab';
-// import Modal from '@mui/material/Modal';
-// import Container from '@mui/material/Container';
-// import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -33,6 +31,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
+import LoopIcon from '@mui/icons-material/Loop';
 import ModeNightIcon from '@mui/icons-material/ModeNight';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -67,16 +66,44 @@ const smallDrawerWidth = 240;
 
 function Sidebar({ children }) {
 
-    const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
-    const username = useSelector((state) => state.userState.username);
-    
     const dispatch = useDispatch()
 
+    const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
+    const username = useSelector((state) => state.userState.username);
+    const firstInitial = useSelector((state) => state.userState.firstInitial);
+    const lastInitial = useSelector((state) => state.userState.lastInitial);
+    const activeChats = useSelector((state) => state.chatState.activeChats);
+
+    const { loading, error, data, refetch } = useQuery(GET_CHATS, {
+        fetchPolicy: 'no-cache', // Used for first execution
+        nextFetchPolicy: 'no-cache', // Used for subsequent executions
+    });
 
     // const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        // console.log('testing graphql fetching');
+
+        if (!loading) {
+            if (!error) {
+                if (data) {
+                    // console.log('chats effect:', data);
+                    dispatch(populateChats({ chats: data.me.activeChats }));
+                }
+            } else {
+                // throw error on screen
+                console.log('There was an error loading me!')
+            }
+        }
+
+    }, [loading, error, data])
+
+
+
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -103,6 +130,23 @@ function Sidebar({ children }) {
         navigate(`/${newPage}`);
     }
 
+
+    const handleRefresh = async () => {
+        try {
+            // console.log('handling refresh');
+            const data = await refetch();
+            console.log('data from refresh hopefully', data);
+            dispatch(populateChats({ chats: data.data.me.activeChats }));
+        } catch (error) {
+            console.log('sidebar chats refetch error', error);
+        }
+    }
+
+
+
+
+
+
     const settingsDrawer = (
         <div style={{ paddingLeft: 8 }}>
             {/* <Toolbar /> */}
@@ -117,14 +161,14 @@ function Sidebar({ children }) {
                 sx={{
                     padding: 2,
                 }}>
-                <Avatar>WX</Avatar>
+                <Avatar>{`${firstInitial}${lastInitial}`}</Avatar>
                 <Typography noWrap>{username}</Typography>
                 <IconButton onClick={() => dispatch(toggleThemeMode())}
                     sx={{}}>
                     {isDarkMode ?
-                        <LightModeIcon color="secondary"/>
+                        <LightModeIcon color="secondary" />
                         :
-                        <ModeNightIcon color="secondary"/>
+                        <ModeNightIcon color="secondary" />
                     }
                 </IconButton>
             </Stack>
@@ -134,7 +178,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <CottageIcon color="secondary"/>
+                            <CottageIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Home"} />
 
@@ -144,7 +188,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <NotificationsIcon color="secondary"/>
+                            <NotificationsIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Notifications"} />
 
@@ -154,7 +198,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <SearchIcon color="secondary"/>
+                            <SearchIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Search"} />
 
@@ -164,7 +208,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <FavoriteIcon color="secondary"/>
+                            <FavoriteIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Favorites"} />
 
@@ -174,7 +218,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <PersonIcon color="secondary"/>
+                            <PersonIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Profile"} />
 
@@ -187,7 +231,7 @@ function Sidebar({ children }) {
                     <ListItemButton>
                         <ListItemIcon>
 
-                            <TuneIcon color="secondary"/>
+                            <TuneIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Settings"} />
 
@@ -196,7 +240,7 @@ function Sidebar({ children }) {
                 <ListItem disablePadding onClick={handleLogOut}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <LogoutIcon color="secondary"/>
+                            <LogoutIcon color="secondary" />
                         </ListItemIcon>
                         <ListItemText primary={"Log Out"} />
                     </ListItemButton>
@@ -220,244 +264,41 @@ function Sidebar({ children }) {
                     justifyContent: 'center',
                 }}
             >
-                {/* <Toolbar sx={{
+                <Toolbar sx={{
                     // flexGrow: 1,
                     justifyContent: "center"
                 }}>
                     <Typography noWrap>Chatrooms</Typography>
-                </Toolbar> */}
+                    <IconButton color="secondary" onClick={handleRefresh}
+                        sx={{
+                            display: { xs: 'none', md: 'inline-flex', },
+                            position: "absolute",
+                            top: 12,
+                            left: { xs: 40, md: 150, lg: 150 }
+                        }}>
+                        <LoopIcon />
+                    </IconButton >
+
+                </Toolbar>
+
                 {/* <Typography noWrap>Chatrooms</Typography> */}
-                <Typography noWrap>Chatrooms</Typography>
 
             </AppBar>
-            <Divider id="back-to-top-chat-anchor" />
+            {/* <Divider id="back-to-top-chat-anchor" /> */}
 
             {/* <ScrollToTopSide /> */}
 
             <List sx={{ paddingTop: 8, paddingBottom: 24 }}>
-                <ListItem disablePadding >
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PersonIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <ListItemText primary={"first"} />
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ChatItem chatId='testId123' chatName='Cool Guys' />
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <GroupsIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        <Typography noWrap>person 1, person 2, person 3</Typography>
-                    </ListItemButton>
-                </ListItem>
-                <Divider />
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <PeopleAltIcon sx={{
-                                marginTop: 1,
-                                marginBottom: 1,
-                                marginLeft: 1
-                            }} />
-                        </ListItemIcon>
-                        {/* make the list item text turn into ellipsis */}
-                        <ListItemText primary={"last"} />
-                    </ListItemButton>
-                </ListItem>
+
+                {activeChats?.length > 0 &&
+                    activeChats.map((chat, index) => (
+                        <Box key={index}>
+                            <Divider />
+                            <ChatItem chat={chat} />
+                        </Box>
+                    ))
+                }
+
             </List>
 
         </Box>
@@ -509,7 +350,7 @@ function Sidebar({ children }) {
                             left: 40
                         }}
                     >
-                        <Avatar>WX</Avatar>
+                        <Avatar>{`${firstInitial}${lastInitial}`}</Avatar>
                     </IconButton>
                     <IconButton
                         color="inherit"
@@ -534,22 +375,6 @@ function Sidebar({ children }) {
 
                 </Toolbar>
             </AppBar>
-
-            {/* <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Text in a modal
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
-                </Box>
-            </Modal> */}
 
             <Box
                 component="nav"

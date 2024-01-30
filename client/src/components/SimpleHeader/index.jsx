@@ -41,7 +41,7 @@ export default function SimpleHeader() {
               right: 40
             }}
           >
-            {themeMode === 'dark' ?
+            {themeMode ?
               <LightModeIcon />
               :
               <ModeNightIcon />

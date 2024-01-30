@@ -88,12 +88,17 @@ query GetPost($postId: ID!) {
   getPost(postId: $postId) {
     _id
     creator
+    creatorId
+    creatorFirstInitial
+    creatorLastInitial
     content
     likeCount
     commentCount
     comments {
       _id
       creator
+      creatorFirstInitial
+      creatorLastInitial
       content
       createdAt
       likeCount
@@ -106,6 +111,7 @@ export const GET_PUBLIC_POSTS = gql`
 query GetAllPosts {
   getAllPosts {
     _id
+    creatorId
     creatorFirstInitial
     creatorLastInitial
     content
@@ -116,13 +122,21 @@ query GetAllPosts {
 }
 `;
 
-// export const GET_CIRCLE_POSTS = gql`
-// query GetUser($username: String!) {
-//   getUser(username: $username) {
-//     token
-//   }
-// }
-// `;
+export const GET_CIRCLE_POSTS = gql`
+query GetCirclePosts {
+  getCirclePosts {
+    _id
+    creatorId
+    creator
+    creatorFirstInitial
+    creatorLastInitial
+    content
+    commentCount
+    likeCount
+    createdAt
+  }
+}
+`;
 
 export const GET_LIKED_POSTS = gql`
 query LikedPosts {
@@ -145,6 +159,8 @@ query LikedComments {
     likedComments {
       _id
       creator
+      creatorFirstInitial
+      creatorLastInitial
       content
       postId
       likeCount
@@ -158,20 +174,19 @@ export const GET_CHAT = gql`
 query GetChat($chatId: ID!) {
   getChat(chatId: $chatId) {
     _id
-    isGroupChat
+    chatName
+    userCount
+    messageCount
     recipients {
       _id
       username
-      firstInitial
-      lastInitial
     }
     messages {
       _id
-      content
+      creatorId
       creator
+      content
       createdAt
-      chatId
-      postId
     }
   }
 }
@@ -182,7 +197,9 @@ query GetChats {
   me {
     activeChats {
       _id
-      isGroupChat
+      chatName
+      userCount
+      messageCount
       recipients {
         _id
         username

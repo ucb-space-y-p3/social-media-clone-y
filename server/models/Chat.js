@@ -2,12 +2,9 @@ const { Schema, model } = require('mongoose');
 
 const chatSchema = new Schema(
   {
-    isGroupChat: {
-      type: Boolean,
-      required: true
-    },
     chatName: {
-      type: String
+      type: String,
+      required: true
     },
     recipients: [
       {
@@ -29,6 +26,13 @@ const chatSchema = new Schema(
   }
 );
 
+chatSchema.virtual('messageCount').get(function () {
+  return this.messages.length;
+})
+
+chatSchema.virtual('userCount').get(function () {
+  return this.recipients.length;
+})
 
 const Chat = model('chat', chatSchema);
 
