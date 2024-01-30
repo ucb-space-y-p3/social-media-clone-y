@@ -202,6 +202,7 @@ mutation SendMessage($chatId: ID!, $content: String!) {
     chatId
     content
     creator
+    creatorId
     createdAt
   }
 } 

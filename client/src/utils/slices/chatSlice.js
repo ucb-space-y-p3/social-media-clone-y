@@ -32,7 +32,7 @@ const chatSlice = createSlice({
             state.activeChats = state.activeChats.filter((chat) => chat._id !== action.payload.id);
         },
         addMessage: (state, action) => {
-            state.currentChat.messages = [...state.currentChat.messages, action.payload.message]
+            state.currentChat.messages = [action.payload.message, ...state.currentChat.messages]
         },
         populateMessages: (state, action) => {
             state.currentChat.messages = [...action.payload.messages]

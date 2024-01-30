@@ -4,8 +4,8 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { GET_CHAT, } from '../../utils/queries';
-import { ADD_TO_CHAT, } from '../../utils/mutations';
-import { populateCurrentChat, setCurrentRecipients, setDraftMessage } from '../../utils/slices/chatSlice';
+import { ADD_TO_CHAT, SEND_MESSAGE, } from '../../utils/mutations';
+import { populateCurrentChat, setCurrentRecipients, setDraftMessage, addMessage } from '../../utils/slices/chatSlice';
 
 import MessageItem from '../../components/MessageItem';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
@@ -35,12 +35,14 @@ function Chat() {
         }
     });
 
+    const [sendMessage] = useMutation(SEND_MESSAGE);
+    const [addToChat] = useMutation(ADD_TO_CHAT);
+
     const newRecipients = useSelector((state) => state.chatState.currentChat.newRecipients);
     const currentChatId = useSelector((state) => state.chatState.currentChat.id);
     const draftMessage = useSelector((state) => state.chatState.currentChat.draftMessage);
     const messages = useSelector((state) => state.chatState.currentChat.messages);
 
-    const [addToChat] = useMutation(ADD_TO_CHAT);
 
     useEffect(() => {
         if (!loading) {
@@ -90,12 +92,22 @@ function Chat() {
     }
 
     const handleContentChange = (event) => {
+        // console.log(event.target.value);
         dispatch(setDraftMessage({ draftMessage: event.target.value }))
     }
 
     const handleSendMessage = async () => {
         try {
-
+            console.log('sending message:', draftMessage);
+            const newMessage = `${draftMessage}`;
+            dispatch(setDraftMessage({ draftMessage: '' }));
+            const data = await sendMessage({
+                variables: { chatId, content: newMessage }
+            });
+            console.log(data);
+            const message = data.data.sendMessage;
+            // dispatch(addMessage({ message: { _id: , creatorId: , creator: , content: , createdAt:  }}))
+            dispatch(addMessage({ message }));
         } catch (error) {
             console.log('send message error', error);
         }
@@ -113,14 +125,19 @@ function Chat() {
                 flexDirection: 'column',
                 // justifyContent: 'flex-end',
             }}>
+                <h1
+                    id="back-to-top-anchor"
+                    style={{ paddingLeft: '0.8em', marginTop: '0.2em' }}
+                >{!loading && data.getChat.chatName}</h1>
                 <Stack
                     spacing={0.7}
                     sx={{
                         flexGrow: 1,
                         display: 'flex',
+                        flexDirection: 'column-reverse',
+                        overflow: 'auto',
                     }}
                 >
-                    <h1 id="back-to-top-anchor">Chat{!loading && ` - ${data.getChat.chatName}`}</h1>
 
                     {messages.length > 0 &&
                         messages.map((message, index) => (
@@ -144,11 +161,13 @@ function Chat() {
                         focused
                         multiline
                         rows={2}
+                        onChange={handleContentChange}
+                        value={draftMessage}
                         sx={{
                             // paddingRight: 8,
                         }}
                     />
-                    <IconButton color="secondary" onClick={handleRefresh}
+                    <IconButton color="secondary" onClick={handleSendMessage}
                         sx={{
                             marginLeft: 1,
                             marginRight: 1,
@@ -172,7 +191,7 @@ function Chat() {
                     position: "fixed",
                     // top: { xs: 120, md: 120, lg: 120 },
                     top: 100,
-                    right: { xs: 40, md: 60, lg: 380 }
+                    right: { xs: 15, md: 60, lg: 380 }
                 }}>
                 <LoopIcon />
             </IconButton >

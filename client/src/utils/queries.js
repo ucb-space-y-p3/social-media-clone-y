@@ -183,8 +183,10 @@ query GetChat($chatId: ID!) {
     }
     messages {
       _id
+      creatorId
       creator
       content
+      createdAt
     }
   }
 }

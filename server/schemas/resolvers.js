@@ -131,7 +131,7 @@ const resolvers = {
     getAllPosts: async (parent, { }, context) => {
       try {
         if (context.user) {
-          const posts = await Post.find();
+          const posts = await Post.find().sort({ 'createdAt': -1 });
           if (!posts) {
             throw PostNotFoundError;
           };
@@ -153,11 +153,11 @@ const resolvers = {
 
           const posts = await Post.find({
             creatorId: { $in: [...user.friends, user._id] }
-          });
+          }).sort({ 'createdAt': -1 });
           if (!posts) {
             throw PostNotFoundError;
           };
-          
+
           return posts;
         }
         throw AuthenticationError;
@@ -235,7 +235,9 @@ const resolvers = {
     getChat: async (parent, { chatId }, context) => {
       try {
         if (context.user) {
-          const chat = await Chat.findById(chatId).populate('messages');
+          // the sort wasn't working with subdocuments
+          // const chat = await Chat.findById(chatId).populate('messages').sort({ 'messages.createdAt': -1 });
+          const chat = await Chat.findById(chatId);
           if (!chat) {
             ChatNotFoundError;
           }
@@ -244,6 +246,10 @@ const resolvers = {
           if (!user) {
             throw UserNotFoundError;
           };
+
+          const messages = await Message.find({ chatId }).sort({ 'createdAt': -1 });
+
+          chat.messages = messages;
 
           for (const tempChat of user.activeChats) {
             if (chatId === tempChat._id.toString()) {

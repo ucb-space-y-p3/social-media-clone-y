@@ -46,7 +46,7 @@ function Favorites() {
 
                 
 
-                <h1>Last</h1>
+                {/* <h1>Last</h1> */}
             </Stack>
             <ScrollToTopMain />
         </Container>
