@@ -82,7 +82,6 @@ const typeDefs = `
 
   type Message {
     _id: ID
-    content: String
     chatId: ID
     postId: ID
     commentId: ID
