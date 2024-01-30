@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { GET_CHAT, } from '../../utils/queries';
 import { ADD_TO_CHAT, SEND_MESSAGE, } from '../../utils/mutations';
-import { populateCurrentChat, setCurrentRecipients, setDraftMessage, addMessage } from '../../utils/slices/chatSlice';
+import { populateCurrentChat, setCurrentRecipients, setDraftMessage, addMessage, toggleChatUserBox } from '../../utils/slices/chatSlice';
 
 import MessageItem from '../../components/MessageItem';
 import ScrollToTopMain from '../../components/ScrollToTopMain';
@@ -113,6 +113,11 @@ function Chat() {
         }
     }
 
+    const handleAdd = () => {
+        // console.log('trying to open chat user box');
+        dispatch(toggleChatUserBox({}));
+    }
+
     return (
         // <Container maxWidth="sm" sx={{ py: 4, pt: 7 }}>
         <Container id="" maxWidth="md" sx={{
@@ -184,17 +189,16 @@ function Chat() {
                     top: 100,
                     right: { xs: 15, md: 60, lg: 380 }
                 }}>
-                <LoopIcon sx={{ fontSize: 25 }}/>
+                <LoopIcon sx={{ fontSize: 25 }} />
             </IconButton >
-            {/* <IconButton color="secondary" onClick={handleRefresh} */}
-            <IconButton color="secondary" 
+            <IconButton color="secondary" onClick={handleAdd}
                 sx={{
                     position: "fixed",
                     // top: { xs: 120, md: 120, lg: 120 },
                     top: 200,
-                    right: { xs: 13, md: 55, lg: 370 }
+                    right: { xs: 10, md: 55, lg: 370 }
                 }}>
-                <AddIcon sx={{ fontSize: 40 }}/>
+                <AddIcon sx={{ fontSize: 40 }} />
             </IconButton >
         </Container>
     );

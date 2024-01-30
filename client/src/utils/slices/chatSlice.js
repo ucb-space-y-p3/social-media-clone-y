@@ -10,6 +10,7 @@ const INITIAL_STATE = {
         newRecipients: [],
         draftMessage: '',
         connected: false,
+        openDialog: false,
     },
     newChat: {
         firstMessage: '',
@@ -41,8 +42,11 @@ const chatSlice = createSlice({
         deleteMessage: (state, action) => {
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
         },
-        toggleDialogChatBox: (state, action) => {
+        toggleDialogChatBox: (state) => {
             state.newChat.open = !state.newChat.open;
+        },
+        toggleChatUserBox: (state) => {
+            state.currentChat.openDialog = !state.currentChat.openDialog;
         },
         populateCurrentChat: (state, action) => {
             state.currentChat.id = action.payload.id;
@@ -91,6 +95,7 @@ export const {
     populateMessages,
     deleteMessage,
     toggleDialogChatBox,
+    toggleChatUserBox,
     populateCurrentChat,
     closeCurrentChat,
     setCurrentRecipients,

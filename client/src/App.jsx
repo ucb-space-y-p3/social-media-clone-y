@@ -40,7 +40,8 @@ import Footer from './components/Footer';
 import SignUp from './pages/SignUp';
 import NewChatDialog from './components/NewChatDialog';
 import NewPostDialog from './components/NewPostDialog';
-import NewCommentDialog from './components/NewCommentDialog';
+import NewChatUserDialog from './components/NewChatUserDialog';
+// import NewCommentDialog from './components/NewCommentDialog';
 
 
 const rootReducer = combineReducers({
@@ -144,6 +145,7 @@ function App() {
             <Outlet style={{ marginTop: 10 }} />
             <NewChatDialog />
             <NewPostDialog />
+            <NewChatUserDialog />
             {/* <NewCommentDialog /> */}
           </Sidebar>)
           :

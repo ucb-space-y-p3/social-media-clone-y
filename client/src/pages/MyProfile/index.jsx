@@ -90,11 +90,11 @@ function MyProfile() {
           }}
         >
 
-          {posts.length > 0 &&
+          {/* {posts.length > 0 &&
             posts.map((post, index) => (
-              <PostItem key={index} post={post}/>
+              <PostItem key={index} post={post} />
             ))
-          }
+          } */}
 
         </Stack>
       )
@@ -110,11 +110,11 @@ function MyProfile() {
           }}
         >
 
-          {posts.length > 0 &&
+          {/* {posts.length > 0 &&
             posts.map((post, index) => (
-              <PostItem key={index} post={post}/>
+              <PostItem key={index} post={post} />
             ))
-          }
+          } */}
 
         </Stack>
       )
@@ -130,11 +130,11 @@ function MyProfile() {
           }}
         >
 
-          {posts.length > 0 &&
+          {/* {posts.length > 0 &&
             posts.map((post, index) => (
-              <PostItem key={index} post={post}/>
+              <PostItem key={index} post={post} />
             ))
-          }
+          } */}
 
         </Stack>
       )
@@ -153,7 +153,7 @@ function MyProfile() {
 
           {posts.length > 0 &&
             posts.map((post, index) => (
-              <PostItem key={index} post={post}/>
+              <PostItem key={index} post={post} />
             ))
           }
 

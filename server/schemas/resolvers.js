@@ -778,6 +778,43 @@ const resolvers = {
         throw error;
       }
     },
+    addUserToChat: async (parent, { chatId, username }, context) => {
+      try {
+        if (context.user) {
+          const user = await User.findOneAndUpdate(
+            { username },
+            { $addToSet: { activeChats: chatId } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          console.log(username, user);
+          if (!user) {
+            throw UserNotFoundError;
+          }
+
+          const chat = await Chat.findOneAndUpdate(
+            { _id: chatId },
+            { $addToSet: { recipients: user._id } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          if (!chat) {
+            throw ChatNotFoundError;
+          }
+
+
+          return chat;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
     sendMessage: async (parent, { chatId, content, commentId, postId }, context) => {
       try {
         if (context.user) {

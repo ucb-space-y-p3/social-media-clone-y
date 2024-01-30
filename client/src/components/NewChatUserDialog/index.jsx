@@ -1,48 +1,50 @@
+import { useState } from 'react';
 import { forwardRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleDialogCommentBox } from '../../utils/slices/feedSlice';
-import { CREATE_COMMENT } from '../../utils/mutations';
+import { toggleChatUserBox, setCurrentRecipients } from '../../utils/slices/chatSlice';
+
+import { ADD_USER_TO_CHAT } from '../../utils/mutations';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useMutation } from '@apollo/client';
-
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function NewCommentDialog({ }) {
+export default function NewChatUserDialog({ }) {
 
-  const [commentContent, setCommentContent] = useState('');
+  const [newUsername, setNewUser] = useState('');
 
-  const [createComment] = useMutation(CREATE_COMMENT);
+  const [addUserToChat] = useMutation(ADD_USER_TO_CHAT);
 
   const dispatch = useDispatch();
 
-  const isNewCommentDialogOpen = useSelector((state) => state.feedState.newComment.open);
+  const isChatUserDialogOpen = useSelector((state) => state.chatState.currentChat.openDialog);
+  const chatId = useSelector((state) => state.chatState.currentChat.id);
 
   const handleClose = () => {
-    dispatch(toggleDialogCommentBox({}));
+    dispatch(toggleChatUserBox({}));
   };
 
   const handleSubmit = async () => {
-    console.log('pushing new comment');
-    dispatch(toggleDialogCommentBox({}));
+    console.log('adding new user to chat');
+    dispatch(toggleChatUserBox({}));
     try {
-      console.log('new comment content:', commentContent);
-      // we also need the current post id!!
-      const comment = await createComment({
-        variables: { content: commentContent },
+      console.log('user being added:', newUsername);
+      const { data: { addUserToChat:  returnedChat } } = await addUserToChat({
+        variables: { chatId, username: newUsername },
       });
-      console.log('newly created comment from backend', comment);
-
+      console.log('new chat users', returnedChat);
+      setNewUser('');
+      dispatch(setCurrentRecipients({ recipients: returnedChat.recipients }))
     } catch (error) {
       console.log(error);
     }
@@ -50,12 +52,12 @@ export default function NewCommentDialog({ }) {
 
   const handleContent = (event) => {
     // setContent(event.target.value)
-    setCommentContent(event.target.value);
+    setNewUser(event.target.value);
   }
 
   return (
     <Dialog
-      open={isNewCommentDialogOpen}
+      open={isChatUserDialogOpen}
       TransitionComponent={Transition}
       // keepMounted
       fullWidth
@@ -69,30 +71,23 @@ export default function NewCommentDialog({ }) {
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
           const formJson = Object.fromEntries(formData.entries());
-          const content = formJson.content;
-          console.log(content);
-          // pushNewPost();
+          // const content = formJson.content;
           handleSubmit();
         }
       }}
     >
-      <DialogTitle>{"Create A New Comment"}</DialogTitle>
+      <DialogTitle>{"Add To Chat"}</DialogTitle>
       <DialogContent >
-        {/* <DialogContentText id="alert-dialog-slide-description">
-    New Post
-  </DialogContentText> */}
         <TextField
           autoFocus
           required
           margin="dense"
           id="newContent"
           name="content"
-          label={"Text Here"}
+          label={"New User"}
           type="content"
-          // value={newPostContent}
+          value={newUsername}
           fullWidth
-          multiline
-          rows={2}
           // onChange={handleContentChange}
           onChange={handleContent}
         // variant="standard"
@@ -100,9 +95,8 @@ export default function NewCommentDialog({ }) {
         {/* <TextArea /> */}
       </DialogContent>
       <DialogActions>
-        {/* <Button onClick={closePostModal}>Cancel</Button> */}
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='submit' >Comment</Button>
+        <Button type='submit' >Add User</Button>
       </DialogActions>
     </Dialog>
 

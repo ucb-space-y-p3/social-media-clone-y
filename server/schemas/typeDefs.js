@@ -156,6 +156,7 @@ const typeDefs = `
     deleteComment(commentId: ID!): Comment
     createChat(chatName: String!, recipients: [String]!): Chat
     addToChat(chatId: String!, recipients: [String]!): Chat
+    addUserToChat(chatId: String!, username: String!): Chat
     leaveChat(chatId: ID!): Chat
     sendMessage(chatId: ID!, content: String!): Message
     # sendMessage(input: SendMessageInput!): Message
