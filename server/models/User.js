@@ -13,6 +13,18 @@ const userSchema = new Schema(
       minLength: 4,
       maxLength: 16,
     },
+    firstInitial: {
+      type: String,
+      required: true,
+      trim: true,
+      maxLength: 1,
+    },
+    lastInitial: {
+      type: String,
+      required: true,
+      trim: true,
+      maxLength: 1,
+    },
     email: {
       type: String,
       required: true,
@@ -29,6 +41,12 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'post',
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'comment',
       },
     ],
     friends: [
@@ -49,7 +67,25 @@ const userSchema = new Schema(
         ref: 'notification',
       },
     ],
-    friendRequests: [
+    likedPosts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'post',
+      },
+    ],
+    likedComments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'comment',
+      },
+    ],
+    outgoingFriendRequests: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'request',
+      },
+    ],
+    incomingFriendRequests: [
       {
         type: Schema.Types.ObjectId,
         ref: 'request',
@@ -89,6 +125,10 @@ userSchema.virtual('postCount').get(function () {
   return this.posts.length;
 })
 
+userSchema.virtual('commentCount').get(function () {
+  return this.comments.length;
+})
+
 userSchema.virtual('chatCount').get(function () {
   return this.activeChats.length;
 })
@@ -98,7 +138,7 @@ userSchema.virtual('notificationCount').get(function () {
 })
 
 userSchema.virtual('requestCount').get(function () {
-  return this.friendRequests.length;
+  return this.incomingFriendRequests.length;
 })
 
 const User = model('user', userSchema);

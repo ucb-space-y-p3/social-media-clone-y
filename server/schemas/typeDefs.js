@@ -3,29 +3,35 @@ const typeDefs = `
   type User {
     _id: ID
     username: String
+    firstInitial: String
+    lastInitial: String
     email: String
     friendCount: Int
     friends: [User]
     requestCount: Int
-    friendRequests: [FriendRequest]
+    incomingFriendRequests: [FriendRequest]
+    outgoingFriendRequests: [FriendRequest]
     postCount: Int
     posts: [Post]
+    commentCount: Int
+    comments: [Comment]
     chatCount: Int
     activeChats: [Chat]
     notificationCount: Int
     notifications: [Notification]
-    # likedPosts: [Post]
-    # likedComments: [Comment]
+    likedPosts: [Post]
+    likedComments: [Comment]
     settings: Settings
     chats: [Chat]
   }
 
   type Settings {
-    silentMode: Boolean
+    isDarkMode: Boolean
   }
 
   type Notification {
     _id: ID
+    isSystem: Boolean
     type: String
     alert: String
     createdAt: String
@@ -42,9 +48,12 @@ const typeDefs = `
   type Post {
     _id: ID
     creator: String
+    creatorFirstInitial: String
+    creatorLastInitial: String
     content: String
     createdAt: String
-    # likeCount: Int
+    likedBy: [User]
+    likeCount: Int
     commentCount: Int
     comments: [Comment]
   }
@@ -52,20 +61,25 @@ const typeDefs = `
   type Comment {
     _id: ID
     postId: ID
+    creatorId: ID
     creator: String
     createdAt: String
     content: String
+    likedBy: [User]
+    likeCount: Int
   }
 
   type Chat {
     _id: ID
     isGroupChat: Boolean
+    chatName: String
     recipients: [User]
     messages: [Message]
   }
 
   type Message {
     _id: ID
+    content: String
     chatId: ID
     postId: ID
     commentId: ID
@@ -116,19 +130,21 @@ const typeDefs = `
     username: String!
     email: String!
     password: String!
+    firstInitial: String!
+    lastInitial: String!
   }
 
   type Mutation {
     login(email: String!, password: String!): Auth
     createUser(input: UserInput): Auth
-    editUser(username: String, email: String, userId: ID!): Auth
-    changePassword(userId: ID!, password: String!): User
-    deleteUser(userId: ID!, password: String!): User
-    requestFriend(requesterId: ID!, targetId: String!): FriendRequest
+    editUser(username: String, email: String): User
+    changePassword(password: String!): User
+    deleteUser(password: String!): User
+    requestFriend(targetId: String!): FriendRequest
     acceptFriend(requestId: ID!): User
     denyFriend(requestId: ID!): FriendRequest
-    removeFriend(me: ID!, friend: String!): User
-    createPost(username: String!, content: String!): Post
+    removeFriend(friend: String!): User
+    createPost(content: String!): Post
     deletePost(postId: ID!): Post
     createComment(postId: ID!, content: String!, username: String!): Comment
     deleteComment(postId: ID!, commentId: ID!): Comment
