@@ -44,6 +44,8 @@ query GetUser($username: String!) {
     username
     firstInitial
     lastInitial
+    postCount
+    friendCount
     posts {
       _id
       content
@@ -65,12 +67,38 @@ query GetUser($username: String!) {
       requesterId
       createdAt
     }
+    outgoingFriendRequests {
+      _id
+      targetId
+      createdAt
+    }
     settings {
       isDarkMode
     }
   }
 }
 `;
+
+// export const GET_FRIEND = gql`
+// query GetFriend($username: String!) {
+//   getFriend(username: $username) {
+//     username
+//     firstInitial
+//     lastInitial
+//     posts {
+//       _id
+//       content
+//       createdAt
+//     }
+//     friends {
+//       _id
+//       username
+//       firstInitial
+//       lastInitial
+//     }
+//   }
+// }
+// `;
 
 export const GET_FRIEND_REQUEST = gql`
 query GetFriendRequest($requestId: ID!) {

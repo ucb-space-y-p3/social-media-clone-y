@@ -177,15 +177,6 @@ function Chat() {
                 </Box>
             </Paper>
 
-
-            {/* <Fab color="secondary" aria-label="add" onClick={handleNewRecipients}
-                sx={{
-                    position: "fixed",
-                    bottom: { xs: 150, md: 90, lg: 80 },
-                    right: { xs: 40, md: 60, lg: 380 }
-                }}>
-                <AddIcon />
-            </Fab> */}
             <IconButton color="secondary" onClick={handleRefresh}
                 sx={{
                     position: "fixed",
@@ -193,7 +184,17 @@ function Chat() {
                     top: 100,
                     right: { xs: 15, md: 60, lg: 380 }
                 }}>
-                <LoopIcon />
+                <LoopIcon sx={{ fontSize: 25 }}/>
+            </IconButton >
+            {/* <IconButton color="secondary" onClick={handleRefresh} */}
+            <IconButton color="secondary" 
+                sx={{
+                    position: "fixed",
+                    // top: { xs: 120, md: 120, lg: 120 },
+                    top: 200,
+                    right: { xs: 13, md: 55, lg: 370 }
+                }}>
+                <AddIcon sx={{ fontSize: 40 }}/>
             </IconButton >
         </Container>
     );

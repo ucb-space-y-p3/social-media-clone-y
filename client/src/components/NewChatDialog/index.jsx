@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useMutation } from '@apollo/client';
 import { CREATE_CHAT } from '../../utils/mutations';
@@ -24,6 +25,8 @@ export default function NewChatDialog({ }) {
 
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const isNewChatDialogOpen = useSelector((state) => state.chatState.newChat.open);
   const firstMessage = useSelector((state) => state.chatState.newChat.firstMessage);
   const newChatName = useSelector((state) => state.chatState.newChat.newChatName);
@@ -42,6 +45,7 @@ export default function NewChatDialog({ }) {
     dispatch(resetNewChat({}));
   }
 
+  // fix bug in here
   const handleSubmit = async () => {
     try {
       console.log('creating new chatroom');
@@ -49,9 +53,14 @@ export default function NewChatDialog({ }) {
       const { data: { createChat: chat}} = await createChat({
         variables: { chatName: newChatName, recipients: [...newRecipients, userId] },
       });
+
       dispatch(resetNewChat({}));
+
       console.log('chat response:', chat);
+
       dispatch(addChat({ newChat: { _id: chat._id, chatName: chat.chatName, userCount: chat.userCount, messageCount: chat.messageCount } }));
+
+      navigate(`/chats/${chat._id}`);
     } catch (error) {
       console.log(error);
     }

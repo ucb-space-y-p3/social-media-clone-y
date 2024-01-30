@@ -14,6 +14,14 @@ const INITIAL_STATE = {
         isDarkMode: true,
 
     },
+    profile: {
+        userId: '',
+        username: '',
+        firstInitial: '',
+        lastInitial: '',
+        friendCount: '',
+        postCount: '',
+    }
 };
 
 const userSlice = createSlice({
@@ -27,6 +35,15 @@ const userSlice = createSlice({
             state.firstInitial = action.payload.firstInitial;
             state.lastInitial = action.payload.lastInitial;
             state.email = action.payload.email;
+        },
+        setProfile: (state, action) => {
+            state.profile.userId = action.payload.userId;
+            state.profile.username = action.payload.username;
+            state.profile.firstInitial = action.payload.firstInitial;
+            state.profile.lastInitial = action.payload.lastInitial;
+            state.profile.friendCount = action.payload.friendCount;
+            state.profile.postCount = action.payload.postCount;
+            // state.profile.email = action.payload.email;
         },
         updateUser: (state, action) => {
             state.username = action.payload.username;
@@ -81,6 +98,7 @@ const userSlice = createSlice({
 
 export const {
     setUser,
+    setProfile,
     updateUser,
     updateUserSettings,
     toggleThemeMode,

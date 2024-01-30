@@ -111,7 +111,7 @@ function Home() {
                     top: 120,
                     right: { xs: 40, md: 60, lg: 380 }
                 }}>
-                <LoopIcon />
+                <LoopIcon sx={{ fontSize: 30 }}/>
             </IconButton >
         </Container>
     );

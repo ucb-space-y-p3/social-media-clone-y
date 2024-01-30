@@ -63,10 +63,6 @@ const router = createBrowserRouter([
                 element: <UserProfile />
             },
             {
-                path: '/me',
-                element: <UserProfile isMe /> // change maybe?
-            },
-            {
                 path: '/me/settings',
                 element: <Settings />
             },

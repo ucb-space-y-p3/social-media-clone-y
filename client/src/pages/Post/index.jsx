@@ -49,7 +49,7 @@ function Post() {
                 }}
             >Post - {postId}</Typography>
 
-
+            {/* maybe move loading out of the return */}
             {!loading && <PostCard post={data?.getPost} isDirect />}
 
             <Stack spacing={0.7}>

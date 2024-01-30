@@ -69,10 +69,10 @@ const chatSlice = createSlice({
             state.newChat.newChatName = action.payload.newChatName;
         },
         addNewRecipient: (state, action) => {
-            state.newChat.recipients = [...state.newChat.recipients, action.payload.user];
+            state.newChat.newRecipients = [...state.newChat.newRecipients, action.payload.user];
         },
         removeNewRecipient: (state, action) => {
-            state.newChat.recipients = state.newChat.recipients.filter((user) => user.username !== action.payload.username);
+            state.newChat.newRecipients = state.newChat.newRecipients.filter((user) => user.username !== action.payload.username);
         },
         resetNewChat: (state) => {
             state.newChat.firstMessage = '';
