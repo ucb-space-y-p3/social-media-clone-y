@@ -87,6 +87,7 @@ function MyProfile() {
             display: 'flex',
             flexDirection: 'column-reverse',
             overflow: 'auto',
+            paddingTop: 2,
           }}
         >
 
@@ -107,6 +108,7 @@ function MyProfile() {
             display: 'flex',
             flexDirection: 'column-reverse',
             overflow: 'auto',
+            paddingTop: 2,
           }}
         >
 
@@ -127,6 +129,7 @@ function MyProfile() {
             display: 'flex',
             flexDirection: 'column-reverse',
             overflow: 'auto',
+            paddingTop: 2,
           }}
         >
 
@@ -146,8 +149,9 @@ function MyProfile() {
           sx={{
             flexGrow: 1,
             display: 'flex',
-            flexDirection: 'column-reverse',
+            flexDirection: 'column',
             overflow: 'auto',
+            paddingTop: 2,
           }}
         >
 
