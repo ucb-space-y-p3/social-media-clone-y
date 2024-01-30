@@ -11,6 +11,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import { red, purple } from '@mui/material/colors';
@@ -39,12 +40,14 @@ function PostCard({ post, feedState, isDirect }) {
     return (
         <Card sx={{ minWidth: 275 }} >
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {feedState === 'circle' ?
-                        post.creator :
-                        `${post.creatorFirstInitial}${post.creatorLastInitial}`
-                    }
-                </Typography>
+                {feedState === 'circle' &&
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                        {post.creator}
+                    </Typography>
+                }
+                <Avatar
+                    onClick={() => navigate(`/user/${post.creatorId}`)}
+                >{`${post.creatorFirstInitial}${post.creatorLastInitial}`}</Avatar>
                 <Typography variant="h6" component="div">
                     {post.content}
                 </Typography>
@@ -59,7 +62,7 @@ function PostCard({ post, feedState, isDirect }) {
             </CardContent>
             <CardActions>
                 {isDirect ?
-                    <Button size="small" >{post.commentCount} Comments</Button> :
+                    <Button size="small" disabled>{post.commentCount} Comments</Button> :
                     <Button size="small" onClick={() => navigate(`/posts/${post._id}`)}>{post.commentCount} Comments</Button>
 
                 }

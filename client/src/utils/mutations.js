@@ -161,6 +161,8 @@ mutation CreateChat($chatName: String!, $recipients: [String]!) {
   createChat(chatName: $chatName, recipients: $recipients) {
     _id
     chatName
+    userCount
+    messageCount
     recipients {
       _id
       username
@@ -179,8 +181,19 @@ mutation AddToChat($chatId: String!, $recipients: [String]!) {
     recipients {
       _id
       username
-      firstInitial
-      lastInitial
+    }
+  }
+}
+`;
+
+export const ADD_USER_TO_CHAT = gql`
+mutation AddUserToChat($chatId: String!, $username: String!) {
+  addUserToChat(chatId: $chatId, username: $username) {
+    _id
+    chatName
+    recipients {
+      _id
+      username
     }
   }
 }

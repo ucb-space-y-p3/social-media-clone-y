@@ -37,10 +37,25 @@ const resolvers = {
     },
     // oth
     // agith
-    getFriends: async (parent, { username }, context) => {
+    // getFriends: async (parent, { username }, context) => {
+    //   try {
+    //     if (context.user) {
+    //       const user = await User.findOne({ username: username }).populate('posts');
+    //       if (!user) {
+    //         throw UserNotFoundError;
+    //       };
+    //       return user;
+    //     }
+    //     throw AuthenticationError;
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    getUser: async (parent, { username }, context) => {
       try {
         if (context.user) {
-          const user = await User.findOne({ username: username }).populate('posts');
+          const user = await User.findOne({ username }).populate(['posts', 'friends']);
           if (!user) {
             throw UserNotFoundError;
           };
@@ -174,29 +189,29 @@ const resolvers = {
   },
 
   Subscription: {
-    
-      messageSent: {
-        subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
-      },
-      messageReceived: {
-        subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
-      },
-      userConnected: {
-        subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_CONNECTED_${userId}`)
-      },
-      userDisconnected: {
-        subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_DISCONNECTED_${userId}`)
-      },
-      friendAdded: {
-        subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_ADDED_${userId}_${friendId}`)
-      },
-      friendRemoved: {
-        subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_REMOVED_${userId}_${friendId}`)
-      },
-      friendRequestAccepted: {
-        subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
-      }
-    
+
+    messageSent: {
+      subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
+    },
+    messageReceived: {
+      subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
+    },
+    userConnected: {
+      subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_CONNECTED_${userId}`)
+    },
+    userDisconnected: {
+      subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_DISCONNECTED_${userId}`)
+    },
+    friendAdded: {
+      subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_ADDED_${userId}_${friendId}`)
+    },
+    friendRemoved: {
+      subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_REMOVED_${userId}_${friendId}`)
+    },
+    friendRequestAccepted: {
+      subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
+    }
+
   },
 
 
@@ -307,10 +322,10 @@ const resolvers = {
           );
 
 
-        // await Chat.updateMany(
-        //   { _id: {//n: user.chats } },
-        //   { $pull: { friends: user._id } },
-        // );
+          // await Chat.updateMany(
+          //   { _id: {//n: user.chats } },
+          //   { $pull: { friends: user._id } },
+          // );
 
 
           return user;
@@ -437,40 +452,40 @@ const resolvers = {
         throw error;
       }
     },
-      friendRequestAccepted: async (parent, { userId, friendRequestId }, { pubsub }) => {
-        try {
-          // Find and remove the friend request from the database
-          const friendRequest = await FriendRequest.findByIdAndDelete(friendRequestId);
-          if (!friendRequest) {
-            throw new Error("Friend request not found");
-          }
-    
-          // Update the user who accepted the friend request
-          const user = await User.findOneAndUpdate(
-            { _id: userId },
-            {
-              $addToSet: { friends: friendRequest.requesterId },
-              $pull: { friendRequests: friendRequestId }
-            },
-            { new: true }
-          );
-    
-          if (!user) {
-            throw new Error("User not found");
-          }
-    
-          // Notify subscribers that the friend request has been accepted
-          pubsub.publish(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`, {
-            friendRequestAccepted: { userId, friendRequestId }
-          });
-          // Returnthe friend request acceptance
-          return { success: true, message: "Friend request accepted successfully", user };
-        } catch (error) {
-          console.log(error);
-          throw error;
+    friendRequestAccepted: async (parent, { userId, friendRequestId }, { pubsub }) => {
+      try {
+        // Find and remove the friend request from the database
+        const friendRequest = await FriendRequest.findByIdAndDelete(friendRequestId);
+        if (!friendRequest) {
+          throw new Error("Friend request not found");
         }
-      },
-    
+
+        // Update the user who accepted the friend request
+        const user = await User.findOneAndUpdate(
+          { _id: userId },
+          {
+            $addToSet: { friends: friendRequest.requesterId },
+            $pull: { friendRequests: friendRequestId }
+          },
+          { new: true }
+        );
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        // Notify subscribers that the friend request has been accepted
+        pubsub.publish(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`, {
+          friendRequestAccepted: { userId, friendRequestId }
+        });
+        // Returnthe friend request acceptance
+        return { success: true, message: "Friend request accepted successfully", user };
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+
 
     // agith
 
@@ -493,15 +508,15 @@ const resolvers = {
         if (!oldFriend) {
           throw UserNotFoundError;
         };
-           // Publish the event to notify subscribers about the friend removal
-     pubsub.publish(`FRIEND_REMOVED_${me}_${friend}`, { friendRemoved: { userId: me, friendId: friend } });  
-      // return some information about the friend removal
-      return { success: true, message: "Friend removed successfully" };
-    } catch (error) {
-      console.log(error);
-      throw error;
-    } 
-  },
+        // Publish the event to notify subscribers about the friend removal
+        pubsub.publish(`FRIEND_REMOVED_${me}_${friend}`, { friendRemoved: { userId: me, friendId: friend } });
+        // return some information about the friend removal
+        return { success: true, message: "Friend removed successfully" };
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
     // agith
     createPost: async (parent, { content }, context) => {
       try {
@@ -763,6 +778,43 @@ const resolvers = {
         throw error;
       }
     },
+    addUserToChat: async (parent, { chatId, username }, context) => {
+      try {
+        if (context.user) {
+          const user = await User.findOneAndUpdate(
+            { username },
+            { $addToSet: { activeChats: chatId } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          console.log(username, user);
+          if (!user) {
+            throw UserNotFoundError;
+          }
+
+          const chat = await Chat.findOneAndUpdate(
+            { _id: chatId },
+            { $addToSet: { recipients: user._id } },
+            {
+              new: true,
+              runValidators: true
+            }
+          );
+          if (!chat) {
+            throw ChatNotFoundError;
+          }
+
+
+          return chat;
+        }
+        throw AuthenticationError;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
     sendMessage: async (parent, { chatId, content, commentId, postId }, context) => {
       try {
         if (context.user) {
@@ -801,65 +853,65 @@ const resolvers = {
     },
 
 
-      receiveMessage: async (parent, { userId, message }, { pubsub }) => {
-        try {
-         
-          const newMessage = await Message.create({
-            userId,
-            content: message,
-            createdAt: new Date().toISOString(),
-          });
-          pubsub.publish(`MESSAGE_RECEIVED_${userId}`, { messageReceived: newMessage });
-          return newMessage;
-        } catch (error) {
-          console.log(error);
-          throw error;
-        }
-      },
-      userConnected: async (parent, { userId }, { pubsub }) => {
-        try {
-          // Update user status to "online"
-          const user = await User.findByIdAndUpdate(userId, { status: 'online' }, { new: true });
-  
-          // Notify friends about user connection
-          const friends = await User.find({ _id: { $in: user.friends } });
-  
-          // Notify each friend about the user connection
-          friends.forEach(async (friend) => {
-            // Publish a friend connection event
-            pubsub.publish(`FRIEND_CONNECTED_${friend._id}_${userId}`, { friendConnected: { userId } });
-          });
-  
-          return { success: true, message: 'User connected successfully' };
-        } catch (error) {
-          console.log(error);
-          throw error;
-        }
-      },
-      userDisconnected: async (parent, { userId }, { pubsub }) => {
-        try {
-          // Update user status to "offline"
-          const user = await User.findByIdAndUpdate(userId, { status: 'offline' }, { new: true });
-  
-          // Notify friends about user disconnection
-          const friends = await User.find({ _id: { $in: user.friends } });
-  
-          // Notify each friend about the user disconnection
-          friends.forEach(async (friend) => {
-            // Publish a friend disconnection event
-            pubsub.publish(`FRIEND_DISCONNECTED_${friend._id}_${userId}`, { friendDisconnected: { userId } });
-          });
-  
-          return { success: true, message: 'User disconnected successfully' };
-        } catch (error) {
-          console.log(error);
-          throw error;
-        }
-      },
+    receiveMessage: async (parent, { userId, message }, { pubsub }) => {
+      try {
 
-
-
+        const newMessage = await Message.create({
+          userId,
+          content: message,
+          createdAt: new Date().toISOString(),
+        });
+        pubsub.publish(`MESSAGE_RECEIVED_${userId}`, { messageReceived: newMessage });
+        return newMessage;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     },
+    userConnected: async (parent, { userId }, { pubsub }) => {
+      try {
+        // Update user status to "online"
+        const user = await User.findByIdAndUpdate(userId, { status: 'online' }, { new: true });
+
+        // Notify friends about user connection
+        const friends = await User.find({ _id: { $in: user.friends } });
+
+        // Notify each friend about the user connection
+        friends.forEach(async (friend) => {
+          // Publish a friend connection event
+          pubsub.publish(`FRIEND_CONNECTED_${friend._id}_${userId}`, { friendConnected: { userId } });
+        });
+
+        return { success: true, message: 'User connected successfully' };
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    userDisconnected: async (parent, { userId }, { pubsub }) => {
+      try {
+        // Update user status to "offline"
+        const user = await User.findByIdAndUpdate(userId, { status: 'offline' }, { new: true });
+
+        // Notify friends about user disconnection
+        const friends = await User.find({ _id: { $in: user.friends } });
+
+        // Notify each friend about the user disconnection
+        friends.forEach(async (friend) => {
+          // Publish a friend disconnection event
+          pubsub.publish(`FRIEND_DISCONNECTED_${friend._id}_${userId}`, { friendDisconnected: { userId } });
+        });
+
+        return { success: true, message: 'User disconnected successfully' };
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+
+
+
+  },
 };
 
 module.exports = resolvers;

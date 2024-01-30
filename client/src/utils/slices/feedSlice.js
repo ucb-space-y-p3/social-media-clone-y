@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     publicPosts: [],
     circlePosts: [],
+    currentComments: [],
     newPost: {
         content: '',
         open: false,
@@ -18,11 +19,11 @@ const feedSlice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         addPublicPost: (state, action) => {
-            state.publicPosts = [ action.payload, ...state.publicPosts];
+            state.publicPosts = [action.payload, ...state.publicPosts];
         },
         populatePublicPosts: (state, action) => {
             // state.publicPosts = [...state.publicPosts, ...action.payload.posts];
-            state.publicPosts = [ ...action.payload.posts ];
+            state.publicPosts = [...action.payload.posts];
         },
         addCirclePost: (state, action) => {
             state.circlePosts = [...state.circlePosts, action.payload];
@@ -51,6 +52,15 @@ const feedSlice = createSlice({
         setFeed: (state, action) => {
             state.currentFeed = action.payload.feed;
         },
+        setCurrentComments: (state, action) => {
+            state.currentComments = action.payload.currentComments;
+        },
+        removeComment: (state, action) => {
+            state.currentComments = state.currentComments.filter((comment) => comment._id !== action.payload.id);
+        },
+        addComment: (state, action) => {
+            state.currentComments = [action.payload, ...state.currentComments];
+        },
     }
 })
 
@@ -66,6 +76,9 @@ export const {
     toggleDialogPostBox,
     toggleDialogCommentBox,
     setFeed,
+    setCurrentComments,
+    removeComment,
+    addComment,
 
 } = feedSlice.actions;
 export default feedSlice.reducer;

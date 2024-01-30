@@ -10,7 +10,13 @@ query Me {
     email
     posts {
       _id
+      creatorId
+      creatorFirstInitial
+      creatorLastInitial
+      creator
       content
+      commentCount
+      likeCount
       createdAt
     }
     comments {
@@ -44,6 +50,8 @@ query GetUser($username: String!) {
     username
     firstInitial
     lastInitial
+    postCount
+    friendCount
     posts {
       _id
       content
@@ -51,8 +59,12 @@ query GetUser($username: String!) {
     }
     comments {
       _id
+      creator
+      creatorFirstInitial
+      creatorLastInitial
       content
       createdAt
+      likeCount
     }
     friends {
       _id
@@ -62,7 +74,14 @@ query GetUser($username: String!) {
     }
     incomingFriendRequests {
       _id
+      requesterName
       requesterId
+      createdAt
+    }
+    outgoingFriendRequests {
+      _id
+      targetName
+      targetId
       createdAt
     }
     settings {
@@ -71,6 +90,27 @@ query GetUser($username: String!) {
   }
 }
 `;
+
+// export const GET_FRIEND = gql`
+// query GetFriend($username: String!) {
+//   getFriend(username: $username) {
+//     username
+//     firstInitial
+//     lastInitial
+//     posts {
+//       _id
+//       content
+//       createdAt
+//     }
+//     friends {
+//       _id
+//       username
+//       firstInitial
+//       lastInitial
+//     }
+//   }
+// }
+// `;
 
 export const GET_FRIEND_REQUEST = gql`
 query GetFriendRequest($requestId: ID!) {

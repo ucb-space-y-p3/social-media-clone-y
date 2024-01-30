@@ -86,8 +86,6 @@ function Sidebar({ children }) {
 
 
     useEffect(() => {
-        // console.log('testing graphql fetching');
-
         if (!loading) {
             if (!error) {
                 if (data) {
@@ -101,8 +99,6 @@ function Sidebar({ children }) {
         }
 
     }, [loading, error, data])
-
-
 
 
     const handleDrawerClose = () => {
@@ -214,6 +210,7 @@ function Sidebar({ children }) {
 
                     </ListItemButton>
                 </ListItem>
+                {/* <ListItem disablePadding onClick={(() => handleDirection(`user/${username}`))}> */}
                 <ListItem disablePadding onClick={(() => handleDirection('me'))}>
                     <ListItemButton>
                         <ListItemIcon>
@@ -365,7 +362,7 @@ function Sidebar({ children }) {
                             right: 25
                         }}
                     >
-                        <Avatar>WX</Avatar>
+                        <Avatar>{`${firstInitial}${lastInitial}`}</Avatar>
                     </IconButton>
 
                     <img src={Y} alt="y logo" width="80" style={{

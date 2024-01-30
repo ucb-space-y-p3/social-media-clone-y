@@ -10,9 +10,11 @@ const INITIAL_STATE = {
         newRecipients: [],
         draftMessage: '',
         connected: false,
+        openDialog: false,
     },
     newChat: {
         firstMessage: '',
+        newChatName: '',
         newRecipients: [],
         open: false,
     },
@@ -40,8 +42,11 @@ const chatSlice = createSlice({
         deleteMessage: (state, action) => {
             state.currentChat.messages = state.currentChat.messages.filter((message) => message._id !== action.payload.id);
         },
-        toggleDialogChatBox: (state, action) => {
+        toggleDialogChatBox: (state) => {
             state.newChat.open = !state.newChat.open;
+        },
+        toggleChatUserBox: (state) => {
+            state.currentChat.openDialog = !state.currentChat.openDialog;
         },
         populateCurrentChat: (state, action) => {
             state.currentChat.id = action.payload.id;
@@ -64,16 +69,20 @@ const chatSlice = createSlice({
         setFirstMessage: (state, action) => {
             state.newChat.firstMessage = action.payload.firstMessage;
         },
+        setNewName: (state, action) => {
+            state.newChat.newChatName = action.payload.newChatName;
+        },
         addNewRecipient: (state, action) => {
-            state.newChat.recipients = [...state.newChat.recipients, action.payload.user];
+            state.newChat.newRecipients = [...state.newChat.newRecipients, action.payload.user];
         },
         removeNewRecipient: (state, action) => {
-            state.newChat.recipients = state.newChat.recipients.filter((user) => user.username !== action.payload.username);
+            state.newChat.newRecipients = state.newChat.newRecipients.filter((user) => user.username !== action.payload.username);
         },
         resetNewChat: (state) => {
             state.newChat.firstMessage = '';
-            state.newChat.recipients = [];
+            state.newChat.newRecipients = [];
             state.newChat.open = false;
+            state.newChat.newChatName = '';
         }
     }
 })
@@ -86,11 +95,13 @@ export const {
     populateMessages,
     deleteMessage,
     toggleDialogChatBox,
+    toggleChatUserBox,
     populateCurrentChat,
     closeCurrentChat,
     setCurrentRecipients,
     setDraftMessage,
     setFirstMessage,
+    setNewName,
     addNewRecipient,
     removeNewRecipient,
     resetNewChat,

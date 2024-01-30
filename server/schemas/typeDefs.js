@@ -39,7 +39,9 @@ const typeDefs = `
 
   type FriendRequest {
     _id: ID
+    requesterName: String
     requesterId: ID
+    targetName: String
     targetId: ID
     createdAt: String
   }
@@ -90,6 +92,12 @@ const typeDefs = `
     creatorId: String
     createdAt: String
   }
+
+  type Auth {
+    token: ID!
+    user: User
+  }
+
   type Subscription {
     messageSent(chatId: ID!): Message
     messageReceived(userId: ID!): Message
@@ -98,11 +106,6 @@ const typeDefs = `
     friendAdded(userId: ID!, friendId: ID!): User
     friendRemoved(userId: ID!, friendId: ID!): User
     friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
-  }
-
-  type Auth {
-    token: ID!
-    user: User
   }
 
   # Define which queries the front end is allowed to make and what data is returned
@@ -153,6 +156,7 @@ const typeDefs = `
     deleteComment(commentId: ID!): Comment
     createChat(chatName: String!, recipients: [String]!): Chat
     addToChat(chatId: String!, recipients: [String]!): Chat
+    addUserToChat(chatId: String!, username: String!): Chat
     leaveChat(chatId: ID!): Chat
     sendMessage(chatId: ID!, content: String!): Message
     # sendMessage(input: SendMessageInput!): Message
