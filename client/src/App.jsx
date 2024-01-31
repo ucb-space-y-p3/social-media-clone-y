@@ -4,13 +4,19 @@ import {
   ApolloProvider,
   createHttpLink,
   useQuery,
-  useLazyQuery,
+  split,
+  HttpLink,
+  ApolloLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 
+import { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { combineReducers } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import userReducer from './utils/slices/userSlice';
@@ -18,11 +24,8 @@ import notificationReducer from './utils/slices/notificationSlice';
 import feedReducer from './utils/slices/feedSlice';
 import favoriteReducer from './utils/slices/favoriteSlice';
 import chatReducer from './utils/slices/chatSlice';
-import { GET_ME, GET_PUBLIC_POSTS, GET_LIKED_COMMENTS, GET_LIKED_POSTS, GET_CHAT, GET_CHATS, GET_NOTIFICATIONS } from './utils/queries';
-
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { setUser, } from './utils/slices/userSlice';
+import { GET_ME, GET_PUBLIC_POSTS, GET_LIKED_COMMENTS, GET_LIKED_POSTS, GET_CHAT, GET_CHATS, GET_NOTIFICATIONS } from './utils/queries';
 
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
@@ -34,12 +37,13 @@ import './App.css';
 
 import Auth from './utils/auth';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import SimpleHeader from './components/SimpleHeader';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
-import SignUp from './pages/SignUp';
 import NewChatDialog from './components/NewChatDialog';
 import NewPostDialog from './components/NewPostDialog';
+import NewChatUserDialog from './components/NewChatUserDialog';
 import NewCommentDialog from './components/NewCommentDialog';
 
 
@@ -55,10 +59,6 @@ const store = configureStore({
   reducer: rootReducer,
 });
 
-// Construct our main GraphQL API endpoint
-const httpLink = createHttpLink({
-  uri: '/graphql',
-});
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
 const authLink = setContext((_, { headers }) => {
@@ -73,21 +73,48 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const client = new ApolloClient({
-  // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+// Construct our main GraphQL API endpoint
+const httpLink = new HttpLink({
+  uri: '/graphql',
 });
 
+// use react routers useLocation to inject the correct url
+const wsLink = new GraphQLWsLink(createClient({
+  url: 'ws://localhost:3000/graphql',
+  // url: '/subscriptions',
+  connectionParams: {
+    authorization: () => localStorage.getItem('id_token'),
+  },
+}));
 
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  authLink.concat(httpLink),
+);
 
+const client = new ApolloClient({
+  // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
+  link: splitLink,
+  cache: new InMemoryCache(),
+});
 
 
 function App() {
 
   const dispatch = useDispatch();
 
+  const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
+
   const isDarkMode = useSelector((state) => state.userState.settings.isDarkMode);
+
+  const location = useLocation().pathname.split('/')[1];
 
   const theme = createTheme({
     palette: {
@@ -115,27 +142,13 @@ function App() {
     }
   });
 
-  const location = useLocation().pathname.split('/')[1];
-
-  const { loading: getMeLoading, error: getMeError, data: getMeData, refetch: getMeRefetch } = useQuery(GET_ME);
-  
-  // useEffect(() => {
-  //   if (Auth.loggedIn()) {
-  //     console.log('first app load/render');
-  //     getMeRefetch({});
-  //     publicPostsRefetch({});
-  //     // circlePostsRefetch({ });
-  //   }
-  // }, [])
-
-
   useEffect(() => {
     if (!getMeLoading) {
       if (!getMeError) {
         if (getMeData) {
-          // console.log(getMeData);
-          const { _id: userId , username, email, firstInitial, lastInitial } = getMeData.me;
-          dispatch(setUser({ userId, username, email, firstInitial, lastInitial }));
+          console.log("me:", getMeData);
+          const { _id: userId, username, email, firstInitial, lastInitial, friends, incomingFriendRequests: friendRequests, posts, comments } = getMeData.me;
+          dispatch(setUser({ userId, username, email, firstInitial, lastInitial, friends, friendRequests, posts, comments }));
         }
       } else {
         // throw error on screen
@@ -154,7 +167,8 @@ function App() {
             <Outlet style={{ marginTop: 10 }} />
             <NewChatDialog />
             <NewPostDialog />
-            {/* <NewCommentDialog /> */}
+            <NewChatUserDialog />
+            <NewCommentDialog />
           </Sidebar>)
           :
           (location == 'signup' ?

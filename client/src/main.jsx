@@ -14,8 +14,8 @@ import Favorites from './pages/Favorites';
 import Search from './pages/Search';
 import Notifications from './pages/Notifications';
 import UserProfile from './pages/UserProfile';
+import MyProfile from './pages/MyProfile';
 import Settings from './pages/Settings';
-
 
 const router = createBrowserRouter([
     {
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/me',
-                element: <UserProfile isMe /> // change maybe?
+                element: <MyProfile />
             },
             {
                 path: '/me/settings',

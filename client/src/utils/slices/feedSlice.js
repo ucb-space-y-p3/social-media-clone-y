@@ -3,12 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     publicPosts: [],
     circlePosts: [],
+    currentComments: [],
+    currentPostId: '',
     newPost: {
         content: '',
         open: false,
     },
     newComment: {
-        content: '',
         open: false,
     },
     currentFeed: 'public',
@@ -19,11 +20,11 @@ const feedSlice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         addPublicPost: (state, action) => {
-            state.publicPosts = [ action.payload, ...state.publicPosts];
+            state.publicPosts = [action.payload, ...state.publicPosts];
         },
         populatePublicPosts: (state, action) => {
             // state.publicPosts = [...state.publicPosts, ...action.payload.posts];
-            state.publicPosts = [ ...action.payload.posts ];
+            state.publicPosts = [...action.payload.posts];
         },
         addCirclePost: (state, action) => {
             state.circlePosts = [...state.circlePosts, action.payload];
@@ -46,15 +47,23 @@ const feedSlice = createSlice({
         toggleDialogPostBox: (state) => {
             state.newPost.open = !state.newPost.open;
         },
-        openDialogCommentBox: (state) => {
-            state.newComment.open = true;
-        },
-        closeDialogCommentBox: (state) => {
-            state.newComment.open = true;
-            state.newPost.content = '';
+        toggleDialogCommentBox: (state) => {
+            state.newComment.open = !state.newComment.open;
         },
         setFeed: (state, action) => {
             state.currentFeed = action.payload.feed;
+        },
+        setCurrentComments: (state, action) => {
+            state.currentComments = action.payload.currentComments;
+        },
+        removeComment: (state, action) => {
+            state.currentComments = state.currentComments.filter((comment) => comment._id !== action.payload.id);
+        },
+        addComment: (state, action) => {
+            state.currentComments = [...state.currentComments, action.payload.comment];
+        },
+        setCurrentPostId: (state, action) => {
+            state.currentPostId = action.payload.currentPostId;
         },
     }
 })
@@ -69,9 +78,12 @@ export const {
     updateNewPost,
     updateNewComment,
     toggleDialogPostBox,
-    openDialogCommentBox,
-    closeDialogCommentBox,
+    toggleDialogCommentBox,
     setFeed,
+    setCurrentComments,
+    removeComment,
+    addComment,
+    setCurrentPostId,
 
 } = feedSlice.actions;
 export default feedSlice.reducer;

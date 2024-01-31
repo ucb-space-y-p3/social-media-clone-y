@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '../../utils/mutations';
 import { toggleDialogPostBox, updateNewPost, addPublicPost } from '../../utils/slices/feedSlice';
+import { addPost } from '../../utils/slices/userSlice';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -23,13 +24,14 @@ export default function NewPostDialog({ }) {
 
   const [createPost] = useMutation(CREATE_POST);
 
+  const dispatch = useDispatch();
+
   const isNewPostDialogOpen = useSelector((state) => state.feedState.newPost.open);
   const newPostContent = useSelector((state) => state.feedState.newPost.content);
   const userId = useSelector((state) => state.userState.userId);
   const firstInitial = useSelector((state) => state.userState.firstInitial);
   const lastInitial = useSelector((state) => state.userState.lastInitial);
 
-  const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(toggleDialogPostBox({}))
@@ -45,7 +47,8 @@ export default function NewPostDialog({ }) {
         variables: { content: newPostContent },
       });
       console.log('newly created post from backend', post);
-      dispatch(addPublicPost({ _id: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, createdAt: post.createdAt }))
+      dispatch(addPublicPost({ _id: post.data.createPost._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt }))
+      dispatch(addPost({ post: { _id: post.data.createPost._id, creatorId: userId, creatorFirstInitial: firstInitial, creatorLastInitial: lastInitial, content: newPostContent, commentCount: 0, likeCount: 0, createdAt: post.data.createPost.createdAt } }))
 
     } catch (error) {
       console.log(error);

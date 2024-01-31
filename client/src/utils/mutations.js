@@ -136,9 +136,13 @@ export const CREATE_COMMENT = gql`
 mutation CreateComment($postId: ID!, $content: String!) {
   createComment(postId: $postId, content: $content) {
     _id
+    creator
+    creatorId
+    creatorFirstInitial
+    creatorLastInitial
     content
     createdAt
-    postId
+    likeCount
   }
 }
 `;
@@ -155,3 +159,69 @@ mutation DeleteComment($commentId: ID!) {
   }
 }
 `;
+
+export const CREATE_CHAT = gql`
+mutation CreateChat($chatName: String!, $recipients: [String]!) {
+  createChat(chatName: $chatName, recipients: $recipients) {
+    _id
+    chatName
+    userCount
+    messageCount
+    recipients {
+      _id
+      username
+      firstInitial
+      lastInitial
+    }
+  }
+}
+`;
+
+export const ADD_TO_CHAT = gql`
+mutation AddToChat($chatId: String!, $recipients: [String]!) {
+  addToChat(chatId: $chatId, recipients: $recipients) {
+    _id
+    chatName
+    recipients {
+      _id
+      username
+    }
+  }
+}
+`;
+
+export const ADD_USER_TO_CHAT = gql`
+mutation AddUserToChat($chatId: String!, $username: String!) {
+  addUserToChat(chatId: $chatId, username: $username) {
+    _id
+    chatName
+    recipients {
+      _id
+      username
+    }
+  }
+}
+`;
+
+export const LEAVE_CHAT = gql`
+mutation LeaveChat($chatId: ID!) {
+  leaveChat(chatId: $chatId) {
+    _id
+    chatName
+  }
+}
+`;
+
+export const SEND_MESSAGE = gql`
+mutation SendMessage($chatId: ID!, $content: String!) {
+  sendMessage(chatId: $chatId, content: $content) {
+    _id
+    chatId
+    content
+    creator
+    creatorId
+    createdAt
+  }
+} 
+`;
+
