@@ -127,14 +127,76 @@ const resolvers = {
             throw PostNotFoundError;
           };
 
-          return posts;
-        }
-        throw AuthenticationError;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getChat: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
+
+    //     // }
+    //     // throw AuthenticationError;
+
+    //     // dev code
+
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getChats: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
+
+    //     // }
+    //     // throw AuthenticationError;
+
+    //     // dev code
+
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getMessages: async (parent, { chatId }, context) => {
+    //   try {
+    //     // if (context.user) {
+
+    //     // }
+    //     // throw AuthenticationError;
+
+    //     // dev code
+
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // // not necessary
+    // getNotifications: async (parent, { }, context) => {
+    //   try {
+    //     // if (context.user) {
+
+    //     // }
+    //     // throw AuthenticationError;
+
+    //     // dev code
+
+    //   } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    //   }
+    // },
+    // agith
+
+
+    // dev methods
+
     // agith
 
     // not necessary
