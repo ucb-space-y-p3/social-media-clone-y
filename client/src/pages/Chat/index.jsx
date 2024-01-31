@@ -209,14 +209,14 @@ function Chat() {
                     top: 100,
                     right: { xs: 15, md: 60, lg: 380 }
                 }}>
-                <LoopIcon sx={{ fontSize: 25 }} />
+                <LoopIcon sx={{ fontSize: 30 }} />
             </IconButton >
             <IconButton color="secondary" onClick={handleAdd}
                 sx={{
                     position: "fixed",
                     // top: { xs: 120, md: 120, lg: 120 },
-                    top: 200,
-                    right: { xs: 10, md: 55, lg: 370 }
+                    top: 95,
+                    right: { xs: 75, md: 140, lg: 440 }
                 }}>
                 <AddIcon sx={{ fontSize: 40 }} />
             </IconButton >
