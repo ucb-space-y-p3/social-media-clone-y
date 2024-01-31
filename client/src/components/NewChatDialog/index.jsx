@@ -78,7 +78,7 @@ export default function NewChatDialog({ }) {
     <Dialog
       open={isNewChatDialogOpen}
       TransitionComponent={Transition}
-      keepMounted // maybe remove?
+      // keepMounted
       scroll='paper'
       fullWidth
       onClose={handleClose}
@@ -87,7 +87,7 @@ export default function NewChatDialog({ }) {
       <DialogTitle>{"Create A New Chatroom"}</DialogTitle>
       <DialogContent>
 
-        <TextField label="New Chat Name" variant="standard" value={newChatName} color="secondary" focused onChange={handleNameChange} />
+        <TextField label="New Chat Name" variant="standard" value={newChatName} color="secondary" autoFocus focused onChange={handleNameChange} />
 
         <TextField
           id="outlined-read-only-input"

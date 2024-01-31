@@ -183,13 +183,13 @@ const typeDefs = `
     messageCreated(chatId: ID!): Message
     requestCreated(userId: ID!): FriendRequest
 
-    messageSent(chatId: ID!): Message
-    messageReceived(userId: ID!): Message
-    userConnected(userId: ID!): User
-    userDisconnected(userId: ID!): User
-    friendAdded(userId: ID!, friendId: ID!): User
-    friendRemoved(userId: ID!, friendId: ID!): User
-    friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
+    #messageSent(chatId: ID!): Message
+    #messageReceived(userId: ID!): Message
+    #userConnected(userId: ID!): User
+    #userDisconnected(userId: ID!): User
+    #friendAdded(userId: ID!, friendId: ID!): User
+    #friendRemoved(userId: ID!, friendId: ID!): User
+    #friendRequestAccepted(userId: ID!, friendRequestId: ID!): User
   }
 
   

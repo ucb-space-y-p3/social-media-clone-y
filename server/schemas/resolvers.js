@@ -189,28 +189,6 @@ const resolvers = {
   },
 
   Subscription: {
-    messageSent: {
-      subscribe: (_, { chatId }) => pubsub.asyncIterator(`MESSAGE_SENT_${chatId}`)
-    },
-    // messageReceived: {
-    //   subscribe: (_, { userId }) => pubsub.asyncIterator(`MESSAGE_RECEIVED_${userId}`)
-    // },
-    userConnected: {
-      subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_CONNECTED_${userId}`)
-    },
-    userDisconnected: {
-      subscribe: (_, { userId }) => pubsub.asyncIterator(`USER_DISCONNECTED_${userId}`)
-    },
-    friendAdded: {
-      subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_ADDED_${userId}_${friendId}`)
-    },
-    friendRemoved: {
-      subscribe: (_, { userId, friendId }) => pubsub.asyncIterator(`FRIEND_REMOVED_${userId}_${friendId}`)
-    },
-    friendRequestAccepted: {
-      subscribe: (_, { userId, friendRequestId }) => pubsub.asyncIterator(`FRIEND_REQUEST_ACCEPTED_${userId}_${friendRequestId}`)
-    },
-
     postCreated: {
       // subscribe: () => pubsub.asyncIterator(['POST_CREATED']),
       subscribe: withFilter(
@@ -238,6 +216,9 @@ const resolvers = {
       subscribe: withFilter(
         () => pubsub.asyncIterator('MESSAGE_CREATED'), 
         (payload, variables) => {
+          console.log('subscribe test');
+          // console.log('payload!!:', payload);
+          // console.log('variables!!:', variables);
           return (
             payload.messageCreated.chatId === variables.chatId
           );
@@ -893,7 +874,14 @@ const resolvers = {
             throw UserNotFoundError;
           };
           //add message to chat of suscribes
-          // pubsub.publish(`MESSAGE_SENT_${chatId}`, { messageSent: message });
+          pubsub.publish('MESSAGE_CREATED', { messageCreated: {
+            _id: message._id,
+            chatId: message.chatId,
+            content: message.content,
+            creator: message.creator,
+            creatorId: message.creatorId,
+            createdAt: message.createdAt,
+          } });
           return message;
         }
         throw AuthenticationError;
