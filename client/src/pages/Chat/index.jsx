@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { GET_CHAT, } from '../../utils/queries';
 import { ADD_TO_CHAT, SEND_MESSAGE, } from '../../utils/mutations';
+import { MESSAGE_SUBSCRIPTION, } from '../../utils/subscriptions';
 import { populateCurrentChat, setCurrentRecipients, setDraftMessage, addMessage, toggleChatUserBox } from '../../utils/slices/chatSlice';
 
 import MessageItem from '../../components/MessageItem';
@@ -35,6 +36,7 @@ function Chat() {
         }
     });
 
+
     const [sendMessage] = useMutation(SEND_MESSAGE);
     const [addToChat] = useMutation(ADD_TO_CHAT);
 
@@ -43,6 +45,24 @@ function Chat() {
     const draftMessage = useSelector((state) => state.chatState.currentChat.draftMessage);
     const messages = useSelector((state) => state.chatState.currentChat.messages);
 
+    const handleNewMessage = () => {
+        console.log('incoming message:');
+        
+        // dispatch(addMessage({ message }));
+    }
+
+    const { sloading, sdata, serror } = useSubscription(MESSAGE_SUBSCRIPTION,
+        { variables: { chatId }, shouldResubscribe: true, onData: handleNewMessage}
+      );
+
+    useEffect(() => {
+        console.log('looking at subscriptions');
+        if (sdata) {
+            console.log('loading state:', sloading);
+            console.log('loading s:', sdata);
+            console.log('loading serror:', serror);
+        }
+    }, [sdata]);
 
     useEffect(() => {
         if (!loading) {
@@ -104,10 +124,10 @@ function Chat() {
             const data = await sendMessage({
                 variables: { chatId, content: newMessage }
             });
-            console.log(data);
-            const message = data.data.sendMessage;
+            console.log('message was stored:',data);
+            // const message = data.data.sendMessage;
             // dispatch(addMessage({ message: { _id: , creatorId: , creator: , content: , createdAt:  }}))
-            dispatch(addMessage({ message }));
+            // dispatch(addMessage({ message }));
         } catch (error) {
             console.log('send message error', error);
         }

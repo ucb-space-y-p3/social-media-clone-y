@@ -31,4 +31,15 @@ module.exports = {
 
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },
+  wsDecode: function ( encodedToken ) {
+    try {
+      // console.log(encodedToken)
+      const { data } = jwt.verify(encodedToken, secret, { maxAge: expiration });
+      return data;
+    } catch {
+      console.log('Invalid token');
+    }
+
+    return null;
+  }
 };

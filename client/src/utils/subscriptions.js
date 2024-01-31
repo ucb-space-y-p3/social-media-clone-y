@@ -13,7 +13,6 @@ subscription PostFeed($userId: ID!) {
         likeCount
         createdAt
     }
-  }
 }
 `;
 
@@ -29,7 +28,6 @@ subscription CommentFeed($postId: ID!) {
         createdAt: String
         content: String
     }
-  }
 }
 `;
 
@@ -42,7 +40,6 @@ subscription MessageFeed($chatId: ID!) {
         content
         createdAt
     }
-  }
 }
 `;
 
@@ -56,6 +53,5 @@ subscription RequestFeed($userId: ID!) {
         requesterId
         createdAt
     }
-  }
 }
 `;
