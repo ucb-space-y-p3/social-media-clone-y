@@ -18,7 +18,7 @@ This app allows for users to connect with others by sharing thoughts through pos
 Install by cloning repo. Run npm install in the installation directory and run npm run develop for a development environment
 
 ## Usage
-Visit this site. Sign up and start creating posts or talking to friends in a chatroom.
+Visit this site, https://social-media-clone-akmd.onrender.com. Sign up and start creating posts or talking to friends in a chatroom.
 
 ## Credits
 (Pending)
@@ -30,7 +30,8 @@ Licensed under the Apache license 2.0 license.
 Users can sign up, create/delete posts/comments, add/remove friends(pending), have real-time(pending) messaging in chatrooms
 
 ## Questions
-Github Username: KAntBarr - https://github.com/KAntBarr
-https://github.com/Camsca
+Github Usernames: 
+- KAntBarr - https://github.com/KAntBarr
+- Camsca - https://github.com/Camsca
 
-Reach Me: kobybarr.dev@gmail.com
+Reach Us: kobybarr.dev@gmail.com, 
