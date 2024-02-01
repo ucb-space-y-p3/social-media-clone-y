@@ -4,6 +4,8 @@
 ## Description
 This app allows for users to connect with others by sharing thoughts through posts and comments. Users can have real-time(pending) messaging within separate chats. This app is a generic social media clone with heavy influence from X (Twitter).
 
+<img width="1128" alt="image" src="https://github.com/ucb-space-y-p3/social-media-clone-y/assets/70618192/df45dad5-1809-4997-9880-0e7f55bdb91e">
+
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
