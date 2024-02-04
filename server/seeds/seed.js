@@ -7,8 +7,8 @@ db.once('open', async () => {
   await cleanDB(db);
 
   const users = await User.create([
-    { username: 'tester0', email: 'tester0@example.com', password: 'password', firstInitial: 't', lastInitial: 'a' },
-    { username: 'tester1', email: 'tester1@example.com', password: 'password', firstInitial: 't', lastInitial: 'b' },
+    { username: 'tester0', email: 'tester0@testmail.com', password: 'password', firstInitial: 't', lastInitial: 'a' },
+    { username: 'tester1', email: 'tester1@testmail.com', password: 'password', firstInitial: 't', lastInitial: 'b' },
   ]);
   console.log('Users seeded.');
 

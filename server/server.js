@@ -30,8 +30,8 @@ console.log('GraphQL schema created');
 // new ws server
 const wsServer = new WebSocketServer({
   server: httpServer,
-  // path: '/subscriptions'//probchane
-  path: '/graphql'//probchane
+  path: '/subscriptions'//probchane
+  // path: '/graphql'//probchane
 
 });
 console.log('WebSocket server created');
@@ -108,7 +108,7 @@ async function startApolloServer() {
   app.use('/graphql', cors(), expressMiddleware(server, { context: authMiddleware }));
 
 
-  // app.use('/subscriptions', expressMiddleware(server, { context: authMiddleware }));
+  app.use('/subscriptions', expressMiddleware(server, { context: authMiddleware }));
   // app.use('/subscriptions', expressMiddleware(server));
 
   // Production mode

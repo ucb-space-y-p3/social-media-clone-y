@@ -11,13 +11,16 @@ import Container from '@mui/material/Container';
 // import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 
 import Auth from '../../utils/auth';
 import { CREATE_USER } from '../../utils/mutations';
 
 function SignUp() {
+
+    const navigate = useNavigate();
+
     const [formState, setFormState] = useState({ email: '', password: '', username: '', firstInitial: '', lastInitial: '' });
     const [addUser] = useMutation(CREATE_USER);
 
@@ -39,7 +42,8 @@ function SignUp() {
             const token = mutationResponse.data.createUser.token;
             Auth.login(token);
             // rtk here
-            redirect('/');
+            // redirect('/');
+            navigate('/');
         } catch (error) {
             console.log(error);
             // do a timed popup
