@@ -80,8 +80,8 @@ const httpLink = new HttpLink({
 
 // use react routers useLocation to inject the correct url
 const wsLink = new GraphQLWsLink(createClient({
-  // url: 'ws://localhost:3005/graphql',
-  url: 'ws://localhost:3000/subscriptions',
+  url: 'ws://localhost:3005/subscriptions',
+  // url: 'ws://localhost:3000/subscriptions',
   connectionParams: () => {
     console.log('attempting ws connection');
     const token = localStorage.getItem('id_token');

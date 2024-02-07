@@ -34,10 +34,14 @@ module.exports = {
   wsDecode: function ( encodedToken ) {
     try {
       // console.log(encodedToken)
-      const { data } = jwt.verify(encodedToken, secret, { maxAge: expiration });
+      const token = encodedToken.split(' ').pop().trim();
+      if (!token) {
+        return null;
+      }
+      const { data } = jwt.verify(token, secret, { maxAge: expiration });
       return data;
     } catch {
-      console.log('Invalid token');
+      console.log('Invalid ws token');
     }
 
     return null;

@@ -57,7 +57,8 @@ const serverCleanup = useServer(
     },
     onConnect: async (ctx) => {
       console.log('ctx', ctx.connectionParams);
-      if (!wsDecode(ctx.connectionParams?.authorization || ctx.connectionParams?.Authorization)) {
+      const token = ctx.connectionParams?.authorization || ctx.connectionParams?.Authorization;
+      if (!wsDecode(token)) {
         throw new Error('Auth token missing!');
       }
       console.log('user connected');
