@@ -30,8 +30,8 @@ console.log('GraphQL schema created');
 // new ws server
 const wsServer = new WebSocketServer({
   server: httpServer,
-  // path: '/subscriptions'//probchane
-  path: '/graphql'//probchane
+  path: '/subscriptions'//probchane
+  // path: '/graphql'//probchane
 
 });
 console.log('WebSocket server created');
@@ -57,7 +57,8 @@ const serverCleanup = useServer(
     },
     onConnect: async (ctx) => {
       console.log('ctx', ctx.connectionParams);
-      if (!wsDecode(ctx.connectionParams?.authorization || ctx.connectionParams?.Authorization)) {
+      const token = ctx.connectionParams?.authorization || ctx.connectionParams?.Authorization;
+      if (!wsDecode(token)) {
         throw new Error('Auth token missing!');
       }
       console.log('user connected');
@@ -108,7 +109,7 @@ async function startApolloServer() {
   app.use('/graphql', cors(), expressMiddleware(server, { context: authMiddleware }));
 
 
-  // app.use('/subscriptions', expressMiddleware(server, { context: authMiddleware }));
+  app.use('/subscriptions', expressMiddleware(server, { context: authMiddleware }));
   // app.use('/subscriptions', expressMiddleware(server));
 
   // Production mode

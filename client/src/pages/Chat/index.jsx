@@ -45,24 +45,27 @@ function Chat() {
     const draftMessage = useSelector((state) => state.chatState.currentChat.draftMessage);
     const messages = useSelector((state) => state.chatState.currentChat.messages);
 
-    const handleNewMessage = () => {
-        console.log('incoming message:');
+    const handleNewMessage = ({ data: { data: { messageCreated: message }} }) => {
+        console.log('incoming message:', message);
         
-        // dispatch(addMessage({ message }));
+        dispatch(addMessage({ message }));
     }
 
-    const { sloading, sdata, serror } = useSubscription(MESSAGE_SUBSCRIPTION,
+    const { loading: sloading, data: sdata, error: serror } = useSubscription(MESSAGE_SUBSCRIPTION,
         { variables: { chatId }, shouldResubscribe: true, onData: handleNewMessage}
       );
 
     useEffect(() => {
         console.log('looking at subscriptions');
+        console.log('sloading:', sloading);
+        console.log('sdata:', sdata);
+        console.log('serror:', serror);
         if (sdata) {
             console.log('loading state:', sloading);
             console.log('loading s:', sdata);
             console.log('loading serror:', serror);
         }
-    }, [sdata]);
+    }, [sdata, sloading, serror]);
 
     useEffect(() => {
         if (!loading) {
@@ -185,7 +188,7 @@ function Chat() {
                         color="secondary"
                         focused
                         multiline
-                        rows={2}
+                        // rows={2}
                         onChange={handleContentChange}
                         value={draftMessage}
                         sx={{

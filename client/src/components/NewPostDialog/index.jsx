@@ -100,7 +100,7 @@ export default function NewPostDialog({ }) {
           value={newPostContent}
           fullWidth
           multiline
-          rows={4}
+          // rows={4}
           // onChange={handleContentChange}
           onChange={handleContent}
         // variant="standard"

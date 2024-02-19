@@ -12,7 +12,12 @@ export default defineConfig({
         target: 'http://localhost:3005',
         secure: false,
         changeOrigin: true
-      }
+      },
+      // '/subscription': {
+      //   target: 'ws://localhost:3005',
+      //   secure: false,
+      //   changeOrigin: true
+      // }
     }
   }
 })
