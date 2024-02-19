@@ -45,10 +45,10 @@ function Chat() {
     const draftMessage = useSelector((state) => state.chatState.currentChat.draftMessage);
     const messages = useSelector((state) => state.chatState.currentChat.messages);
 
-    const handleNewMessage = () => {
-        console.log('incoming message:');
+    const handleNewMessage = ({ data: { data: { messageCreated: message }} }) => {
+        console.log('incoming message:', message);
         
-        // dispatch(addMessage({ message }));
+        dispatch(addMessage({ message }));
     }
 
     const { loading: sloading, data: sdata, error: serror } = useSubscription(MESSAGE_SUBSCRIPTION,
