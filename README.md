@@ -27,7 +27,7 @@ Visit this site, https://social-media-clone-akmd.onrender.com. Sign up and start
 Licensed under the Apache license 2.0 license.
 
 ## Features
-Users can sign up, create/delete posts/comments, add/remove friends(pending), have real-time(pending) messaging in chatrooms
+Users can sign up, create/delete posts/comments, add/remove friends(pending), have real-time messaging in chatrooms
 
 ## Questions
 Github Usernames: 
